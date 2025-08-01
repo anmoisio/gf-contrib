@@ -7,7 +7,7 @@ param
 
   Agreement = Agr Number Person ;
 
-  VForm = Inf | PresSg3 ;
+  VForm = Inf | PresSg3 | Past | PastPart | PresPart ;
 
 oper
   Noun : Type = {s : Number => Str} ;
@@ -41,20 +41,56 @@ oper
 
   Verb : Type = {s : VForm => Str} ;
 
-  mkVerb : (inf,pres : Str) -> Verb = \inf,pres -> {
+--   mkVerb : (inf,pres : Str) -> Verb = \inf,pres -> {
+--     s = table {
+--       Inf => inf ;
+--       PresSg3 => pres
+--       }
+--     } ;
+  mkVerb : (inf,pres,past,pastp,presp : Str) -> Verb =
+    \inf,pres,past,pastp,presp -> {
     s = table {
       Inf => inf ;
-      PresSg3 => pres
+      PresSg3 => pres ;
+      Past => past ;
+      PastPart => pastp ;
+      PresPart => presp
       }
     } ;
 
-  smartVerb : Str -> Verb = \inf ->
-     mkVerb inf ((mkN inf).s ! Pl) ;
- 
-  mkV = overload {
-    mkV : Str -> Verb = smartVerb ;
-    mkV : (inf,pres : Str) -> Verb = mkVerb ;
+
+   regVerb : Str -> Verb = \s ->
+     mkVerb s (s + "s") (s + "ed") (s + "ed") (s + "ing") ;
+
+--   smartVerb : Str -> Verb = \inf ->
+--      mkVerb inf ((mkN inf).s ! Pl) ;
+   smartVerb : Str -> Verb = \inf -> case inf of {
+    _ + ("ay"|"ey"|"oy"|"uy") => regVerb inf ;
+    x + "y" =>
+      mkVerb inf (x + "ies") (x + "ied") (x + "ied") (inf + "ing") ;
+    x + "e" =>
+      mkVerb inf (inf + "s") (x + "ed") (x + "ed") (x + "ing") ;
+    _ + ("ch"|"sh"|"s"|"o") =>
+      mkVerb inf (inf + "es") (inf + "ed") (inf + "ed") (inf + "ing") ;
+    _       => regVerb inf
     } ;
+ 
+--   mkV = overload {
+--     mkV : Str -> Verb = smartVerb ;
+--     mkV : (inf,pres : Str) -> Verb = mkVerb ;
+--     } ;
+  mkV = overload {
+   mkV : Str -> Verb = smartVerb ;
+   mkV : (inf,past,pastp : Str) -> Verb =
+     \inf,past,pastp -> {
+       s = table {
+         Past => past ;
+	 PastPart => pastp ;
+	 f => (smartVerb inf).s ! f
+	 }
+       } ;
+   mkV : (inf,pres,past,pastp,presp : Str) -> Verb = mkVerb ;
+   } ;
 
   Verb2 : Type = Verb ** {c : Str} ;
 
@@ -69,31 +105,44 @@ oper
 
   mkAdv : Str -> Adverb = \s -> {s = s} ;
 
+   noVerb = mkVerb "" "" "" "" "" ;
+   do_Verb = mkVerb "do" "does" "did" "done" "doing" ;
+   have_Verb = mkVerb "have" "has" "had" "had" "having" ;
+
   be_GVerb : GVerb = {
      s = table {
        PresSg1 => "am" ;
        PresPl  => "are" ;
-       VF vf   => (mkVerb "be" "is").s ! vf
+       PastPl  => "were" ;
+       VF vf   => (mkVerb "be" "is" "was" "been" "being").s ! vf
        } ;
      isAux = True
      } ;
+--    be_GVerb : GVerb = table {
+--      PresSg1 => "am" ;
+--      PresPl  => "are" ;
+--      PastPl  => "were" ;
+--      VF vf   => (mkVerb "be" "is" "was" "been" "being").s ! vf
+--      } ;
 
   GVerb : Type = {
      s : GVForm => Str ;
      isAux : Bool
      } ;
+    -- GVerb : Type = GVForm => Str ;
 
  param
-   GVForm = VF VForm | PresSg1 | PresPl ;
+   GVForm = VF VForm | PresSg1 | PresPl | PastPl ;
 
  oper
    verb2gverb : Verb -> GVerb = \v -> {s =
      table {
-       PresSg1 => v.s ! Inf ;
-       PresPl  => v.s ! Inf ;
-       VF vf   => v.s ! vf
-       } ;
-     isAux = False
+        PresSg1 => v.s ! Inf ;
+        PresPl  => v.s ! Inf ;
+        PastPl  => v.s ! Past ;
+        VF vf   => v.s ! vf
      } ;
+      isAux = False
+   } ;
 
 }

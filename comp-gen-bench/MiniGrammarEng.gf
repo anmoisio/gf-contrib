@@ -4,11 +4,15 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
   lincat
     Utt = {s : Str} ;
     Adv = Adverb ;
-    Pol = {s : Str ; b : Bool} ;
+    -- Pol = {s : Str ; b : Bool} ;
+    Pol   = {p  : Bool} ;
+    Tense = {vf : VForm} ;
     
     S  = {s : Str} ;
-    Cl = {s : Bool => Str} ;
-    VP = {verb : GVerb ; compl : Str} ;
+    -- Cl = {s : Bool => Str} ;
+    Cl = {subj : Str ; a : Agreement ; verb : GVerb ; compl : Str ; isAux : Bool} ;
+    -- VP = {verb : GVerb ; compl : Str} ;
+    VP = {verb : GVerb ; compl : Str ; isAux : Bool} ;
     AP = Adjective ;
     CN = Noun ;
     NP = {s : Case => Str ; a : Agreement} ;
@@ -26,36 +30,78 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
     UttS s = s ;
     UttNP np = {s = np.s ! Acc} ;
 
-    UsePresCl pol cl = {
-      s = pol.s ++ cl.s ! pol.b
+    -- UsePresCl pol cl = {
+    --   s = pol.s ++ cl.s ! pol.b
+    --   } ;
+
+    UseCl t p cl = {
+      s = let
+            agr = cl.a ;
+	    verb = cl.verb.s
+          in
+          cl.subj ++
+	  case <t.vf, p.p, agr, cl.isAux> of {
+        <Inf,True ,Agr Sg Per3  ,_>     => verb ! VF PresSg3 ; 
+        <Inf,True ,Agr Sg Per1  ,_>     => verb ! PresSg1 ;
+        <Inf,True ,_            ,_>     => verb ! PresPl ;
+	    <Inf,False,Agr Sg Per3  ,False> => do_Verb.s ! PresSg3 ++ "not" ++ verb ! VF Inf ;
+	    <Inf,False,_            ,False> => do_Verb.s ! Inf ++ "not" ++ verb ! VF Inf ;
+	    <Inf,False,Agr Sg Per3  ,_>     => verb ! VF PresSg3 ++ "not" ; 
+        <Inf,False,Agr Sg Per1  ,_>     => verb ! PresSg1 ++ "not" ; 
+        <Inf,False,_            ,_>     => verb ! PresPl ++ "not" ;
+
+        <Past,True ,_           ,_>     => verb ! VF Past ; 
+	    <Past,False,_  ,         _>      => do_Verb.s ! Past ++ "not" ++ verb ! VF Inf ;
+
+        <_  ,True ,Agr Sg Per3  ,_>     => have_Verb.s ! PresSg3 ++ verb ! VF PastPart ; 
+        <_ , True ,_            ,_>     => have_Verb.s ! Inf ++ verb ! VF PastPart ; 
+	    <_,  False,Agr Sg Per3  ,_>     => have_Verb.s ! PresSg3 ++ "not" ++ verb ! VF PastPart ; 
+	    <_,  False,_            ,_>     => have_Verb.s ! Inf ++ "not" ++ verb ! VF PastPart
+            } ++
+	  cl.compl ;
       } ;
+
+    -- PredVP np vp = {
+    --   s = \\b =>
+    --        np.s ! Nom 
+	-- ++ case <b, np.a, vp.verb.isAux> of {
+	--     <True, Agr Sg Per1,_> => vp.verb.s ! PresSg1 ;
+	--     <True, Agr Sg Per3,_> => vp.verb.s ! VF PresSg3 ;
+	--     <True, _          ,_> => vp.verb.s ! PresPl ;
+	--     <False, Agr Sg Per1,True>  => vp.verb.s ! PresSg1 ++ "not" ;
+	--     <False, Agr Sg Per3,True>  => vp.verb.s ! VF PresSg3 ++ "not" ;
+	--     <False, _          ,True>  => vp.verb.s ! PresPl ++ "not" ;
+	--     <False, Agr Sg Per3,False> => "does not" ++ vp.verb.s ! VF Inf ;
+	--     <False, _          ,False> => "do not" ++ vp.verb.s ! VF Inf
+	--     }
+    --     ++ vp.compl ;
+    --   } ;
     PredVP np vp = {
-      s = \\b =>
-           np.s ! Nom 
-	++ case <b, np.a, vp.verb.isAux> of {
-	    <True, Agr Sg Per1,_> => vp.verb.s ! PresSg1 ;
-	    <True, Agr Sg Per3,_> => vp.verb.s ! VF PresSg3 ;
-	    <True, _          ,_> => vp.verb.s ! PresPl ;
-	    <False, Agr Sg Per1,True>  => vp.verb.s ! PresSg1 ++ "not" ;
-	    <False, Agr Sg Per3,True>  => vp.verb.s ! VF PresSg3 ++ "not" ;
-	    <False, _          ,True>  => vp.verb.s ! PresPl ++ "not" ;
-	    <False, Agr Sg Per3,False> => "does not" ++ vp.verb.s ! VF Inf ;
-	    <False, _          ,False> => "do not" ++ vp.verb.s ! VF Inf
-	    }
-        ++ vp.compl ;
+      subj = np.s ! Nom ;
+      a = np.a ;
+      verb = vp.verb ;
+      compl = vp.compl ;
+      isAux = vp.isAux
       } ;
-      
+
     UseV v = {
       verb = verb2gverb v ;
-      compl = []
+      compl = [] ;
+      isAux = False
       } ;
+    -- ComplV2 v2 np = {
+    --   verb = verb2gverb v2 ;
+    --   compl = v2.c ++ np.s ! Acc
+    --   } ;
     ComplV2 v2 np = {
       verb = verb2gverb v2 ;
-      compl = v2.c ++ np.s ! Acc
+      compl = v2.c ++ np.s ! Acc ;
+      isAux = False
       } ;
     UseAP ap = {
       verb = be_GVerb ;
-      compl = ap.s
+      compl = ap.s ;
+      isAux = False -- is this ok?
       } ;
     AdvVP vp adv =
       vp ** {compl = vp.compl ++ adv.s} ;
@@ -90,8 +136,12 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
 
     CoordS conj a b = {s = a.s ++ conj.s ++ b.s} ;
     
-    PPos  = {s = [] ; b = True} ;
-    PNeg  = {s = [] ; b = False} ;
+    PPos  = {s = [] ; p = True} ;
+    PNeg  = {s = [] ; p = False} ;
+
+    Pres = {vf = Inf} ;
+    Imp = {vf = Past} ;
+    Perf = {vf = PastPart} ;
 
     and_Conj = {s = "and"} ;
     or_Conj = {s = "or"} ;

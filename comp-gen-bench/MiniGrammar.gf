@@ -27,13 +27,16 @@ abstract MiniGrammar = {
     N ;      -- common noun                         e.g. "house"
     PN ;     -- proper name                         e.g. "Paris"
 
+    Tense ;
+
   fun
 -- Phrase
     UttS      : S  -> Utt ;
     UttNP     : NP -> Utt ;
 
 -- Sentence
-    UsePresCl : Pol -> Cl  -> S ;       -- John does not walk ---s
+    -- UsePresCl : Pol -> Cl  -> S ;       -- John does not walk ---s
+    UseCl : Tense -> Pol -> Cl  -> S ;
     PredVP    : NP -> VP -> Cl ;        -- John walks / John does not walk
 
 -- Verb
@@ -63,9 +66,12 @@ abstract MiniGrammar = {
 -- Conjunction
     CoordS    : Conj -> S -> S -> S ;   -- he walks and she runs ---s
 
--- Tense
+-- Polarity
     PPos      : Pol ;                   -- I sleep  [positive polarity]
     PNeg      : Pol ;                   -- I do not sleep [negative polarity]
+
+-- Tense
+    Pres, Perf, Imp : Tense ;
 
 -- Structural
     and_Conj  : Conj ;
