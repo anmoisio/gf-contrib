@@ -73,10 +73,10 @@ oper
       \inf,past,pastp -> {
         s = table {
           Past => past ;
-    PastPart => pastp ;
-    f => (smartVerb inf).s ! f
-    }
-        } ;
+          PastPart => pastp ;
+          f => (smartVerb inf).s ! f
+        }
+      } ;
     mkV : (inf,pres,past,pastp,presp : Str) -> Verb = mkVerb ;
     } ;
 
@@ -87,6 +87,10 @@ oper
     mkV2 : Str  -> Str -> Verb2 = \s,p -> mkV s ** {c = p} ;
     mkV2 : Verb        -> Verb2 = \v   -> v ** {c = []} ;
     mkV2 : Verb -> Str -> Verb2 = \v,p -> v ** {c = p} ;
+    mkV2 : (inf,past,pastp : Str) -> Verb2 =
+      \inf,past,pastp -> mkV inf past pastp ** {c = []} ;
+    mkV2 : (inf,past,pastp,p : Str) -> Verb2 =
+      \inf,past,pastp,p -> mkV inf past pastp ** {c = p} ;
     } ;
 
   Adverb : Type = {s : Str} ;
@@ -122,8 +126,8 @@ oper
         PresPl  => v.s ! Inf ;
         PastPl  => v.s ! Past ;
         VF vf   => v.s ! vf
+        } ;
+      isAux = False
       } ;
-        isAux = False
-    } ;
 
 }

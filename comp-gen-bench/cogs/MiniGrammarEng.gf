@@ -22,6 +22,8 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
     Prep = {s : Str} ;
     V = Verb ;
     V2 = Verb2 ;
+    V3 = Verb2 ;
+    VS = Verb ;
     A = Adjective ;
     N = Noun ;
     PN = ProperName ;
@@ -72,9 +74,24 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
       } ;
     ComplV2 v2 np = {
       verb = verb2gverb v2 ;
-      compl = v2.c ++ np.s ! Acc ;
+      compl = v2.c ++ np.s ! Acc ; -- v2.c is preposition (?)
       isAux = False
       } ;
+    ComplV3 v3 np_dobj np_oobj = {
+      verb = verb2gverb v3 ;
+      compl = np_dobj.s ! Acc ++ np_oobj.s ! Acc ; -- give us him
+      isAux = False
+      } ;
+    ComplPrepV3 v3 np_dobj np_oobj = {
+      verb = verb2gverb v3 ;
+      compl = np_oobj.s ! Acc ++ v3.c ++ np_dobj.s ! Acc ; -- give him to us
+      isAux = False
+      } ;
+    ComplVS vs s = {
+			verb = verb2gverb vs ;
+			compl = "that" ++ s.s ;
+			isAux = False
+			} ;
     UseAP ap = {
       verb = be_GVerb ;
       compl = ap.s ;

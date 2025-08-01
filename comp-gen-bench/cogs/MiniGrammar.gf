@@ -23,6 +23,8 @@ abstract MiniGrammar = {
     Prep ;   -- preposition, or just case           e.g. "in", dative
     V ;      -- one-place verb                      e.g. "sleep" 
     V2 ;     -- two-place verb                      e.g. "love"
+    V3 ;
+    VS ;
     A ;      -- one-place adjective                 e.g. "warm"
     N ;      -- common noun                         e.g. "house"
     PN ;     -- proper name                         e.g. "Paris"
@@ -35,13 +37,16 @@ abstract MiniGrammar = {
     UttNP     : NP -> Utt ;
 
 -- Sentence
-    UseCl : Tense -> Pol -> Cl  -> S ;
+    UseCl     : Tense -> Pol -> Cl  -> S ;
     PredVP    : NP -> VP -> Cl ;        -- John walks / John does not walk
 
 -- Verb
     UseV      : V   -> VP ;             -- sleep
-    ComplV2   : V2  -> NP -> VP ;       -- love it  ---s
-    UseAP     : AP  -> VP ;             -- be small ---s
+    ComplV2   : V2  -> NP -> VP ;       -- love it      ---s
+    ComplV3   : V3  -> NP -> NP -> VP ;     -- give him it  ---s
+    ComplPrepV3 : V3  -> NP -> NP -> VP ;   -- give it to him ---s
+    ComplVS     : VS -> S -> VP ;           -- say that she runs
+    UseAP     : AP  -> VP ;             -- be small     ---s
     AdvVP     : VP -> Adv -> VP ;       -- sleep here
 
 -- Noun

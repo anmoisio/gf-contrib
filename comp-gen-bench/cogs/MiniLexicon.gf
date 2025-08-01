@@ -39,11 +39,13 @@ fun
   flower_N : N ;
   friend_N : N ;
   girl_N : N ;
+  give_V3 : V3 ;
   good_A : A ;
   go_V : V ;
   grammar_N : N ;
   green_A : A ;
   heavy_A : A ;
+  hope_VS : VS ;
   horse_N : N ;
   hot_A : A ;
   house_N : N ;
@@ -51,6 +53,8 @@ fun
   jump_V : V ;
   kill_V2 : V2 ;
   language_N : N ;
+  like_V2 : V2 ;
+  like_VS : VS ;
   live_V : V ;
   love_V2 : V2 ;
   man_N : N ;
@@ -66,6 +70,7 @@ fun
   red_A : A ;
   river_N : N ;
   run_V : V ;
+  say_VS : VS ;
   sea_N : N ;
   see_V2 : V2 ;
   ship_N : N ;
