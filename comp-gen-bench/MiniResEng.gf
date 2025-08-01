@@ -41,12 +41,6 @@ oper
 
   Verb : Type = {s : VForm => Str} ;
 
---   mkVerb : (inf,pres : Str) -> Verb = \inf,pres -> {
---     s = table {
---       Inf => inf ;
---       PresSg3 => pres
---       }
---     } ;
   mkVerb : (inf,pres,past,pastp,presp : Str) -> Verb =
     \inf,pres,past,pastp,presp -> {
     s = table {
@@ -62,8 +56,6 @@ oper
    regVerb : Str -> Verb = \s ->
      mkVerb s (s + "s") (s + "ed") (s + "ed") (s + "ing") ;
 
---   smartVerb : Str -> Verb = \inf ->
---      mkVerb inf ((mkN inf).s ! Pl) ;
    smartVerb : Str -> Verb = \inf -> case inf of {
     _ + ("ay"|"ey"|"oy"|"uy") => regVerb inf ;
     x + "y" =>
@@ -75,10 +67,6 @@ oper
     _       => regVerb inf
     } ;
  
---   mkV = overload {
---     mkV : Str -> Verb = smartVerb ;
---     mkV : (inf,pres : Str) -> Verb = mkVerb ;
---     } ;
   mkV = overload {
    mkV : Str -> Verb = smartVerb ;
    mkV : (inf,past,pastp : Str) -> Verb =
@@ -118,18 +106,11 @@ oper
        } ;
      isAux = True
      } ;
---    be_GVerb : GVerb = table {
---      PresSg1 => "am" ;
---      PresPl  => "are" ;
---      PastPl  => "were" ;
---      VF vf   => (mkVerb "be" "is" "was" "been" "being").s ! vf
---      } ;
 
   GVerb : Type = {
      s : GVForm => Str ;
      isAux : Bool
      } ;
-    -- GVerb : Type = GVForm => Str ;
 
  param
    GVForm = VF VForm | PresSg1 | PresPl | PastPl ;

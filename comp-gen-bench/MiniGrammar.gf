@@ -35,7 +35,6 @@ abstract MiniGrammar = {
     UttNP     : NP -> Utt ;
 
 -- Sentence
-    -- UsePresCl : Pol -> Cl  -> S ;       -- John does not walk ---s
     UseCl : Tense -> Pol -> Cl  -> S ;
     PredVP    : NP -> VP -> Cl ;        -- John walks / John does not walk
 

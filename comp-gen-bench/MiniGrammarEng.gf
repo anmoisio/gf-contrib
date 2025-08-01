@@ -30,10 +30,6 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
     UttS s = s ;
     UttNP np = {s = np.s ! Acc} ;
 
-    -- UsePresCl pol cl = {
-    --   s = pol.s ++ cl.s ! pol.b
-    --   } ;
-
     UseCl t p cl = {
       s = let
             agr = cl.a ;
@@ -51,7 +47,7 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
         <Inf,False,_            ,_>     => verb ! PresPl ++ "not" ;
 
         <Past,True ,_           ,_>     => verb ! VF Past ; 
-	    <Past,False,_  ,         _>      => do_Verb.s ! Past ++ "not" ++ verb ! VF Inf ;
+	    <Past,False,_  ,         _>     => do_Verb.s ! Past ++ "not" ++ verb ! VF Inf ;
 
         <_  ,True ,Agr Sg Per3  ,_>     => have_Verb.s ! PresSg3 ++ verb ! VF PastPart ; 
         <_ , True ,_            ,_>     => have_Verb.s ! Inf ++ verb ! VF PastPart ; 
@@ -61,21 +57,6 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
 	  cl.compl ;
       } ;
 
-    -- PredVP np vp = {
-    --   s = \\b =>
-    --        np.s ! Nom 
-	-- ++ case <b, np.a, vp.verb.isAux> of {
-	--     <True, Agr Sg Per1,_> => vp.verb.s ! PresSg1 ;
-	--     <True, Agr Sg Per3,_> => vp.verb.s ! VF PresSg3 ;
-	--     <True, _          ,_> => vp.verb.s ! PresPl ;
-	--     <False, Agr Sg Per1,True>  => vp.verb.s ! PresSg1 ++ "not" ;
-	--     <False, Agr Sg Per3,True>  => vp.verb.s ! VF PresSg3 ++ "not" ;
-	--     <False, _          ,True>  => vp.verb.s ! PresPl ++ "not" ;
-	--     <False, Agr Sg Per3,False> => "does not" ++ vp.verb.s ! VF Inf ;
-	--     <False, _          ,False> => "do not" ++ vp.verb.s ! VF Inf
-	--     }
-    --     ++ vp.compl ;
-    --   } ;
     PredVP np vp = {
       subj = np.s ! Nom ;
       a = np.a ;
@@ -89,10 +70,6 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
       compl = [] ;
       isAux = False
       } ;
-    -- ComplV2 v2 np = {
-    --   verb = verb2gverb v2 ;
-    --   compl = v2.c ++ np.s ! Acc
-    --   } ;
     ComplV2 v2 np = {
       verb = verb2gverb v2 ;
       compl = v2.c ++ np.s ! Acc ;
@@ -101,7 +78,7 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
     UseAP ap = {
       verb = be_GVerb ;
       compl = ap.s ;
-      isAux = False -- is this ok?
+      isAux = False
       } ;
     AdvVP vp adv =
       vp ** {compl = vp.compl ++ adv.s} ;
