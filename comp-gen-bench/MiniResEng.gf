@@ -27,9 +27,9 @@ oper
     } ;
 
   mkN = overload {
-   mkN : Str -> Noun = smartNoun ;
-   mkN : Str -> Str -> Noun = mkNoun ;
-   } ;
+    mkN : Str -> Noun = smartNoun ;
+    mkN : Str -> Str -> Noun = mkNoun ;
+    } ;
 
   ProperName : Type = {s : Str} ;
 
@@ -53,10 +53,10 @@ oper
     } ;
 
 
-   regVerb : Str -> Verb = \s ->
-     mkVerb s (s + "s") (s + "ed") (s + "ed") (s + "ing") ;
+  regVerb : Str -> Verb = \s ->
+    mkVerb s (s + "s") (s + "ed") (s + "ed") (s + "ing") ;
 
-   smartVerb : Str -> Verb = \inf -> case inf of {
+  smartVerb : Str -> Verb = \inf -> case inf of {
     _ + ("ay"|"ey"|"oy"|"uy") => regVerb inf ;
     x + "y" =>
       mkVerb inf (x + "ies") (x + "ied") (x + "ied") (inf + "ing") ;
@@ -68,17 +68,17 @@ oper
     } ;
  
   mkV = overload {
-   mkV : Str -> Verb = smartVerb ;
-   mkV : (inf,past,pastp : Str) -> Verb =
-     \inf,past,pastp -> {
-       s = table {
-         Past => past ;
-	 PastPart => pastp ;
-	 f => (smartVerb inf).s ! f
-	 }
-       } ;
-   mkV : (inf,pres,past,pastp,presp : Str) -> Verb = mkVerb ;
-   } ;
+    mkV : Str -> Verb = smartVerb ;
+    mkV : (inf,past,pastp : Str) -> Verb =
+      \inf,past,pastp -> {
+        s = table {
+          Past => past ;
+    PastPart => pastp ;
+    f => (smartVerb inf).s ! f
+    }
+        } ;
+    mkV : (inf,pres,past,pastp,presp : Str) -> Verb = mkVerb ;
+    } ;
 
   Verb2 : Type = Verb ** {c : Str} ;
 
@@ -93,37 +93,37 @@ oper
 
   mkAdv : Str -> Adverb = \s -> {s = s} ;
 
-   noVerb = mkVerb "" "" "" "" "" ;
-   do_Verb = mkVerb "do" "does" "did" "done" "doing" ;
-   have_Verb = mkVerb "have" "has" "had" "had" "having" ;
+  noVerb = mkVerb "" "" "" "" "" ;
+  do_Verb = mkVerb "do" "does" "did" "done" "doing" ;
+  have_Verb = mkVerb "have" "has" "had" "had" "having" ;
 
   be_GVerb : GVerb = {
-     s = table {
-       PresSg1 => "am" ;
-       PresPl  => "are" ;
-       PastPl  => "were" ;
-       VF vf   => (mkVerb "be" "is" "was" "been" "being").s ! vf
-       } ;
-     isAux = True
-     } ;
+    s = table {
+      PresSg1 => "am" ;
+      PresPl  => "are" ;
+      PastPl  => "were" ;
+      VF vf   => (mkVerb "be" "is" "was" "been" "being").s ! vf
+      } ;
+    isAux = True
+    } ;
 
   GVerb : Type = {
-     s : GVForm => Str ;
-     isAux : Bool
-     } ;
+    s : GVForm => Str ;
+    isAux : Bool
+    } ;
 
- param
-   GVForm = VF VForm | PresSg1 | PresPl | PastPl ;
+  param
+    GVForm = VF VForm | PresSg1 | PresPl | PastPl ;
 
- oper
-   verb2gverb : Verb -> GVerb = \v -> {s =
-     table {
+  oper
+    verb2gverb : Verb -> GVerb = \v -> {s =
+      table {
         PresSg1 => v.s ! Inf ;
         PresPl  => v.s ! Inf ;
         PastPl  => v.s ! Past ;
         VF vf   => v.s ! vf
-     } ;
-      isAux = False
-   } ;
+      } ;
+        isAux = False
+    } ;
 
 }
