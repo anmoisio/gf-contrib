@@ -63,6 +63,7 @@ lin new_A = mkA "new" ;
 lin now_Adv = mkAdv "now" ;
 lin old_A = mkA "old" ;
 lin paris_PN = mkPN "Paris" ;
+lin paint_V2 = mkV2 "paint" ;
 lin play_V = mkV "play" ;
 lin read_V2 = mkV2 "read" ;
 lin ready_A = mkA "ready" ;

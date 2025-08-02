@@ -64,6 +64,7 @@ fun
   now_Adv : Adv ;
   old_A : A ;
   paris_PN : PN ;
+  paint_V2 : V2 ;
   play_V : V ;
   read_V2 : V2 ;
   ready_A : A ;

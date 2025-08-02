@@ -31,7 +31,7 @@ abstract MiniGrammar = {
 
     Tense ;
 
-  fun
+  data
 -- Phrase
     UttS      : S  -> Utt ;
     UttNP     : NP -> Utt ;
