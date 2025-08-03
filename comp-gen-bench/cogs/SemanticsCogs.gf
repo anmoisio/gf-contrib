@@ -102,12 +102,8 @@ concrete SemanticsCogs of SemanticsLang = open Prelude in {
         -- Flat conjunction with AND - combines presuppositions and assertions
         And p q = {
             s = "" ;
-            asserts = case p.asserts.isEmpty of {
-                        NonEmpty => ConsAssert p.asserts (ConsAssert q.asserts BaseAssert) ;
-                        Empty => ConsAssert q.asserts BaseAssert } ;
-            presups = case p.presups.isEmpty of {
-                        NonEmpty => ConsPresup p.presups (ConsPresup q.presups BasePresup) ;
-                        Empty => ConsPresup q.presups BasePresup } ;
+            asserts = ConsAssert p.asserts (ConsAssert q.asserts BaseAssert) ;
+            presups = ConsPresup p.presups (ConsPresup q.presups BasePresup) ;
             name = ""
             } ;
         
