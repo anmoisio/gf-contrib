@@ -108,7 +108,7 @@ def
     iVP (ComplPrepV3 v np_dobj np_oobj) i   = iNP np_oobj (\z -> iNP np_dobj (\y -> iV3 v y z i)) ;
 
     -- sentence as complement
-    iVP (ComplVS vs s) i = iVS vs s i ;
+    iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iPol p (iCl cl))) i ;
 
 fun iCN : CN -> Ind -> Prop ;
 def
@@ -132,16 +132,14 @@ def
     iV3 v dobj oobj subj e  = And (And
         (DotAgentV3 v subj e) (DotThemeV3 v oobj e)) (DotRecipient v dobj e) ;
 
-
-fun iVS : VS -> S -> Ind -> Event -> Prop ;
+fun iVS : VS -> (Event -> Prop) -> Ind -> Event -> Prop ;
 def
-    iVS vs (UseCl t p cl) subj e = And
+    iVS vs eprop subj e = And
         (DotAgentVS vs subj e)
         (ExistE (\e2 -> And
             (DotCcomp vs e2 e)
-            (iTense t (iPol p (iCl cl)) e2)
+            (eprop e2)
         )) ;
-
 
 -- fun iAdA : AdA -> (Ind -> Prop) -> Ind -> Prop ;
 -- def
