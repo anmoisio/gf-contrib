@@ -4,9 +4,9 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
   lincat
     Utt = {s : Str} ;
     Adv = Adverb ;
-    -- Pol = {s : Str ; b : Bool} ;
-    Pol   = {p  : Bool} ;
-    Tense = {vf : VForm} ;
+    Pol = {s : Str ; p : Bool} ;
+    -- Pol   = {p  : Bool} ;
+    Tense = {s : Str ; vf : VForm} ;
     
     S  = {s : Str} ;
     -- Cl = {s : Bool => Str} ;
@@ -39,22 +39,22 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
           in
           cl.subj ++
 	  case <t.vf, p.p, agr, cl.isAux> of {
-      <Inf,True, Agr Sg Per3  ,_>     => verb ! VF PresSg3 ; 
-      <Inf,True, Agr Sg Per1  ,_>     => verb ! PresSg1 ;
-      <Inf,True, _            ,_>     => verb ! PresPl ;
-	    <Inf,False,Agr Sg Per3  ,False> => do_Verb.s ! PresSg3 ++ "not" ++ verb ! VF Inf ;
-	    <Inf,False,_            ,False> => do_Verb.s ! Inf ++ "not" ++ verb ! VF Inf ;
-	    <Inf,False,Agr Sg Per3  ,_>     => verb ! VF PresSg3 ++ "not" ; 
-      <Inf,False,Agr Sg Per1  ,_>     => verb ! PresSg1 ++ "not" ; 
-      <Inf,False,_            ,_>     => verb ! PresPl ++ "not" ;
+      <Inf,True, Agr Sg Per3  ,_>     => verb ! VF PresSg3 ++ p.s ++ t.s ;
+      <Inf,True, Agr Sg Per1  ,_>     => verb ! PresSg1 ++ p.s ++ t.s ;
+      <Inf,True, _            ,_>     => verb ! PresPl ++ p.s ++ t.s ;
+	    <Inf,False,Agr Sg Per3  ,False> => do_Verb.s ! PresSg3 ++ p.s ++ verb ! VF Inf ++ t.s ;
+	    <Inf,False,_            ,False> => do_Verb.s ! Inf ++ p.s ++ verb ! VF Inf ++ t.s ;
+	    <Inf,False,Agr Sg Per3  ,_>     => verb ! VF PresSg3 ++ p.s ++ t.s ;
+      <Inf,False,Agr Sg Per1  ,_>     => verb ! PresSg1 ++ p.s ++ t.s ;
+      <Inf,False,_            ,_>     => verb ! PresPl ++ p.s ++ t.s ;
 
-      <Past,True ,_,           _>     => verb ! VF Past ; 
-	    <Past,False,_  ,         _>     => do_Verb.s ! Past ++ "not" ++ verb ! VF Inf ;
+      <Past,True ,_,           _>     => verb ! VF Past ++ p.s ;
+	    <Past,False,_  ,         _>     => do_Verb.s ! Past ++ p.s ++ verb ! VF Inf ++ t.s ;
 
-      <_,  True ,Agr Sg Per3  ,_>     => have_Verb.s ! PresSg3 ++ verb ! VF PastPart ; 
-      <_,  True ,_            ,_>     => have_Verb.s ! Inf ++ verb ! VF PastPart ; 
-	    <_,  False,Agr Sg Per3  ,_>     => have_Verb.s ! PresSg3 ++ "not" ++ verb ! VF PastPart ; 
-	    <_,  False,_            ,_>     => have_Verb.s ! Inf ++ "not" ++ verb ! VF PastPart
+      <_,  True ,Agr Sg Per3  ,_>     => have_Verb.s ! PresSg3 ++ verb ! VF PastPart ++ p.s ++ t.s ;
+      <_,  True ,_            ,_>     => have_Verb.s ! Inf ++ verb ! VF PastPart ++ p.s ++ t.s ;
+	    <_,  False,Agr Sg Per3  ,_>     => have_Verb.s ! PresSg3 ++ p.s ++ verb ! VF PastPart ++ t.s ;
+	    <_,  False,_            ,_>     => have_Verb.s ! Inf ++ p.s ++ verb ! VF PastPart ++ t.s
             } ++
 	  cl.compl ;
       } ;
@@ -131,11 +131,11 @@ concrete MiniGrammarEng of MiniGrammar = open MiniResEng, Prelude in {
     CoordS conj a b = {s = a.s ++ conj.s ++ b.s} ;
     
     PPos  = {s = [] ; p = True} ;
-    PNeg  = {s = [] ; p = False} ;
+    PNeg  = {s = "not" ; p = False} ;
 
-    Pres = {vf = Inf} ;
-    Imp = {vf = Past} ;
-    Perf = {vf = PastPart} ;
+    Pres = {s = [] ; vf = Inf} ;
+    Imp = {s = [] ; vf = Past} ;
+    Perf = {s = [] ; vf = PastPart} ;
 
     and_Conj = {s = "and"} ;
     or_Conj = {s = "or"} ;
