@@ -1,0 +1,2 @@
+i MiniLangEng.gf
+gr -depth=6 -number=10000 -cat=S | l -tabtreebank
