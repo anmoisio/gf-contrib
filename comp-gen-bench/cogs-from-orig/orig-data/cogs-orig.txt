@@ -1,0 +1,54 @@
+S -> NP_animate_nsubj VP_external [0.49] | VP_internal [0.06] | NP_inanimate_nsubjpass VP_passive [0.375] | NP_animate_nsubjpass VP_passive_dat [0.075]
+VP_external -> V_unerg [0.10525] | V_unacc NP_dobj [0.10525] | V_trans_omissible [0.10525] | V_trans_omissible NP_dobj [0.10525] | V_trans_not_omissible NP_dobj [0.10525] | V_inf_taking INF V_inf [0.10525] | V_cp_taking C S [0.158] | V_dat NP_inanimate_dobj PP_iobj [0.10525] | V_dat NP_animate_iobj NP_inanimate_dobj [0.10525]
+VP_internal -> NP_unacc_subj V_unacc [1.0]
+VP_passive -> AUX V_trans_not_omissible_pp [0.125] | AUX V_trans_not_omissible_pp BY NP_animate_nsubj [0.125] | AUX V_trans_omissible_pp [0.125] | AUX V_trans_omissible_pp BY NP_animate_nsubj [0.125] | AUX V_unacc_pp [0.125] | AUX V_unacc_pp BY NP_animate_nsubj [0.125] |  AUX V_dat_pp PP_iobj [0.125] | AUX V_dat_pp PP_iobj BY NP_animate_nsubj [0.125]
+VP_passive_dat -> AUX V_dat_pp NP_inanimate_dobj [0.5] | AUX V_dat_pp NP_inanimate_dobj BY NP_animate_nsubj [0.5]
+NP_dobj -> NP_inanimate_dobj [0.5] | NP_animate_dobj [0.5]
+NP_unacc_subj -> NP_inanimate_dobj_noPP [0.5] | NP_animate_dobj_noPP [0.5]
+NP_animate_dobj_noPP -> Det N_common_animate_dobj [0.5] | N_prop_dobj [0.5]
+NP_animate_dobj -> Det N_common_animate_dobj [0.25] | Det N_common_animate_dobj PP_loc [0.25]  | N_prop_dobj [0.50]
+NP_animate_iobj -> Det N_common_animate_iobj [0.5] | N_prop_iobj [0.5]
+NP_animate_nsubj -> Det N_common_animate_nsubj [0.5] | N_prop_nsubj [0.5]
+NP_animate_nsubjpass -> Det N_common_animate_nsubjpass [0.5] | N_prop_nsubjpass [0.5]
+NP_inanimate_dobj -> Det N_common_inanimate_dobj [0.5] | Det N_common_inanimate_dobj PP_loc [0.5]
+NP_inanimate_dobj_noPP -> Det N_common_inanimate_dobj [1.0]
+NP_inanimate_nsubjpass -> Det N_common_inanimate_nsubjpass [1.0]
+NP_on -> Det N_on PP_loc [0.1] | Det N_on [0.9]
+NP_in -> Det N_in PP_loc [0.1] | Det N_in [0.9]
+NP_beside -> Det N_beside PP_loc [0.1] | Det N_beside [0.9]
+Det -> 'the' [0.5] | 'a' [0.5]
+C -> 'that' [1.0]
+AUX -> 'was' [1.0]
+BY -> 'by' [1.0]
+N_common_animate_dobj -> {animate_nouns_str}
+N_common_animate_iobj -> {animate_nouns_str}
+N_common_animate_nsubj -> {animate_nouns_str}
+N_common_animate_nsubjpass -> {animate_nouns_str}
+N_common_inanimate_dobj -> {inanimate_nouns_str}
+N_common_inanimate_nsubjpass -> {inanimate_nouns_str}
+N_prop_dobj -> {proper_nouns_str}
+N_prop_iobj -> {proper_nouns_str}
+N_prop_nsubj -> {proper_nouns_str}
+N_prop_nsubjpass -> {proper_nouns_str}
+N_on -> {on_nouns_str}
+N_in -> {in_nouns_str}
+N_beside -> {beside_nouns_str}
+V_trans_omissible -> {V_trans_omissible_str}
+V_trans_omissible_pp -> {V_trans_omissible_pp_str}
+V_trans_not_omissible -> {V_trans_not_omissible_str}
+V_trans_not_omissible_pp -> {V_trans_not_omissible_pp_str}
+V_cp_taking -> {V_cp_taking_str}
+V_inf_taking -> {V_inf_taking_str}
+V_unacc -> {V_unacc_str}
+V_unacc_pp -> {V_unacc_pp_str}
+V_unerg -> {V_unerg_str}
+V_inf -> {V_inf_str}
+V_dat -> {V_dat_str}
+V_dat_pp -> {V_dat_pp_str}
+PP_iobj -> P_iobj NP_animate_iobj [1.0]
+PP_loc -> P_on NP_on [0.333] | P_in NP_in [0.333] | P_beside NP_beside [0.334]
+P_iobj -> 'to' [1.0]
+P_on -> 'on' [1.0]
+P_in -> 'in' [1.0]
+P_beside -> 'beside' [1.0]
+INF -> 'to' [1.0]
