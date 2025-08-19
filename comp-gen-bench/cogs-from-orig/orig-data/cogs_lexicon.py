@@ -95,7 +95,7 @@ beside_nouns = [
 
 assert len(set(on_nouns)) == len(set(in_nouns)) == len(set(beside_nouns)) == 100
 noun_list = animate_nouns + inanimate_nouns + proper_nouns + on_nouns + in_nouns + beside_nouns
-print(len(set(noun_list)))
+# print(len(set(noun_list)))
 
 # Levin, '1.2.1 Unspecified Object Alternation'
 # And some intuition-based selection. 
@@ -185,13 +185,13 @@ V_inf = [
 assert len(set(V_inf)) == 20
 
 V_dat = [
-  'gave', 'lended', 'sold', 'offered', 'fed',
+  'gave', 'lent', 'sold', 'offered', 'fed',
   'passed', 'sent', 'rented', 'served', 'awarded', 
   'brought', 'handed', 'forwarded', 'promised', 'mailed',
   'loaned', 'posted', 'returned', 'slipped', 'wired'
 ]
 V_dat_pp = [
-  'given', 'lended', 'sold', 'offered', 'fed', 
+  'given', 'lent', 'sold', 'offered', 'fed', 
   'passed', 'sent', 'rented', 'served', 'awarded',
   'brought', 'handed', 'forwarded', 'promised', 'mailed', 
   'loaned', 'posted', 'returned', 'slipped', 'wired'
@@ -199,7 +199,7 @@ V_dat_pp = [
 
 assert len(set(V_dat)) == len(set(V_dat_pp)) == 20
 
-print(len(set(V_trans_omissible + V_trans_not_omissible + V_cp_taking + V_unacc + V_unerg + V_dat)))
+# print(len(set(V_trans_omissible + V_trans_not_omissible + V_cp_taking + V_unacc + V_unerg + V_dat)))
 
 verbs_lemmas = { 
   'ate':'eat', 'painted':'paint', 'drew':'draw', 'cleaned':'clean',
@@ -228,7 +228,7 @@ verbs_lemmas = {
   'walked':'walk', 'ran':'run', 'napped':'nap', 'snoozed':'snooze', 'screamed':'scream',
   'stuttered':'stutter', 'frowned':'frown', 'giggled':'giggle', 'scoffed':'scoff',
   'snored':'snore', 'snorted':'snort', 'smirked':'smirk', 'gasped':'gasp',
-  'gave':'give', 'lended':'lend', 'sold':'sell', 'offered':'offer', 'fed':'feed', 
+  'gave':'give', 'lent':'lend', 'sold':'sell', 'offered':'offer', 'fed':'feed', 
   'passed':'pass', 'rented':'rent', 'served':'serve','awarded':'award', 'promised':'promise',
   'brought':'bring', 'sent':'send', 'handed':'hand', 'forwarded':'forward', 'mailed':'mail',
   'posted':'post','given':'give', 'shipped':'ship', 'packed':'pack', 'studied':'study', 
