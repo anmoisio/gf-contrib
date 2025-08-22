@@ -54,7 +54,7 @@ cat
     V_unacc ;
     V_unacc_pp ;
     V_unerg ;
-fun
+data
     mkS 		: NP_animate_nsubj -> VP_external -> S ;
     mkS2 		: VP_internal -> S ;
     mkS3 		: NP_inanimate_nsubjpass -> VP_passive -> S ;
