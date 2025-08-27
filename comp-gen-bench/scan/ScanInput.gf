@@ -1,27 +1,26 @@
 
 concrete ScanInput of Scan = {
+
     lincat Utt, ConjImp, Imp, VP, Adv, Verb, VD, V = {s : Str};
-    
-    oper linArg : {s : Str} -> {s : Str} = \arg -> {s = arg.s} ;
 
     lin
-        UseConjImp  = linArg ;
-        UseImp      = linArg ;
+        UseConjImp imp = imp ;
+        UseImp     imp = imp ;
 
         CoordImp    imp1 imp2   = {s = imp1.s ++ "and" ++ imp2.s} ;
         CoordImpInv imp1 imp2   = {s = imp1.s ++ "after" ++ imp2.s} ;
         
-        ImpVP = linArg ;
-        Twice vp  = {s = vp.s ++ "twice"} ;
+        ImpVP  vp = vp ;
+        Twice  vp = {s = vp.s ++ "twice"} ;
         Thrice vp = {s = vp.s ++ "thrice"} ;
         
-        UseV = linArg ;
-        DirVP      v d = {s = v.s ++ d.s} ;
-        OppositeVP v d = {s = v.s ++ "opposite" ++ d.s} ;
-        AroundVP   v d = {s = v.s ++ "around" ++ d.s} ;
+        UseV       v     = v ;
+        DirVP      v adv = {s = v.s ++ adv.s} ;
+        OppositeVP v adv = {s = v.s ++ "opposite" ++ adv.s} ;
+        AroundVP   v adv = {s = v.s ++ "around" ++ adv.s} ;
 
-        VVerb = linArg ;
-        VDVerb = linArg ;
+        VVerb  v = v ;
+        VDVerb v = v ;
 
         left_Adv  = {s = "left"} ;
         right_Adv = {s = "right"} ;
