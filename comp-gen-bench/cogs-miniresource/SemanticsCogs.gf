@@ -80,7 +80,7 @@ concrete SemanticsCogs of SemanticsLang = open Prelude in {
         -- Time predicate
         Time e t = {
             s = "" ;
-            asserts = ConsAssert {s = "time ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
+            asserts = ConsAssert {s = "TIME ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
             name = ""
             } ;
@@ -107,6 +107,14 @@ concrete SemanticsCogs of SemanticsLang = open Prelude in {
             name = ""
             } ;
         
+        -- negation for propositions, enclose the assertions in NOT(...)
+        Not p = {
+            s = "" ;
+            asserts = ConsAssert {s = "NOT( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
+            presups = p.presups ;
+            name = ""
+            } ;
+
         -- If p q = {
         --     s = p.s ++ " => " ++ q.s ;
         --     presup = combinePresuppositions p.presup q.presup

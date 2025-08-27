@@ -27,13 +27,26 @@ data
 -- flat conjunctions
 fun iS : S -> Prop ;
 def
-    iS (UseCl t p cl) = ExistE (iTense t (iPol p (iCl cl))) ;
+    -- Push polarity into VP for simple clauses so subject quantification stays outside Not.
+    iS (UseCl t p (PredVP np vp)) = ExistE (iTense t (iNP np (iPolVP p (iVP vp)))) ;
+    -- iS (UseCl t p cl) = ExistE (iTense t (iPol p (iCl cl))) ;
     -- iS (UseCl t p cl) = ExistE (iCl cl) ;
     -- iS (ConjS conj x y) = iConj conj (iS x) (iS y) ;
 
 fun iCl : Cl -> Event -> Prop ;
 def
     iCl (PredVP np vp) = iNP np (iVP vp) ;
+
+fun iClPol : Pol -> Cl -> Event -> Prop ;
+def
+    -- Positive: same as iCl
+    iClPol PPos cl = iCl cl ;
+
+    -- Negative on simple clauses: negate the VP pointwise before subject composition
+    iClPol PNeg (PredVP np vp) = iNP np (iPolVP PNeg (iVP vp)) ;
+
+    -- Fallback (other clause shapes): default to event-level negation
+    iClPol PNeg cl = iPol PNeg (iCl cl) ;
 
 -- After a noun phrase has combined with a verb phrase, the resulting
 -- expression is a function that takes an event as its argument.
@@ -76,6 +89,7 @@ def iPN pn vp = \e -> vp (PNInd pn) e ;
 fun
     iTense : Tense -> (Event -> Prop) -> Event -> Prop ;
     iPol   : Pol   -> (Event -> Prop) -> Event -> Prop ;
+    iPolVP : Pol   -> (Ind -> Event -> Prop) -> (Ind -> Event -> Prop) ;
 def
     -- Tense adds a temporal predicate to the event property. 
     iTense t P = \e -> And (P e) (Time e t) ;
@@ -83,6 +97,10 @@ def
     -- Polarity modifies the event property. 
     iPol PPos P = P ;
     iPol PNeg P = \e -> Not (P e) ;
+
+    -- Polarity over subject-indexed event properties (used before iNP)
+    iPolVP PPos F = F ;
+    iPolVP PNeg F = \x,e -> Not (F x e) ;
 
 -- Conjunction for propositions (S) and event properties (NP) 
 fun iConj : Conj -> Prop -> Prop -> Prop ;
@@ -108,7 +126,8 @@ def
     iVP (ComplPrepV3 v np_dobj np_oobj) i   = iNP np_oobj (\z -> iNP np_dobj (\y -> iV3 v y z i)) ;
 
     -- sentence as complement
-    iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iPol p (iCl cl))) i ;
+    -- iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iPol p (iCl cl))) i ;
+    iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iClPol p cl)) i ;
 
 fun iCN : CN -> Ind -> Prop ;
 def
@@ -119,6 +138,7 @@ def
 
 -- a noun is a proposition about an individual
 fun iN : N -> Ind -> Prop ;
+
 
 -- a verb is a proposition about 1-3 individual(s) and an event
 -- Build a flat conjunction: paint.agent(e,subj) AND paint.theme(e,obj)
