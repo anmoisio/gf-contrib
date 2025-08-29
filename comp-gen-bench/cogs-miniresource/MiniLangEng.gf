@@ -1,1 +1,4 @@
-concrete MiniLangEng of MiniLang = MiniGrammarEng, MiniLexiconEng ;
+concrete MiniLangEng of MiniLang = MiniGrammarEng,
+    -- MiniLexiconEng
+    LexiconEng
+    ;

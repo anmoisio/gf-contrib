@@ -84,13 +84,13 @@ oper
 
   mkV2 = overload {
     mkV2 : Str         -> Verb2 = \s   -> mkV s ** {c = []} ;
-    mkV2 : Str  -> Str -> Verb2 = \s,p -> mkV s ** {c = p} ;
-    mkV2 : Verb        -> Verb2 = \v   -> v ** {c = []} ;
-    mkV2 : Verb -> Str -> Verb2 = \v,p -> v ** {c = p} ;
-    mkV2 : (inf,past,pastp : Str) -> Verb2 =
+    mkV2 : Str  -> Str -> Verb2 = \s,p -> mkV s ** {c = p} ;    -- preposition
+    mkV2 : Verb        -> Verb2 = \v   -> v ** {c = []} ;       -- from Verb
+    mkV2 : Verb -> Str -> Verb2 = \v,p -> v ** {c = p} ; 
+    mkV2 : (inf,past,pastp : Str) -> Verb2 =                    -- irregular forms
       \inf,past,pastp -> mkV inf past pastp ** {c = []} ;
     mkV2 : (inf,past,pastp,p : Str) -> Verb2 =
-      \inf,past,pastp,p -> mkV inf past pastp ** {c = p} ;
+      \inf,past,pastp,p -> mkV inf past pastp ** {c = p} ;      -- irregular forms + preposition
     } ;
 
   Adverb : Type = {s : Str} ;

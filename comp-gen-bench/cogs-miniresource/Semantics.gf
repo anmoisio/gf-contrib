@@ -29,22 +29,12 @@ data
     Time        : Event -> Tense -> Prop ;
     
 
+-- should polarity be an argument of clause or predicate?
 fun iS : S -> Prop ;
-def
-    -- Push polarity into VP for simple clauses so subject quantification stays outside Not.
-    iS (UseCl t p (PredVP np vp)) = ExistE (iTense t (iNP np (iPol p (iVP vp)))) ;
-    -- iS (UseCl t p cl) = ExistE (iTense t (iPol p (iCl cl))) ;
-    -- iS (UseCl t p cl) = ExistE (iCl cl) ;
-    -- iS (ConjS conj x y) = iConj conj (iS x) (iS y) ;
+def iS (UseCl t p (PredVP np vp)) = ExistE (iTense t (iNP np (iPol p (iVP vp)))) ;
 
--- fun iCl : Cl -> Event -> Prop ;
--- def
---     iCl (PredVP np vp) = iNP np (iVP vp) ;
-
-fun iCl : Pol -> Cl -> Event -> Prop ;
-def
-    iCl PPos (PredVP np vp) = iNP np (iVP vp) ;
-    iCl PNeg (PredVP np vp) = iNP np (iPol PNeg (iVP vp)) ;
+-- fun iCl : Pol -> Cl -> Event -> Prop ;
+-- def iCl p (PredVP np vp) = iNP np (iPol p (iVP vp)) ;
 
 
 -- After a noun phrase has combined with a verb phrase, the resulting
@@ -126,7 +116,7 @@ def
 
     -- sentence as complement
     -- iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iPol p (iCl cl))) i ;
-    iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iCl p cl)) i ;
+    iVP (ComplVS vs (UseCl t p (PredVP np vp))) i = iVS vs (iTense t (iNP np (iPol p (iVP vp)))) i ;
 
 fun iCN : CN -> Ind -> Prop ;
 def

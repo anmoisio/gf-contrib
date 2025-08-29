@@ -1,6 +1,7 @@
 abstract MiniLang =
   MiniGrammar,
-  MiniLexicon
+--   MiniLexicon
+    Lexicon
   ** {
 
   flags startcat = Utt ;
