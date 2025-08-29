@@ -216,7 +216,7 @@ verbs_lemmas = {
   'thought':'think', 'supported':'support', 'wished':'wish', 'dreamed':'dream', 
   'expected':'expect', 'imagined':'imagine', 'envied':'envy', 'wanted':'want', 
   'preferred':'prefer', 'needed':'need', 'intended':'intend', 'tried':'try',
-  'attempted':'attempt', 'planned':'plan','craved':'crave','hated':'hate','loved':'love', 
+  'attempted':'attempt', 'planned':'plan','craved':'crave','hated':'hate',
   'enjoyed':'enjoy', 'rolled':'roll', 'froze':'freeze', 'burned':'burn', 'shortened':'shorten',
   'floated':'float', 'grew':'grow', 'slid':'slide', 'broke':'break', 'crumpled':'crumple',
   'split':'split', 'changed':'change', 'snapped':'snap', 'tore':'tear', 'collapsed':'collapse',
