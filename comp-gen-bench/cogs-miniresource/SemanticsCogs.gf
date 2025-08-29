@@ -11,7 +11,7 @@ concrete SemanticsCogs of SemanticsLang = open Prelude in {
         Assert, Presup      = {s : Str ; isEmpty : IsEmpty} ;
         [Assert], [Presup]  = {s : Str ; isEmpty : IsEmpty } ;
 
-        Event, Utt, Adv, S, Ind, IndNum, V, V2, V3, VS, A, N, PN, Tense  = {s : Str} ;
+        Event, Utt, Adv, S, Ind, Verb, V, V2, V3, VS, A, N, PN, Tense  = {s : Str} ;
 
     oper
         mkListLin : Str -> (f,fs : {s : Str ; isEmpty : IsEmpty}) -> {s : Str ; isEmpty : IsEmpty} =
@@ -67,15 +67,15 @@ concrete SemanticsCogs of SemanticsLang = open Prelude in {
         } ;
 
         
+        VVerb v  = v ;
+        V2Verb v2 = v2 ;
+        V3Verb v3 = v3 ;
+        VSVerb vs = vs ;
         -- Dot notation predicates
-        DotAgent        = mkDotLin "agent" ;
-        DotAgentV2      = mkDotLin "agent" ;
-        DotAgentV3      = mkDotLin "agent" ;
-        DotAgentVS      = mkDotLin "agent" ;
-        DotThemeV2      = mkDotLin "theme" ;
-        DotThemeV3      = mkDotLin "theme" ;
-        DotRecipient    = mkDotLin "recipient" ;
-        DotCcomp        = mkDotLin "ccomp" ;
+        Agent       = mkDotLin "agent" ;
+        Theme       = mkDotLin "theme" ;
+        Recipient   = mkDotLin "recipient" ;
+        Ccomp       = mkDotLin "ccomp" ;
 
         -- Time predicate
         Time e t = {
@@ -110,7 +110,7 @@ concrete SemanticsCogs of SemanticsLang = open Prelude in {
         -- negation for propositions, enclose the assertions in NOT(...)
         Not p = {
             s = "" ;
-            asserts = ConsAssert {s = "NOT( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
+            asserts = ConsAssert {s = "NOT ( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
             presups = p.presups ;
             name = ""
             } ;
@@ -133,12 +133,12 @@ concrete SemanticsCogs of SemanticsLang = open Prelude in {
 
 
         -- Variable assignments with indexing
-        Inds num = {s = "x _ " ++ num.s} ;
-        Events num = {s = "x _ " ++ num.s} ;
-        One = {s = "1"} ;
-        Two = {s = "2"} ;
-        Three = {s = "3"} ;
-        Four = {s = "4"} ;
-        Five = {s = "5"} ;
+        -- Inds num = {s = "x _ " ++ num.s} ;
+        -- Events num = {s = "x _ " ++ num.s} ;
+        -- One = {s = "1"} ;
+        -- Two = {s = "2"} ;
+        -- Three = {s = "3"} ;
+        -- Four = {s = "4"} ;
+        -- Five = {s = "5"} ;
 
 }

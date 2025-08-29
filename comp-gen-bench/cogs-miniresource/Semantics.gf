@@ -7,46 +7,45 @@ cat
     [Assert] {0} ;
     [Presup] {0} ;
 
+    Verb ;
+
+fun
+    VVerb  : V  -> Verb ;
+    V2Verb : V2 -> Verb ;
+    V3Verb : V3 -> Verb ;
+    VSVerb : VS -> Verb ;
+
+
 data
     -- Uniqueness operator for definite descriptions
     Unique : (Ind -> Prop) -> Ind -> Prop ;
 
     -- Thematic Role Predicates with dot notation structure
-    DotAgent        : V  -> Ind     -> Event -> Prop ;  -- e.g. "paint . agent ( e , x )"
-    DotAgentV2      : V2 -> Ind     -> Event -> Prop ; 
-    DotAgentV3      : V3 -> Ind     -> Event -> Prop ; 
-    DotAgentVS      : VS -> Ind     -> Event -> Prop ;
-    DotThemeV2      : V2 -> Ind     -> Event -> Prop ;
-    DotThemeV3      : V3 -> Ind     -> Event -> Prop ;
-    DotRecipient    : V3 -> Ind     -> Event -> Prop ;
-    DotCcomp        : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
-    
-    Time            : Event -> Tense -> Prop ;
+    Agent       : Verb -> Ind   -> Event -> Prop ;  -- e.g. "paint . agent ( e , x )"
+    Theme       : Verb -> Ind   -> Event -> Prop ;
+    Recipient   : V3 -> Ind     -> Event -> Prop ;
+    Ccomp       : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
+
+    Time        : Event -> Tense -> Prop ;
     
 
--- flat conjunctions
 fun iS : S -> Prop ;
 def
     -- Push polarity into VP for simple clauses so subject quantification stays outside Not.
-    iS (UseCl t p (PredVP np vp)) = ExistE (iTense t (iNP np (iPolVP p (iVP vp)))) ;
+    iS (UseCl t p (PredVP np vp)) = ExistE (iTense t (iNP np (iPol p (iVP vp)))) ;
     -- iS (UseCl t p cl) = ExistE (iTense t (iPol p (iCl cl))) ;
     -- iS (UseCl t p cl) = ExistE (iCl cl) ;
     -- iS (ConjS conj x y) = iConj conj (iS x) (iS y) ;
 
-fun iCl : Cl -> Event -> Prop ;
+-- fun iCl : Cl -> Event -> Prop ;
+-- def
+--     iCl (PredVP np vp) = iNP np (iVP vp) ;
+
+fun iCl : Pol -> Cl -> Event -> Prop ;
 def
-    iCl (PredVP np vp) = iNP np (iVP vp) ;
+    iCl PPos (PredVP np vp) = iNP np (iVP vp) ;
+    iCl PNeg (PredVP np vp) = iNP np (iPol PNeg (iVP vp)) ;
 
-fun iClPol : Pol -> Cl -> Event -> Prop ;
-def
-    -- Positive: same as iCl
-    iClPol PPos cl = iCl cl ;
-
-    -- Negative on simple clauses: negate the VP pointwise before subject composition
-    iClPol PNeg (PredVP np vp) = iNP np (iPolVP PNeg (iVP vp)) ;
-
-    -- Fallback (other clause shapes): default to event-level negation
-    iClPol PNeg cl = iPol PNeg (iCl cl) ;
 
 -- After a noun phrase has combined with a verb phrase, the resulting
 -- expression is a function that takes an event as its argument.
@@ -76,31 +75,31 @@ def
 
             -- using uniqueness operator instead of russelian description
             -- (Unique n x) -- causes "index too large" error because it's not eta-expanded
-            -- (Unique (\z -> n z) x) works but x and z should b equal (?)
             (Unique (\z -> n z) x)
             (vp x e)
         ) ;
 
 -- a proper noun (an individual) and a verb phrase
 -- (proposition that takes an individual and an event) combine into a proposition of event
+fun PNInd : PN -> Ind ;
 fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def iPN pn vp = \e -> vp (PNInd pn) e ;
 
 fun
     iTense : Tense -> (Event -> Prop) -> Event -> Prop ;
-    iPol   : Pol   -> (Event -> Prop) -> Event -> Prop ;
-    iPolVP : Pol   -> (Ind -> Event -> Prop) -> (Ind -> Event -> Prop) ;
+    -- iPol   : Pol   -> (Event -> Prop) -> Event -> Prop ;
+    iPol : Pol   -> (Ind -> Event -> Prop) -> (Ind -> Event -> Prop) ;
 def
     -- Tense adds a temporal predicate to the event property. 
     iTense t P = \e -> And (P e) (Time e t) ;
 
     -- Polarity modifies the event property. 
-    iPol PPos P = P ;
-    iPol PNeg P = \e -> Not (P e) ;
+    -- iPol PPos P = P ;
+    -- iPol PNeg P = \e -> Not (P e) ;
 
     -- Polarity over subject-indexed event properties (used before iNP)
-    iPolVP PPos F = F ;
-    iPolVP PNeg F = \x,e -> Not (F x e) ;
+    iPol PPos F = F ;
+    iPol PNeg F = \x,e -> Not (F x e) ;
 
 -- Conjunction for propositions (S) and event properties (NP) 
 fun iConj : Conj -> Prop -> Prop -> Prop ;
@@ -127,7 +126,7 @@ def
 
     -- sentence as complement
     -- iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iPol p (iCl cl))) i ;
-    iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iClPol p cl)) i ;
+    iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iCl p cl)) i ;
 
 fun iCN : CN -> Ind -> Prop ;
 def
@@ -147,17 +146,17 @@ fun
     iV2 : V2 -> Ind -> Ind          -> Event -> Prop ;
     iV3 : V3 -> Ind -> Ind -> Ind   -> Event -> Prop ;
 def
-    iV  v i e               = DotAgent v i e ;
-    iV2 v obj subj e        = And (DotAgentV2 v subj e) (DotThemeV2 v obj e) ;
-    iV3 v dobj oobj subj e  = And (And
-        (DotAgentV3 v subj e) (DotThemeV3 v oobj e)) (DotRecipient v dobj e) ;
+    iV  v i e                = Agent (VVerb v) i e ;
+    iV2 v obj subj e         = And (Agent (V2Verb v) subj e) (Theme (V2Verb v) obj e) ;
+    iV3 v3 dobj oobj subj e  = And (And
+        (Agent (V3Verb v3) subj e) (Theme (V3Verb v3) oobj e)) (Recipient v3 dobj e) ;
 
 fun iVS : VS -> (Event -> Prop) -> Ind -> Event -> Prop ;
 def
     iVS vs eprop subj e = And
-        (DotAgentVS vs subj e)
+        (Agent (VSVerb vs) subj e)
         (ExistE (\e2 -> And
-            (DotCcomp vs e2 e)
+            (Ccomp vs e2 e)
             (eprop e2)
         )) ;
 
@@ -165,12 +164,5 @@ def
 -- def
 --     -- Adverbs modify adjective properties
 --     iAdA ada prop = prop ; -- placeholder - needs specific adverb definitions
-
-cat IndNum ;
-fun
-    PNInd : PN -> Ind ;
-    Inds : IndNum -> Ind ;
-    Events : IndNum -> Event ;
-    One, Two, Three, Four, Five : IndNum ;
 
 }
