@@ -1,0 +1,119 @@
+"""Convert the lexicon from cogs-lexicon to GF format."""
+#!/usr/bin/env python3
+import os
+from cogs_lexicon import *
+
+N = animate_nouns + inanimate_nouns + on_nouns + in_nouns + beside_nouns
+PN = proper_nouns
+pastV = V_trans_omissible + V_unacc + V_unerg
+pastV2 = V_trans_omissible + V_trans_not_omissible + V_unacc
+pastV3 = V_dat
+pastVS = V_cp_taking
+pastVV = V_inf_taking
+
+V = V_inf
+
+V2, V3, VS, VV = [], [], [], []
+for word_list, lemma_word_list in zip([pastV, pastV2, pastV3, pastVS, pastVV], [V, V2, V3, VS, VV]):
+    for word in word_list:
+        lemma_word_list.append(verbs_lemmas[word])
+    print("------")
+    for w in set(lemma_word_list):
+        print(w)
+
+# missing from cogs_lexicon
+V.append("bake")
+V2.append("bake")
+verbs_lemmas["baked"] = "bake"
+
+
+lexs = {
+    "N": sorted(list(set(N))),
+    "PN": sorted(list(set(PN))),
+    "V": sorted(list(set(V))),
+    "V2": sorted(list(set(V2))),
+    "V3": sorted(list(set(V3))),
+    "VS": sorted(list(set(VS))),
+    "VV": sorted(list(set(VV)))
+}
+
+exclude = ["want"]
+
+# abstract lexicon
+with open("CogsLexicon.gf", "w", encoding="utf-8") as f:
+    f.write("abstract CogsLexicon = Cat ** {\n")
+    f.write("fun\n")
+
+    for wordclass, wordlist in lexs.items():
+        for word in wordlist:
+            if word in exclude:
+                continue
+            f.write(f"    {word.lower()}_{wordclass} \t\t: {wordclass} ;\n")
+        f.write("\n")
+
+    # structural words missing from gf-rgl/src/abstract/Structural.gf
+    f.write("    beside_Prep : Prep ;\n")
+
+    f.write("\n}\n")
+
+# concrete lexicon LexiconEng
+# only lins needed, no lincat
+linfun = { # strings that need to be formatted with the word
+    # constructors for regular and irregular verbs
+    "N": ("mkN {}", "mkN {}"),
+    "PN": ("mkPN {}", "mkPN {}"),
+    "V": ("mkV {}", "irregV {}"),
+    "V2": ("mkV2 {}", "mkV2 (irregV {})"),
+    "V3": ("mkV3 {}", "mkV3 (irregV {}) \"to\""),
+    "VS": ("mkVS (regV {})", "mkVS (irregV {})"),
+    "VV": ("mkVV (regV {})", "mkVV (irregV {})")
+}
+
+verb_base2infls = {}
+for listpairs in [(V_trans_omissible, V_trans_omissible_pp),
+                  (V_trans_not_omissible, V_trans_not_omissible_pp),
+                  (V_unacc, V_unacc_pp),
+                  (V_dat, V_dat_pp)]:
+    for past, pastpart in zip(*listpairs):
+        verb_base2infls[verbs_lemmas[past]] = (past, pastpart)
+
+# missing irregular verbs
+verb_base2infls["say"] = ("said", "said")
+verb_base2infls["know"] = ("knew", "known")
+verb_base2infls["mean"] = ("meant", "meant")
+verb_base2infls["dream"] = ("dreamt", "dreamt")
+verb_base2infls["think"] = ("thought", "thought")
+verb_base2infls["hear"] = ("heard", "heard")
+verb_base2infls["sleep"] = ("slept", "slept")
+verb_base2infls["run"] = ("ran", "run")
+
+
+
+
+with open("CogsLexiconEng.gf", "w", encoding="utf-8") as f:
+    f.write("concrete CogsLexiconEng of CogsLexicon = CatEng ** " \
+            + "open ParadigmsEng, IrregEng, Prelude in {\n")
+    f.write("lin\n")
+    for wordclass, wordlist in lexs.items():
+        for word in wordlist:
+            if word in exclude:
+                continue
+            if wordclass.startswith("V") and word in verb_base2infls and \
+                    verb_base2infls[word][0] != word + "ed" and \
+                    verb_base2infls[word][0] != word[:-1] + "ed" and \
+                    verb_base2infls[word][0] != word + word[-1] + "ed":
+                forms = f'"{word}" "{verb_base2infls[word][0]}" "{verb_base2infls[word][1]}"'
+                linf = linfun[wordclass][1]
+            elif wordclass == "V3":
+                forms = f'"{word}" "to"' # all V3 (dative) verbs use the "to" preposition
+                linf = linfun[wordclass][0]
+            else:
+                forms = f'"{word}"'
+                linf = linfun[wordclass][0]
+            f.write(f"    {word.lower()}_{wordclass} \t\t= {linf.format(forms)} ;\n")
+        f.write("\n")
+
+    # structural words missing from gf-rgl/src/abstract/Structural.gf
+    f.write("    beside_Prep = mkPrep \"beside\" ;\n")
+
+    f.write("\n}\n")

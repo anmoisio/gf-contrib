@@ -1,0 +1,1 @@
+../cogs-from-orig/orig-data/cogs_lexicon.py
