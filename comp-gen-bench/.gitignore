@@ -1,3 +1,5 @@
 *.png
 __pycache__
 *.dot
+*.pdf
+parsed-*.txt
