@@ -1,25 +1,38 @@
 
-abstract Lang = 
+abstract Lang =
+
+    -- from abstract/Grammar.gf
     Noun,
     Verb, 
     Adjective,
     Adverb,
-    --   Numeral,
+    Numeral,
     Sentence, 
-    --   Question,
+    Question,
     Relative,
     Conjunction,
     Phrase,
     Text,
     Structural,
-    --   Idiom,
+    Idiom,
     Tense,
-    --   Names,
-    Transfer,
-    CogsLexicon
-    ** {
-flags startcat=S ;
+    Names,
+    -- Transfer,
 
-fun
-    PassV3   : V3 -> VP ; -- was given to him by a mailman
+    -- not in Grammar.gf
+    Extra,
+
+    -- from abstract/Lang.gf
+    -- Construction,
+    -- Documentation,
+    -- Markup - [stringMark],
+
+    -- from the cogs dataset
+    CogsLexicon
+
+    ** {
+flags startcat=Phr ;
+
+-- fun
+--     PassV3   : V3 -> VP ; -- was given to him by a mailman
 } ;

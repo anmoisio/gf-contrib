@@ -1,13 +1,26 @@
 
 concrete LangEng of Lang =
-    
-    NounEng - [AdvNP,ExtAdvNP,RelNP,ApposCN],
+
+    -- from english/GrammarEng.gf
+    NounEng - [
+        DetNP,
+        AdvCN,
+        ExtAdvNP,
+        RelNP,
+        ApposCN
+    ],
     VerbEng - [
-    -- AdvVPSlash would be need to modify a verb with a prep phrase
-    -- note that we're simplifying the language a lot when we get rid of
-    -- the scope ambiguity of adverbs
-        AdvVPSlash, 
-        VPSlashPrep,Slash3V3,ReflVP,UseComp,ExtAdvVP],
+        -- AdvVPSlash would be need to modify a verb with a prep phrase
+        -- note that we're simplifying the language a lot when we get rid of
+        -- the scope ambiguity of adverbs
+        AdvVPSlash,
+        PassV2,         -- replaced by PassVPSlash
+        VPSlashPrep,
+        Slash3V3,
+        ReflVP,
+        UseComp,
+        ExtAdvVP
+    ],
     AdjectiveEng,
     AdverbEng,
     -- NumeralEng,
@@ -24,6 +37,20 @@ concrete LangEng of Lang =
     -- IdiomEng,
     TenseX - [Pol,PPos,PNeg,SC,CAdv],
     -- NamesEng
+
+    -- not in Grammar.gf
+    ExtraEng [
+        PassVPSlash,
+        passVPSlash
+        -- ,PassAgentVPSlash
+    ],
+
+    -- from english/LangEng.gf
+    -- ConstructionEng,
+    -- DocumentationEng, --# notpresent
+    -- MarkupEng - [stringMark],
+
+    -- from the cogs dataset
     CogsLexiconEng
     ** open ResEng, Prelude in {
 
@@ -33,6 +60,6 @@ lin
     PPos = {s = [] ; p = CPos} ;
     PNeg = {s = [] ; p = CNeg True} ; -- contracted: don't
 
-    PassV3 v = insertObj (\\_ => v.s ! VPPart ++ v.p) (predAux auxBe) ;
+    -- PassV3 v = insertObj (\\_ => v.s ! VPPart ++ v.p) (predAux auxBe) ;
 
 } ;

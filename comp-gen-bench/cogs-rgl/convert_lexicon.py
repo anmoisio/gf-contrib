@@ -32,7 +32,8 @@ lexs = {
     "PN": sorted(list(set(PN))),
     "V": sorted(list(set(V))),
     "V2": sorted(list(set(V2))),
-    "V3": sorted(list(set(V3))),
+    "V3": sorted(list(set(V3))), # double object construction
+    "to_V3": sorted(list(set(V3))), # same as V3 but with "to" preposition
     "VS": sorted(list(set(VS))),
     "VV": sorted(list(set(VV)))
 }
@@ -48,12 +49,10 @@ with open("CogsLexicon.gf", "w", encoding="utf-8") as f:
         for word in wordlist:
             if word in exclude:
                 continue
-            f.write(f"    {word.lower()}_{wordclass} \t\t: {wordclass} ;\n")
+            f.write(f"    {word.lower()}_{wordclass} \t\t: {wordclass.split('_')[-1]} ;\n")
         f.write("\n")
-
-    # structural words missing from gf-rgl/src/abstract/Structural.gf
+    
     f.write("    beside_Prep : Prep ;\n")
-
     f.write("\n}\n")
 
 # concrete lexicon LexiconEng
@@ -64,7 +63,8 @@ linfun = { # strings that need to be formatted with the word
     "PN": ("mkPN {}", "mkPN {}"),
     "V": ("mkV {}", "irregV {}"),
     "V2": ("mkV2 {}", "mkV2 (irregV {})"),
-    "V3": ("mkV3 {}", "mkV3 (irregV {}) \"to\""),
+    "to_V3": ("mkV3 (regV {}) noPrep toP",    "mkV3 (irregV {}) noPrep toP"), # gave a bone to a dog
+    "V3":    ("mkV3 (regV {}) noPrep noPrep", "mkV3 (irregV {}) noPrep noPrep"), # gave a dog a bone
     "VS": ("mkVS (regV {})", "mkVS (irregV {})"),
     "VV": ("mkVV (regV {})", "mkVV (irregV {})")
 }
@@ -86,6 +86,8 @@ verb_base2infls["think"] = ("thought", "thought")
 verb_base2infls["hear"] = ("heard", "heard")
 verb_base2infls["sleep"] = ("slept", "slept")
 verb_base2infls["run"] = ("ran", "run")
+verb_base2infls["prefer"] = ("preferred", "preferred")
+verb_base2infls["shorten"] = ("shortened", "shortened")
 
 
 
@@ -98,22 +100,32 @@ with open("CogsLexiconEng.gf", "w", encoding="utf-8") as f:
         for word in wordlist:
             if word in exclude:
                 continue
-            if wordclass.startswith("V") and word in verb_base2infls and \
+            if any(wordclass.startswith(prefix) for prefix in ["to_V", "V"]) and \
+                    (word in verb_base2infls and \
                     verb_base2infls[word][0] != word + "ed" and \
-                    verb_base2infls[word][0] != word[:-1] + "ed" and \
-                    verb_base2infls[word][0] != word + word[-1] + "ed":
+                    verb_base2infls[word][0] != word[:-1] + "ed") or word == "shorten":
+                    # verb_base2infls[word][0] != word + word[-1] + "ed":
                 forms = f'"{word}" "{verb_base2infls[word][0]}" "{verb_base2infls[word][1]}"'
                 linf = linfun[wordclass][1]
-            elif wordclass == "V3":
-                forms = f'"{word}" "to"' # all V3 (dative) verbs use the "to" preposition
-                linf = linfun[wordclass][0]
             else:
                 forms = f'"{word}"'
                 linf = linfun[wordclass][0]
+
             f.write(f"    {word.lower()}_{wordclass} \t\t= {linf.format(forms)} ;\n")
         f.write("\n")
 
     # structural words missing from gf-rgl/src/abstract/Structural.gf
+
     f.write("    beside_Prep = mkPrep \"beside\" ;\n")
+
+    f.write("oper")
+    f.write('    aboutP = mkPrep "about" ;\n')
+    f.write('    atP = mkPrep "at" ;\n')
+    f.write('    forP = mkPrep "for" ;\n')
+    f.write('    fromP = mkPrep "from" ;\n')
+    f.write('    inP = mkPrep "in" ;\n')
+    f.write('    onP = mkPrep "on" ;\n')
+    f.write('    toP = mkPrep "to" ;\n')
+    f.write('    besideP = mkPrep "beside" ;\n')
 
     f.write("\n}\n")

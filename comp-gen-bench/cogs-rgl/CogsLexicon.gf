@@ -651,6 +651,27 @@ fun
     slip_V3 		: V3 ;
     wire_V3 		: V3 ;
 
+    award_to_V3 		: V3 ;
+    bring_to_V3 		: V3 ;
+    feed_to_V3 		: V3 ;
+    forward_to_V3 		: V3 ;
+    give_to_V3 		: V3 ;
+    hand_to_V3 		: V3 ;
+    lend_to_V3 		: V3 ;
+    loan_to_V3 		: V3 ;
+    mail_to_V3 		: V3 ;
+    offer_to_V3 		: V3 ;
+    pass_to_V3 		: V3 ;
+    post_to_V3 		: V3 ;
+    promise_to_V3 		: V3 ;
+    rent_to_V3 		: V3 ;
+    return_to_V3 		: V3 ;
+    sell_to_V3 		: V3 ;
+    send_to_V3 		: V3 ;
+    serve_to_V3 		: V3 ;
+    slip_to_V3 		: V3 ;
+    wire_to_V3 		: V3 ;
+
     admire_VS 		: VS ;
     appreciate_VS 		: VS ;
     believe_VS 		: VS ;
