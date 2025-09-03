@@ -81,13 +81,17 @@ for listpairs in [(V_trans_omissible, V_trans_omissible_pp),
 verb_base2infls["say"] = ("said", "said")
 verb_base2infls["know"] = ("knew", "known")
 verb_base2infls["mean"] = ("meant", "meant")
-verb_base2infls["dream"] = ("dreamt", "dreamt")
+# verb_base2infls["dream"] = ("dreamt", "dreamt") -- cogs uses dreamed so this is not needed
 verb_base2infls["think"] = ("thought", "thought")
 verb_base2infls["hear"] = ("heard", "heard")
 verb_base2infls["sleep"] = ("slept", "slept")
 verb_base2infls["run"] = ("ran", "run")
 verb_base2infls["prefer"] = ("preferred", "preferred")
+
+# shorten and redden need to be hadled as irregular because in ParadigmsEng.gf
+# all verbs ending in a consonant get the last consonant duplicated, e.g. shortenned
 verb_base2infls["shorten"] = ("shortened", "shortened")
+verb_base2infls["redden"] = ("reddened", "reddened")
 
 
 
