@@ -16,7 +16,6 @@ concrete LangEng of Lang =
         AdvVPSlash,
         PassV2,         -- replaced by PassVPSlash
         VPSlashPrep,
-        Slash3V3,
         ReflVP,
         UseComp,
         ExtAdvVP
