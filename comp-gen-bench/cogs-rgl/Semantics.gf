@@ -30,6 +30,7 @@ cat
     [Assert] {0} ;
     [Presup] {0} ;
     [Event] {0} ;
+    [Ind] {0} ;
 
     Verb ;
 
