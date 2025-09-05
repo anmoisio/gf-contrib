@@ -5,13 +5,13 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
 
     lincat
 
-        Prop = {s : Str ; asserts : [Assert] ; presups : [Presup] ; property : Str} ;
+        Prop = {s : Str ; events : [Event] ; presups : [Presup] ; asserts : [Assert] ; property : Str} ;
 
         -- GF book section 8.7 and blog post https://inariksit.github.io/gf/2021/02/22/lists.html
-        Assert, Presup      = {s : Str ; isEmpty : IsEmpty} ;
-        [Assert], [Presup]  = {s : Str ; isEmpty : IsEmpty } ;
+        Assert, Presup, Event           = {s : Str ; isEmpty : IsEmpty} ;
+        [Assert], [Presup], [Event]     = {s : Str ; isEmpty : IsEmpty } ;
 
-        Event, Utt, Adv, S, Ind, Verb, V, V2, V3, VS, A, N, PN, Tense, Ant  = {s : Str} ;
+        Utt, Adv, S, Ind, Verb, V, V2, V3, VS, A, N, PN, Tense, Ant  = {s : Str} ;
 
     oper
         mkListLin : Str -> (f,fs : {s : Str ; isEmpty : IsEmpty}) -> {s : Str ; isEmpty : IsEmpty} =
@@ -37,7 +37,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
                     isEmpty = NonEmpty}
                 BaseAssert ;
             presups = BasePresup ;
-            property = ""}
+            property = "" ;
+            events = BaseEvent}
             )
             ;
 
@@ -47,16 +48,32 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         ConsPresup = mkListLin ";" ;
 
         BaseAssert = {s = "" ; isEmpty = Empty} ;
-        ConsAssert = mkListLin "AND" ;
+        ConsAssert = mkListLin "∧" ;
 
-        -- todo: the startcategory should combine the events into the s field of Prop
-        -- ExistE f = {
-        --     s = "(" ++ "∃" ++ f.$0 ++ ")" ++ "(" ++ (mkListLin ";" f.presups f.asserts).s ++ ")" ;
-        --     asserts = BaseAssert ; presups = BasePresup ; property = ""} ;
+        BaseEvent = {s = "" ; isEmpty = Empty} ;
+        ConsEvent = mkListLin "." ;
+
+        -- Wrapper combines the quantifiers, assertions and presuppositions into the s field of Prop
+        Wrapper prop = {
+            s = "(" ++ "∃" ++ prop.events.s ++ ")" ++ "(" ++ (mkListLin ";" prop.presups prop.asserts).s ++ ")" ;
+            asserts = BaseAssert ; presups = BasePresup ; events = BaseEvent ; property = ""} ;
+
         ExistE f = {
-            s = "(" ++ "∃" ++ f.$0 ++ ")" ++ "(" ++ (mkListLin ";" f.presups f.asserts).s ++ ")" ;
-            asserts = f.asserts ; presups = f.presups ; property = ""} ;
-        Exist f = {s = "" ; asserts = f.asserts ; presups = f.presups ; property = ""} ;
+            s = "" ;
+            events = ConsEvent {s = f.$0 ; isEmpty = NonEmpty} (ConsEvent f.events BaseEvent) ;
+            asserts = f.asserts ;
+            presups = f.presups ;
+            property = ""
+        } ;
+
+        Exist f = {
+            s = "" ;
+            asserts = f.asserts ;
+            presups = f.presups ;
+            property = "" ;
+            events = f.events
+        } ;
+
         -- All f = {
         --     s = "" ;
         --     asserts = ConsAssert {s = "( ForAll" ++ f.$0 ++ ")" ++ "(" ++ f.s ++ ")" ; isEmpty = NonEmpty} BaseAssert ;
@@ -69,7 +86,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             s = "" ;
             asserts = BaseAssert ;
             presups = ConsPresup {s = "*" ++ n.property ++ "(" ++ x.s ++ ")" ; isEmpty = NonEmpty} BaseAssert ;
-            property = ""
+            property = "" ;
+            events = BaseEvent
         } ;
 
         
@@ -79,6 +97,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             asserts = ConsAssert {s = v.s ++ "( " ++ e.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
             property = "" ;
+            events = BaseEvent
             } ;
         V2Event = VEvent ;
         V3Event = VEvent ;
@@ -96,12 +115,14 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             asserts = ConsAssert {s = "Time ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
             property = "" ;
+            events = BaseEvent
             } ;
         Anteriority e t = {
             s = "" ;
             asserts = ConsAssert {s = "Anteriority ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
             property = "" ;
+            events = BaseEvent
             } ;
 
         -- Tense
@@ -117,7 +138,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             s = "" ;
             asserts = ConsAssert {s = n.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
-            property = n.s
+            property = n.s ;
+            events = BaseEvent
             } ;
 
         -- Flat conjunction with AND - combines presuppositions and assertions
@@ -125,7 +147,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             s = "" ;
             asserts = ConsAssert p.asserts (ConsAssert q.asserts BaseAssert) ;
             presups = ConsPresup p.presups (ConsPresup q.presups BasePresup) ;
-            property = "" ;
+            events = ConsEvent p.events (ConsEvent q.events BaseEvent) ;
+            property = ""
             } ;
         
         -- negation for propositions, enclose the assertions in NOT(...)
@@ -134,6 +157,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             asserts = ConsAssert {s = "NOT ( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
             presups = p.presups ;
             property = "" ;
+            events = p.events
             } ;
 
         -- If p q = { } ;
@@ -143,6 +167,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             asserts = ConsAssert {s = x.s ++ " == " ++ y.s ; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
             property = "" ;
+            events = BaseEvent
             } ;
 
 

@@ -23,14 +23,18 @@ abstract Semantics =
     
     Logic ** {
 
-flags startcat = Prop ;
+flags startcat = Wrapper ;
 
 cat
-    Assert ; Presup ;
+    Assert ; Presup ; 
     [Assert] {0} ;
     [Presup] {0} ;
+    [Event] {0} ;
 
     Verb ;
+
+-- needed in linearisation
+fun Wrapper : Prop -> Prop ;
 
 
 -- should polarity be an argument of clause or predicate?
