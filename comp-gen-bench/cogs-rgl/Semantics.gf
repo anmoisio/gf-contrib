@@ -1,4 +1,27 @@
-abstract Semantics = MiniGrammar, Logic ** {
+abstract Semantics = 
+    Noun,
+    Verb, 
+    Adjective,
+    Adverb,
+    Numeral,
+    Sentence, 
+    Question,
+    Relative,
+    Conjunction,
+    Phrase,
+    Text,
+    Structural,
+    Idiom,
+    Tense,
+    Names,
+    -- Transfer,
+
+    -- not in Grammar.gf
+    Extra,
+
+    CogsLexicon,
+    
+    Logic ** {
 
 flags startcat = Prop ;
 
@@ -15,23 +38,24 @@ fun
     V3Verb : V3 -> Verb ;
     VSVerb : VS -> Verb ;
 
-
 data
     -- Uniqueness operator for definite descriptions
     Unique : (Ind -> Prop) -> Ind -> Prop ;
 
     -- Thematic Role Predicates with dot notation structure
     Agent       : Verb -> Ind   -> Event -> Prop ;  -- e.g. "paint . agent ( e , x )"
+    AgentNew    :         Ind   -> Event -> Prop ;  -- just "agent ( e , x )"
     Theme       : Verb -> Ind   -> Event -> Prop ;
     Recipient   : V3 -> Ind     -> Event -> Prop ;
     Ccomp       : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
 
     Time        : Event -> Tense -> Prop ;
+    Anteriority : Event -> Ant   -> Prop ;
     
 
 -- should polarity be an argument of clause or predicate?
 fun iS : S -> Prop ;
-def iS (UseCl t p (PredVP np vp)) = ExistE (iTense t (iNP np (iPol p (iVP vp)))) ;
+def iS (UseCl (TTAnt t ant) p (PredVP np vp)) = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
 
 -- fun iCl : Pol -> Cl -> Event -> Prop ;
 -- def iCl p (PredVP np vp) = iNP np (iPol p (iVP vp)) ;
@@ -75,18 +99,16 @@ fun PNInd : PN -> Ind ;
 fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def iPN pn vp = \e -> vp (PNInd pn) e ;
 
+-- Tense adds a temporal predicate to the event property. Same for Ant.
 fun
     iTense : Tense -> (Event -> Prop) -> Event -> Prop ;
-    -- iPol   : Pol   -> (Event -> Prop) -> Event -> Prop ;
-    iPol : Pol   -> (Ind -> Event -> Prop) -> (Ind -> Event -> Prop) ;
+    iAnt : Ant -> (Event -> Prop) -> Event -> Prop ;
 def
-    -- Tense adds a temporal predicate to the event property. 
-    iTense t P = \e -> And (P e) (Time e t) ;
+    iTense t p = \e -> And (p e) (Time e t) ;
+    iAnt ant p = \e -> And (p e) (Anteriority e ant) ;
 
-    -- Polarity modifies the event property. 
-    -- iPol PPos P = P ;
-    -- iPol PNeg P = \e -> Not (P e) ;
-
+fun iPol : Pol   -> (Ind -> Event -> Prop) -> (Ind -> Event -> Prop) ;
+def
     -- Polarity over subject-indexed event properties (used before iNP)
     iPol PPos F = F ;
     iPol PNeg F = \x,e -> Not (F x e) ;
@@ -105,18 +127,38 @@ def
 fun iVP : VP -> Ind -> Event -> Prop ;
 def
     -- UseV applies the lexical verb's meaning directly.
-    iVP (UseV v) i = iV v i ;
+    iVP (UseV v) i = iVCaus v i ;
 
     -- The object NP takes the transitive verb as its scope.
     -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
     -- The result of `iNP np (...)` is the final Event -> Prop for the subject `i`.
-    iVP (ComplV2 v np) i                    = iNP np (\y -> iV2 v y i) ;
-    iVP (ComplV3 v np_dobj np_oobj) i       = iNP np_oobj (\z -> iNP np_dobj (\y -> iV3 v y z i)) ;
-    iVP (ComplPrepV3 v np_dobj np_oobj) i   = iNP np_oobj (\z -> iNP np_dobj (\y -> iV3 v y z i)) ;
+    -- iVP (ComplV2 v np) i                    = iNP np (\y -> iV2 v y i) ;
+    -- iVP (ComplV3 v np_dobj np_oobj) i       = iNP np_oobj (\z -> iNP np_dobj (\y -> iV3 v y z i)) ;
+    -- iVP (ComplPrepV3 v np_dobj np_oobj) i   = iNP np_oobj (\z -> iNP np_dobj (\y -> iV3 v y z i)) ;
+
+    iVP (ComplSlash (SlashV2a v2) np) i             = iNP np (\y -> iV2 v2 y i) ;
+    iVP (ComplSlash (Slash2V3 v3 np_do) np_oo) i    = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
+    -- np_oo and np_do switch places
+    iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) i    = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
+
+    -- passive voice
+    iVP (PassVPSlash (SlashV2a v2)) i   = iVIncho v2 i ;
+    iVP (AdvVP vp adv) i                = iAdv adv (iVP vp) i ;
 
     -- sentence as complement
     -- iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iPol p (iCl cl))) i ;
-    iVP (ComplVS vs (UseCl t p (PredVP np vp))) i = iVS vs (iTense t (iNP np (iPol p (iVP vp)))) i ;
+    iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) i = iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) i ;
+
+    -- verb as complement
+    -- iVP (ComplVV TODO)
+
+
+fun iAdv : Adv -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
+def
+    iAdv (PrepNP by8agent_Prep np) vpf i e = (iNP np (\y,e2 -> And (AgentNew y e2) (vpf i e2))) e ;
+
+
+
 
 fun iCN : CN -> Ind -> Prop ;
 def
@@ -132,11 +174,13 @@ fun iN : N -> Ind -> Prop ;
 -- a verb is a proposition about 1-3 individual(s) and an event
 -- Build a flat conjunction: paint.agent(e,subj) AND paint.theme(e,obj)
 fun
-    iV  : V  -> Ind                 -> Event -> Prop ;
-    iV2 : V2 -> Ind -> Ind          -> Event -> Prop ;
-    iV3 : V3 -> Ind -> Ind -> Ind   -> Event -> Prop ;
+    iVCaus  : V  -> Ind                 -> Event -> Prop ;
+    iVIncho : V2 -> Ind                 -> Event -> Prop ;
+    iV2     : V2 -> Ind -> Ind          -> Event -> Prop ;
+    iV3     : V3 -> Ind -> Ind -> Ind   -> Event -> Prop ;
 def
-    iV  v i e                = Agent (VVerb v) i e ;
+    iVCaus  v i e            = Agent (VVerb v) i e ;
+    iVIncho v i e            = Theme (V2Verb v) i e ;
     iV2 v obj subj e         = And (Agent (V2Verb v) subj e) (Theme (V2Verb v) obj e) ;
     iV3 v3 dobj oobj subj e  = And (And
         (Agent (V3Verb v3) subj e) (Theme (V3Verb v3) oobj e)) (Recipient v3 dobj e) ;
@@ -150,9 +194,5 @@ def
             (eprop e2)
         )) ;
 
--- fun iAdA : AdA -> (Ind -> Prop) -> Ind -> Prop ;
--- def
---     -- Adverbs modify adjective properties
---     iAdA ada prop = prop ; -- placeholder - needs specific adverb definitions
 
 }
