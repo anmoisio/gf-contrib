@@ -140,7 +140,7 @@ def
 
 fun iAdv : Adv -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
 def
-    iAdv (PrepNP by8agent_Prep np) vpf i e = (iNP np (\y,e2 -> And (Agent y e2) (vpf i e2))) e ;
+    iAdv (PrepNP by8agent_Prep np) vpf i = (iNP np (\y,e -> And (Agent y e) (vpf i e))) ;
 
 
 
