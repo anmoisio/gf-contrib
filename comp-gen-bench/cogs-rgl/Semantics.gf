@@ -50,8 +50,9 @@ def iS (UseCl (TTAnt t ant) p (PredVP np vp)) = ExistE (iTense t (iAnt ant (iNP 
 -- expression is a function that takes an event as its argument.
 fun iNP : NP -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
-    iNP (DetCN det cn) vp    = iDet det (iCN cn) vp ;
-    iNP (UsePN pn) vp        = (iPN pn) vp ;
+    iNP (DetCN det cn) = iDet det (iCN cn) ;
+    iNP (UsePN pn)     = iPN pn ;
+    iNP (AdvNP np pp)  = iPP pp (iNP np) ;
 
     -- NP conjunction creates a complex event property.                
     -- e.g., for "John and Mary ran", this yields                     
@@ -64,9 +65,9 @@ def
 -- (proposition that takes an individual and an event) combine into a proposition of event
 fun iDet : Det -> (Ind -> Prop) -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
-    iDet (DetQuant IndefArt NumSg) n vp  = \e -> Exist (\x -> And (n x) (vp x e)) ;
-    -- iDet every_Det n vp  = \e -> All   (\x -> If  (n x) (vp x e)) ;
-    iDet (DetQuant DefArt NumSg) n vp    = \e -> Exist (\x -> And
+    iDet (DetQuant IndefArt NumSg) n vpf  = \e -> Exist (\x -> And (n x) (vpf x e)) ;
+    -- iDet every_Det n vpf  = \e -> All   (\x -> If  (n x) (vpf x e)) ;
+    iDet (DetQuant DefArt NumSg) n vpf    = \e -> Exist (\x -> And
             -- (n x)
             -- (And (All (\y -> If (n y) (Equals y x)))
             --      (vp x e)
@@ -75,14 +76,19 @@ def
             -- using uniqueness operator instead of russelian description
             -- (Unique n x) -- causes "index too large" error because it's not eta-expanded
             (Unique (\z -> n z) x)
-            (vp x e)
+            (vpf x e)
         ) ;
 
 -- a proper noun (an individual) and a verb phrase
 -- (proposition that takes an individual and an event) combine into a proposition of event
 fun PNInd : PN -> Ind ;
 fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
-def iPN pn vp = \e -> vp (PNInd pn) e ;
+def iPN pn vpf = \e -> vpf (PNInd pn) e ;
+
+-- the same as iAdv, but prepositional phrases modifying a noun phrase
+-- the type of iNP is ((Ind -> Event -> Prop) -> Event -> Prop)
+fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) -> (Ind -> Event -> Prop) -> Event -> Prop ;
+def iPP (PrepNP prep np) npf vpf = npf (\x,e -> iNP np (\y,e -> And (vpf x e) (Nmod prep x y)) e) ;
 
 -- Tense adds a temporal predicate to the event property. Same for Ant.
 fun
@@ -117,13 +123,10 @@ def
     -- The object NP takes the transitive verb as its scope.
     -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
     -- The result of `iNP np (...)` is the final Event -> Prop for the subject `i`.
-    -- iVP (ComplV2 v np) i                    = iNP np (\y -> iV2 v y i) ;
-    -- iVP (ComplV3 v np_dobj np_oobj) i       = iNP np_oobj (\z -> iNP np_dobj (\y -> iV3 v y z i)) ;
-    -- iVP (ComplPrepV3 v np_dobj np_oobj) i   = iNP np_oobj (\z -> iNP np_dobj (\y -> iV3 v y z i)) ;
-
     iVP (ComplSlash (SlashV2a v2) np) i             = iNP np (\y -> iV2 v2 y i) ;
+
+    -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places; the have the same meaning
     iVP (ComplSlash (Slash2V3 v3 np_do) np_oo) i    = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
-    -- np_oo and np_do switch places
     iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) i    = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
 
     -- passive voice
@@ -131,23 +134,20 @@ def
     iVP (AdvVP vp adv) i                = iAdv adv (iVP vp) i ;
 
     -- sentence as complement
-    -- iVP (ComplVS vs (UseCl t p cl)) i = iVS vs (iTense t (iPol p (iCl cl))) i ;
-    iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) i = iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) i ;
+    iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) i =
+        iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) i ;
 
     -- verb as complement
     -- iVP (ComplVV TODO)
 
 
 fun iAdv : Adv -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
-def
-    iAdv (PrepNP by8agent_Prep np) vpf i = (iNP np (\y,e -> And (Agent y e) (vpf i e))) ;
-
+def iAdv (PrepNP by8agent_Prep np) vpf i = iNP np (\y,e -> And (Agent y e) (vpf i e)) ;
 
 
 
 fun iCN : CN -> Ind -> Prop ;
 def
-    -- Common noun properties remain properties of individuals. 
     iCN (UseN n) = iN n ;
     -- iCN (ModCN ap cn) i = And (iAP ap i) (iCN cn i) ;
 
@@ -193,10 +193,13 @@ fun
     -- Recipient   : V3 -> Ind     -> Event -> Prop ;
     -- Ccomp       : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
 
+    -- without verb and dot notation
     Agent    :  Ind   -> Event -> Prop ;  -- just "agent ( e , x )"
     Theme    :  Ind   -> Event -> Prop ;
     Recipient:  Ind   -> Event -> Prop ;
     Ccomp    :  Event -> Event -> Prop ;
+
+    Nmod      :  Prep -> Ind -> Ind -> Prop ;  -- e.g. "nmod . beside ( x , y )"
 
     Time        : Tense -> Event -> Prop ;
     Anteriority : Ant   -> Event -> Prop ;
