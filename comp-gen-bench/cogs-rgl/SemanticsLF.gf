@@ -65,6 +65,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         ConsInd = mkListLin "∃" ;
 
         -- Wrapper combines the quantifiers, assertions and presuppositions into the s field of Prop
+        -- Prop -> Prop
         Wrapper prop = {
             s = "(" ++ "∃" ++ prop.events.s ++ "∃" ++ prop.inds.s ++ ")" ++ "(" ++ (mkListLin ";" prop.presups prop.asserts).s ++ ")" ;
             asserts = BaseAssert ; presups = BasePresup ; events = BaseEvent ;
@@ -72,6 +73,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             property = ""} ;
 
         -- This is where the bound variables $0 are combined
+        -- (Event -> Prop) -> Prop
         ExistE f = {
             s = "" ;
             events = ConsEvent {s = f.$0 ; isEmpty = NonEmpty} (ConsEvent f.events BaseEvent) ;
@@ -81,6 +83,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             inds = f.inds
         } ;
 
+        -- (Ind -> Prop) -> Prop
         Exist f = {
             s = "" ;
             events = f.events ;
@@ -90,6 +93,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             property = ""
         } ;
 
+        -- -- (Ind -> Prop) -> Prop
         -- All f = {
         --     s = "" ;
         --     asserts = ConsAssert {s = "( ForAll" ++ f.$0 ++ ")" ++ "(" ++ f.s ++ ")" ; isEmpty = NonEmpty} BaseAssert ;
@@ -122,12 +126,15 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         VSEvent = VEvent ;
 
         -- Dot notation predicates
+        -- Ind   -> Event -> Prop
         Agent       = mkDotLin "Agent" ;
         Theme       = mkDotLin "Theme" ;
         Recipient   = mkDotLin "Recipient" ;
+        -- Event -> Event -> Prop
         Ccomp       = mkDotLin "Ccomp" ;
 
         -- Time predicate
+        -- Tense -> Event -> Prop
         Time t e = {
             s = "" ;
             asserts = ConsAssert {s = "Time ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
@@ -136,6 +143,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             events = BaseEvent ;
             inds = BaseInd
             } ;
+        -- Ant -> Event -> Prop
         Anteriority t e = {
             s = "" ;
             asserts = ConsAssert {s = "Anteriority ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
@@ -154,16 +162,18 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         AAnter = {s = "Anter"} ;
 
         -- Nouns
+        -- N -> Ind -> Prop
         iN n i = {
             s = "" ;
             asserts = ConsAssert {s = n.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
             property = n.s ;
             events = BaseEvent ;
-            inds = BaseEvent --ConsInd {s = i.s ; isEmpty = NonEmpty} BaseInd
+            inds = BaseInd --ConsInd {s = i.s ; isEmpty = NonEmpty} BaseInd
             } ;
 
         -- Flat conjunction with AND - combines presuppositions and assertions
+        -- Prop -> Prop -> Prop
         And p q = {
             s = "" ;
             asserts = ConsAssert p.asserts (ConsAssert q.asserts BaseAssert) ;
@@ -174,6 +184,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             } ;
         
         -- negation for propositions, enclose the assertions in NOT(...)
+        -- Prop -> Prop
         Not p = {
             s = "" ;
             asserts = ConsAssert {s = "NOT ( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
@@ -184,7 +195,9 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             } ;
 
         -- If p q = { } ;
-        
+        -- Or p q = { } ;
+
+        -- Ind -> Ind -> Prop
         Equals x y = {
             s = "" ;
             asserts = ConsAssert {s = x.s ++ " == " ++ y.s ; isEmpty = NonEmpty} BaseAssert ;
