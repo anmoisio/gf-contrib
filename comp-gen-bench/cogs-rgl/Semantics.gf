@@ -37,14 +37,9 @@ cat
 -- needed in linearisation
 fun Wrapper : Prop -> Prop ;
 
-
--- should polarity be an argument of clause or predicate?
+-- A sentence is a proposition.
 fun iS : S -> Prop ;
 def iS (UseCl (TTAnt t ant) p (PredVP np vp)) = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
-
--- fun iCl : Pol -> Cl -> Event -> Prop ;
--- def iCl p (PredVP np vp) = iNP np (iPol p (iVP vp)) ;
-
 
 -- After a noun phrase has combined with a verb phrase, the resulting
 -- expression is a function that takes an event as its argument.
@@ -61,34 +56,37 @@ def
     -- A simpler conjunction can also be defined.                     
     -- iNP (ConjNP conj x y) p = iConj_EP conj (iNP x p) (iNP y p) ;
 
--- a noun (proposition that takes an individual) and a verb phrase
--- (proposition that takes an individual and an event) combine into a proposition of event
+-- A noun (a proposition about an individual) and a verb phrase (a proposition about
+-- an individual and an event) combine into a proposition of event.
 fun iDet : Det -> (Ind -> Prop) -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
     iDet (DetQuant IndefArt NumSg) n vpf  = \e -> Exist (\x -> And (n x) (vpf x e)) ;
     -- iDet every_Det n vpf  = \e -> All   (\x -> If  (n x) (vpf x e)) ;
     iDet (DetQuant DefArt NumSg) n vpf    = \e -> Exist (\x -> And
+
+            -- Russelian description:
             -- (n x)
             -- (And (All (\y -> If (n y) (Equals y x)))
             --      (vp x e)
             -- )
 
-            -- using uniqueness operator instead of russelian description
+            -- Using uniqueness operator instead of Russelian description.
             -- (Unique n x) -- causes "index too large" error because it's not eta-expanded
             (Unique (\z -> n z) x)
             (vpf x e)
         ) ;
 
--- a proper noun (an individual) and a verb phrase
--- (proposition that takes an individual and an event) combine into a proposition of event
+-- Proper nouns are individuals, and they combine with verb phrases,
+-- similarly to nouns in iDet (only simpler).
 fun PNInd : PN -> Ind ;
 fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def iPN pn vpf = \e -> vpf (PNInd pn) e ;
 
--- the same as iAdv, but prepositional phrases modifying a noun phrase
--- the type of iNP is ((Ind -> Event -> Prop) -> Event -> Prop)
-fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) -> (Ind -> Event -> Prop) -> Event -> Prop ;
-def iPP (PrepNP prep np) npf vpf = npf (\x,e -> iNP np (\y,e -> And (vpf x e) (Nmod prep x y)) e) ;
+-- Same as iAdv, but prepositional phrases modifying a noun phrase.
+fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
+                  (Ind -> Event -> Prop) -> Event -> Prop ;
+def iPP (PrepNP prep np) npf vpf =
+    npf (\x,e -> iNP np (\y,e -> And (vpf x e) (Nmod prep x y)) e) ;
 
 -- Tense adds a temporal predicate to the event property. Same for Ant.
 fun
@@ -115,6 +113,9 @@ def
     iConj_EP and_Conj P Q = \e -> And (P e) (Q e) ;
     iConj_EP or_Conj  P Q = \e -> Or (P e) (Q e) ;
 
+
+-- A verb phrase is a function that takes an individual and returns a proposition about an event.
+-- Other individuals are introduced by calling iNP inside iVP.
 fun iVP : VP -> Ind -> Event -> Prop ;
 def
     -- UseV applies the lexical verb's meaning directly.
@@ -123,11 +124,11 @@ def
     -- The object NP takes the transitive verb as its scope.
     -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
     -- The result of `iNP np (...)` is the final Event -> Prop for the subject `i`.
-    iVP (ComplSlash (SlashV2a v2) np) i             = iNP np (\y -> iV2 v2 y i) ;
+    iVP (ComplSlash (SlashV2a v2) np) i = iNP np (\y -> iV2 v2 y i) ;
 
     -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places; the have the same meaning
-    iVP (ComplSlash (Slash2V3 v3 np_do) np_oo) i    = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
-    iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) i    = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
+    iVP (ComplSlash (Slash2V3 v3 np_do) np_oo) i = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
+    iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) i = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
 
     -- passive voice
     iVP (PassVPSlash (SlashV2a v2)) i   = iVIncho v2 i ;
@@ -140,20 +141,19 @@ def
     -- verb as complement
     -- iVP (ComplVV TODO)
 
-
+-- Adverbs modify verb phrases.
+-- In COGS the only adverb that modifies a verb phrase is "by" with an agent NP.
 fun iAdv : Adv -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
 def iAdv (PrepNP by8agent_Prep np) vpf i = iNP np (\y,e -> And (Agent y e) (vpf i e)) ;
 
 
-
+-- A noun is a proposition about an individual.
+-- (iCN is is kind of redundant when the only case is UseN.)
 fun iCN : CN -> Ind -> Prop ;
-def
-    iCN (UseN n) = iN n ;
-    -- iCN (ModCN ap cn) i = And (iAP ap i) (iCN cn i) ;
+def iCN (UseN n) = iN n ;
 
 
--- a verb is a proposition about 1-3 individual(s) and an event
--- Build a flat conjunction: paint.agent(e,subj) AND paint.theme(e,obj)
+-- A verb is a proposition about 1-3 individuals and an event
 fun
     iVCaus  : V  -> Ind                 -> Event -> Prop ;
     iVIncho : V2 -> Ind                 -> Event -> Prop ;
@@ -168,7 +168,9 @@ def
     iVCaus  v i e            = And (VEvent v e) (Agent i e) ;
     iVIncho v i e            = And (V2Event v e) (Theme i e) ;
     iV2 v obj subj e         = And (V2Event v e) (And (Agent subj e) (Theme obj e)) ;
-    iV3 v3 dobj oobj subj e  = And (V3Event v3 e) (And (Agent subj e) (And (Theme oobj e) (Recipient dobj e))) ;
+    iV3 v3 dobj oobj subj e  = And (V3Event v3 e) (And (Agent subj e) (And
+                                                       (Theme oobj e)
+                                                       (Recipient dobj e))) ;
 
 fun iVS : VS -> (Event -> Prop) -> Ind -> Event -> Prop ;
 def
