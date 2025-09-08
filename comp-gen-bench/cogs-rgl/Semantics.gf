@@ -26,11 +26,11 @@ abstract Semantics =
 flags startcat = Wrapper ;
 
 cat
-    Assert ; Presup ; 
+    Assert ; Presup ; Inds ; Events ;
     [Assert] {0} ;
     [Presup] {0} ;
-    [Event] {0} ;
-    [Ind] {0} ;
+    [Events] {0} ;
+    [Inds] {0} ;
 
     Verb ;
 
@@ -131,8 +131,9 @@ def
     iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) i = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
 
     -- passive voice
-    iVP (PassVPSlash (SlashV2a v2)) i   = iVIncho v2 i ;
-    iVP (AdvVP vp adv) i                = iAdv adv (iVP vp) i ;
+    iVP (PassVPSlash (SlashV2a v2)) i       = iVIncho v2 i ;
+    iVP (PassVPSlash (Slash3V3 v3 np_oo)) i = iNP np_oo (\z -> iV3Pass v3 z i) ;
+    iVP (AdvVP vp adv) i                    = iAdv adv (iVP vp) i ;
 
     -- sentence as complement
     iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) i =
@@ -143,6 +144,7 @@ def
 
 -- Adverbs modify verb phrases.
 -- In COGS the only adverb that modifies a verb phrase is "by" with an agent NP.
+-- To extend COGS, other adverbs could be added here.
 fun iAdv : Adv -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
 def iAdv (PrepNP by8agent_Prep np) vpf i = iNP np (\y,e -> And (Agent y e) (vpf i e)) ;
 
@@ -159,18 +161,21 @@ fun
     iVIncho : V2 -> Ind                 -> Event -> Prop ;
     iV2     : V2 -> Ind -> Ind          -> Event -> Prop ;
     iV3     : V3 -> Ind -> Ind -> Ind   -> Event -> Prop ;
+    iV3Pass : V3 -> Ind -> Ind          -> Event -> Prop ;
 def
     -- iVCaus  v i e            = Agent (VVerb v) i e ;
     -- iVIncho v i e            = Theme (V2Verb v) i e ;
     -- iV2 v obj subj e         = And (Agent (V2Verb v) subj e) (Theme (V2Verb v) obj e) ;
     -- iV3 v3 dobj oobj subj e  = And (And
-    --     (Agent (V3Verb v3) subj e) (Theme (V3Verb v3) oobj e)) (Recipient v3 dobj e) ;
+    --     (Agent (V3Verb v3) subj e) (Theme (V3Verb v3) dobj e)) (Recipient v3 oobj e) ;
     iVCaus  v i e            = And (VEvent v e) (Agent i e) ;
     iVIncho v i e            = And (V2Event v e) (Theme i e) ;
     iV2 v obj subj e         = And (V2Event v e) (And (Agent subj e) (Theme obj e)) ;
     iV3 v3 dobj oobj subj e  = And (V3Event v3 e) (And (Agent subj e) (And
-                                                       (Theme oobj e)
-                                                       (Recipient dobj e))) ;
+                                                       (Theme dobj e)
+                                                       (Recipient oobj e))) ;
+    iV3Pass v3 oobj dobj e  = And (V3Event v3 e) (And (Theme dobj e)
+                                                      (Recipient oobj e)) ;
 
 fun iVS : VS -> (Event -> Prop) -> Ind -> Event -> Prop ;
 def

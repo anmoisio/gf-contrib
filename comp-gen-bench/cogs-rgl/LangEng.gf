@@ -21,7 +21,9 @@ concrete LangEng of Lang =
         ExtAdvVP
     ],
     AdjectiveEng,
-    AdverbEng,
+    AdverbEng - [
+        SubjS -- SubjS  : Subj -> S -> Adv ; -- when she sleeps
+    ],
     -- NumeralEng,
     SentenceEng - [PredSCVP],
     -- QuestionEng,
