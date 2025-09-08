@@ -1,4 +1,4 @@
-abstract CogsLexicon = Cat ** {
+abstract CogsLexicon = Structural ** {
 fun
     tv_N 		: N ;
     baby_N 		: N ;

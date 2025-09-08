@@ -677,7 +677,7 @@ lin
     believe_VS 		= mkVS (regV "believe") ;
     confess_VS 		= mkVS (regV "confess") ;
     declare_VS 		= mkVS (regV "declare") ;
-    dream_VS 		= mkVS (irregV "dream" "dreamt" "dreamt") ;
+    dream_VS 		= mkVS (regV "dream") ;
     expect_VS 		= mkVS (regV "expect") ;
     hope_VS 		= mkVS (regV "hope") ;
     imagine_VS 		= mkVS (regV "imagine") ;
@@ -695,7 +695,7 @@ lin
 
     attempt_VV 		= mkVV (regV "attempt") ;
     crave_VV 		= mkVV (regV "crave") ;
-    dream_VV 		= mkVV (irregV "dream" "dreamt" "dreamt") ;
+    dream_VV 		= mkVV (regV "dream") ;
     enjoy_VV 		= mkVV (regV "enjoy") ;
     expect_VV 		= mkVV (regV "expect") ;
     hate_VV 		= mkVV (regV "hate") ;

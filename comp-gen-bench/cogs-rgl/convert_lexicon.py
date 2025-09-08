@@ -42,7 +42,7 @@ exclude = ["want"]
 
 # abstract lexicon
 with open("CogsLexicon.gf", "w", encoding="utf-8") as f:
-    f.write("abstract CogsLexicon = Cat ** {\n")
+    f.write("abstract CogsLexicon = Structural ** {\n")
     f.write("fun\n")
 
     for wordclass, wordlist in lexs.items():
@@ -133,3 +133,21 @@ with open("CogsLexiconEng.gf", "w", encoding="utf-8") as f:
     f.write('    besideP = mkPrep "beside" ;\n')
 
     f.write("\n}\n")
+
+
+
+##### for the logical forms
+with open("CogsLexiconLF.gf", "w", encoding="utf-8") as f:
+    f.write("concrete CogsLexiconLF of CogsLexicon = open Prelude in {\n")
+    f.write("lin\n")
+    for wordclass, wordlist in lexs.items():
+        for word in wordlist:
+            f.write(f'    {word.lower()}_{wordclass} \t\t= ss "{word}" ;\n')
+        f.write("\n")
+
+    f.write("    beside_Prep = ss \"beside\" ;\n")
+    f.write("    in_Prep = ss \"in\" ;\n")
+    f.write("    on_Prep = ss \"on\" ;\n")
+
+    f.write("\n}\n")
+
