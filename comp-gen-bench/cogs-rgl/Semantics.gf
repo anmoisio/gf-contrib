@@ -32,7 +32,6 @@ cat
     [Events] {0} ;
     [Inds] {0} ;
 
-    Verb ;
 
 -- needed in linearisation
 fun Wrapper : Prop -> Prop ;
@@ -86,7 +85,7 @@ def iPN pn vpf = \e -> vpf (PNInd pn) e ;
 fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
                   (Ind -> Event -> Prop) -> Event -> Prop ;
 def iPP (PrepNP prep np) npf vpf =
-    npf (\x,e -> iNP np (\y,e -> And (vpf x e) (Nmod prep x y)) e) ;
+    npf (\x,e -> iNP np (\y,e -> And (vpf x e) (iPrep prep x y)) e) ;
 
 -- Tense adds a temporal predicate to the event property. Same for Ant.
 fun
@@ -156,21 +155,22 @@ fun iCN : CN -> Ind -> Prop ;
 def iCN (UseN n) = iN n ;
 
 
--- A verb is a proposition about 1-3 individuals and an event
+-- A verb is combined with 1-3 individuals, an event, and sometimes a complement
 fun
-    iVCaus  : VUnerg -> Ind             -> Event -> Prop ;
-    iVIncho : VUnacc -> Ind             -> Event -> Prop ;
-    iV2     : V2 -> Ind -> Ind          -> Event -> Prop ;
-    iV3     : V3 -> Ind -> Ind -> Ind   -> Event -> Prop ;
-    iV2Pass : V2 -> Ind                 -> Event -> Prop ;
-    iV3Pass : V3 -> Ind -> Ind          -> Event -> Prop ;
+    iVCaus  : VUnerg -> Ind                 -> Event -> Prop ;
+    iVIncho : VUnacc -> Ind                 -> Event -> Prop ;
+    iV2     : V2 -> Ind -> Ind              -> Event -> Prop ;
+    iV3     : V3 -> Ind -> Ind -> Ind       -> Event -> Prop ;
+    iV2Pass : V2 -> Ind                     -> Event -> Prop ;
+    iV3Pass : V3 -> Ind -> Ind              -> Event -> Prop ;
+    iVS     : VS -> (Event -> Prop) -> Ind  -> Event -> Prop ;
 def
     -- iVCaus  v i e            = Agent (VVerb v) i e ;
     -- iVIncho v i e            = Theme (V2Verb v) i e ;
     -- iV2 v obj subj e         = And (Agent (V2Verb v) subj e) (Theme (V2Verb v) obj e) ;
     -- iV3 v3 dobj oobj subj e  = And (And
     --     (Agent (V3Verb v3) subj e) (Theme (V3Verb v3) dobj e)) (Recipient v3 oobj e) ;
-    iVCaus  v i e            = And (VUnergEvent v e) (Agent i e) ;
+    iVCaus v i e             = And (VUnergEvent v e) (Agent i e) ;
     iVIncho v i e            = And (VUnaccEvent v e) (Theme i e) ;
     iV2 v obj subj e         = And (V2Event v e) (And (Agent subj e) (Theme obj e)) ;
     iV3 v3 dobj oobj subj e  = And (V3Event v3 e) (And (Agent subj e) (And
@@ -179,10 +179,6 @@ def
     iV2Pass v i e            = And (V2Event v e) (Theme i e) ; -- same as iVIncho
     iV3Pass v3 oobj dobj e   = And (V3Event v3 e) (And (Theme dobj e)
                                                       (Recipient oobj e)) ;
-    
-
-fun iVS : VS -> (Event -> Prop) -> Ind -> Event -> Prop ;
-def
     iVS vs eprop subj e = And
         (And (VSEvent vs e) (Agent subj e))
         (ExistE (\e2 -> And
@@ -190,14 +186,12 @@ def
             (eprop e2)
         )) ;
 
--- interpretation stops at the following functions
 
+-- these could got to Logic.gf
 fun
     -- Uniqueness operator for definite descriptions
-    Unique : (Ind -> Prop) -> Ind -> Prop ;
+    Unique      : (Ind -> Prop) -> Ind -> Prop ;
 
-
-fun
     -- Thematic Role Predicates with dot notation structure
     -- Agent       : Verb -> Ind   -> Event -> Prop ;  -- e.g. "paint . agent ( e , x )"
     -- Theme       : Verb -> Ind   -> Event -> Prop ;
@@ -205,28 +199,30 @@ fun
     -- Ccomp       : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
 
     -- without verb and dot notation
-    Agent    :  Ind   -> Event -> Prop ;  -- just "agent ( e , x )"
-    Theme    :  Ind   -> Event -> Prop ;
-    Recipient:  Ind   -> Event -> Prop ;
-    Ccomp    :  Event -> Event -> Prop ;
-
-    Nmod      :  Prep -> Ind -> Ind -> Prop ;  -- e.g. "nmod . beside ( x , y )"
-
-    Time        : Tense -> Event -> Prop ;
-    Anteriority : Ant   -> Event -> Prop ;
+    Agent       : Ind   -> Event -> Prop ;  -- agent ( e , x )
+    Theme       : Ind   -> Event -> Prop ;
+    Recipient   : Ind   -> Event -> Prop ;
+    Ccomp       : Event -> Event -> Prop ;
 
 
--- verb is a proposition about an event
+-- interpretation stops at the lexical and morphological interpretation functions
+-- in COGS, the lexicon includes nouns, verbs, and prepositions
 fun
+    -- verb is a proposition about an event
     VUnergEvent : VUnerg    -> Event  -> Prop ;
     VUnaccEvent : VUnacc    -> Event  -> Prop ;
     V2Event     : V2        -> Event  -> Prop ;
     V3Event     : V3        -> Event  -> Prop ;
     VSEvent     : VS        -> Event  -> Prop ;
 
+    -- a noun is a proposition about an individual
+    iN : N -> Ind -> Prop ;
 
--- a noun is a proposition about an individual
-fun iN : N -> Ind -> Prop ;
+    -- prepositions are relations between individuals
+    iPrep : Prep -> Ind -> Ind -> Prop ;  -- e.g. "nmod . beside ( x , y )"
 
+    -- morphological features
+    Time        : Tense -> Event -> Prop ;
+    Anteriority : Ant   -> Event -> Prop ;
 
 }
