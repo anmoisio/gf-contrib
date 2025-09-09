@@ -79,7 +79,7 @@ def
 -- similarly to nouns in iDet (only simpler).
 fun PNInd : PN -> Ind ;
 fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
-def iPN pn vpf = \e -> vpf (PNInd pn) e ;
+def iPN pn vpf = vpf (PNInd pn) ;
 
 -- Same as iAdv, but prepositional phrases modifying a noun phrase.
 fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
@@ -89,17 +89,16 @@ def iPP (PrepNP prep np) npf vpf =
 
 -- Tense adds a temporal predicate to the event property. Same for Ant.
 fun
-    iTense : Tense -> (Event -> Prop) -> Event -> Prop ;
-    iAnt : Ant -> (Event -> Prop) -> Event -> Prop ;
+    iTense  : Tense -> (Event -> Prop) -> Event -> Prop ;
+    iAnt    : Ant   -> (Event -> Prop) -> Event -> Prop ;
 def
     iTense t p = \e -> And (p e) (Time t e) ;
     iAnt ant p = \e -> And (p e) (Anteriority ant e) ;
 
-fun iPol : Pol   -> (Ind -> Event -> Prop) -> (Ind -> Event -> Prop) ;
+fun iPol : Pol -> (Ind -> Event -> Prop) -> (Ind -> Event -> Prop) ;
 def
-    -- Polarity over subject-indexed event properties (used before iNP)
-    iPol PPos F = F ;
-    iPol PNeg F = \x,e -> Not (F x e) ;
+    iPol PPos vpf = vpf ;
+    iPol PNeg vpf = \i,e -> Not (vpf i e) ;
 
 -- Conjunction for propositions (S) and event properties (NP) 
 fun iConj : Conj -> Prop -> Prop -> Prop ;
@@ -118,35 +117,35 @@ def
 fun iVP : VP -> Ind -> Event -> Prop ;
 def
     -- UseV applies the lexical verb's meaning directly.
-    iVP (UseV (VUnergV v)) i = iVCaus v i ;
-    iVP (UseV (VUnaccV v)) i = iVIncho v i ;
+    iVP (UseV (VUnergV v)) = iVCaus v ;
+    iVP (UseV (VUnaccV v)) = iVIncho v ;
 
     -- The object NP takes the transitive verb as its scope.
     -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
     -- The result of `iNP np (...)` is the final Event -> Prop for the subject `i`.
-    iVP (ComplSlash (SlashV2a v2) np) i = iNP np (\y -> iV2 v2 y i) ;
+    iVP (ComplSlash (SlashV2a v2) np) = \i -> iNP np (\y -> iV2 v2 y i) ;
 
     -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places; the have the same meaning
-    iVP (ComplSlash (Slash2V3 v3 np_do) np_oo) i = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
-    iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) i = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
+    iVP (ComplSlash (Slash2V3 v3 np_do) np_oo) = \i -> iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
+    iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) = \i -> iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
 
     -- passive voice
-    iVP (PassVPSlash (SlashV2a v2)) i       = iV2Pass v2 i ;
-    iVP (PassVPSlash (Slash3V3 v3 np_oo)) i = iNP np_oo (\z -> iV3Pass v3 z i) ;
-    iVP (AdvVP vp adv) i                    = iAdv adv (iVP vp) i ;
+    iVP (PassVPSlash (SlashV2a v2))       = iV2Pass v2 ;
+    iVP (PassVPSlash (Slash3V3 v3 np_oo)) = \i -> iNP np_oo (\z -> iV3Pass v3 z i) ;
+    iVP (AdvVP vp adv)                    = iAdv adv (iVP vp) ;
 
     -- sentence as complement
-    iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) i =
-        iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) i ;
+    iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) =
+        iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
 
     -- verb as complement
-    -- iVP (ComplVV TODO)
+    -- iVP (ComplVV vv vp) = iVV vv (iVP vp) ;
 
 -- Adverbs modify verb phrases.
 -- In COGS the only adverb that modifies a verb phrase is "by" with an agent NP.
 -- To extend COGS, other adverbs could be added here.
 fun iAdv : Adv -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
-def iAdv (PrepNP by8agent_Prep np) vpf i = iNP np (\y,e -> And (Agent y e) (vpf i e)) ;
+def iAdv (PrepNP by8agent_Prep np) vpf = \i -> iNP np (\y,e -> And (Agent y e) (vpf i e)) ;
 
 
 -- A noun is a proposition about an individual.
@@ -157,13 +156,14 @@ def iCN (UseN n) = iN n ;
 
 -- A verb is combined with 1-3 individuals, an event, and sometimes a complement
 fun
-    iVCaus  : VUnerg -> Ind                 -> Event -> Prop ;
-    iVIncho : VUnacc -> Ind                 -> Event -> Prop ;
-    iV2     : V2 -> Ind -> Ind              -> Event -> Prop ;
-    iV3     : V3 -> Ind -> Ind -> Ind       -> Event -> Prop ;
-    iV2Pass : V2 -> Ind                     -> Event -> Prop ;
-    iV3Pass : V3 -> Ind -> Ind              -> Event -> Prop ;
-    iVS     : VS -> (Event -> Prop) -> Ind  -> Event -> Prop ;
+    iVCaus  : VUnerg -> Ind                         -> Event -> Prop ;
+    iVIncho : VUnacc -> Ind                         -> Event -> Prop ;
+    iV2     : V2 -> Ind -> Ind                      -> Event -> Prop ;
+    iV3     : V3 -> Ind -> Ind -> Ind               -> Event -> Prop ;
+    iV2Pass : V2 -> Ind                             -> Event -> Prop ;
+    iV3Pass : V3 -> Ind -> Ind                      -> Event -> Prop ;
+    -- iVV     : VV -> (Ind -> Event -> Prop) -> Ind   -> Event -> Prop ;
+    iVS     : VS -> (Event -> Prop) -> Ind          -> Event -> Prop ;
 def
     -- iVCaus  v i e            = Agent (VVerb v) i e ;
     -- iVIncho v i e            = Theme (V2Verb v) i e ;
