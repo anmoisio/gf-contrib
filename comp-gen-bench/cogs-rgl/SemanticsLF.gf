@@ -129,6 +129,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         V2Event = VUnergEvent ;
         V3Event = VUnergEvent ;
         VSEvent = VUnergEvent ;
+        VVEvent = VUnergEvent ;
 
         -- Dot notation predicates
         -- Ind   -> Event -> Prop
@@ -138,6 +139,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         Recipient   = mkDotLin "Recipient" ;
         -- Event -> Event -> Prop
         Ccomp       = mkDotLin "Ccomp" ;
+        Xcomp       = mkDotLin "Xcomp" ;
 
         -- Prep -> Ind -> Ind -> Prop ;
         Nmod prep a_cat on_a_mat = mkDotLin ("Nmod" ++ "." ++ prep.s) on_a_mat a_cat ;

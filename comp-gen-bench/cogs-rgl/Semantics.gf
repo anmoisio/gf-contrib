@@ -139,7 +139,7 @@ def
         iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
 
     -- verb as complement
-    -- iVP (ComplVV vv vp) = iVV vv (iVP vp) ;
+    iVP (ComplVV vv vp) = iVV vv (iVP vp) ;
 
 -- Adverbs modify verb phrases.
 -- In COGS the only adverb that modifies a verb phrase is "by" with an agent NP.
@@ -162,7 +162,7 @@ fun
     iV3     : V3 -> Ind -> Ind -> Ind               -> Event -> Prop ;
     iV2Pass : V2 -> Ind                             -> Event -> Prop ;
     iV3Pass : V3 -> Ind -> Ind                      -> Event -> Prop ;
-    -- iVV     : VV -> (Ind -> Event -> Prop) -> Ind   -> Event -> Prop ;
+    iVV     : VV -> (Ind -> Event -> Prop) -> Ind   -> Event -> Prop ;
     iVS     : VS -> (Event -> Prop) -> Ind          -> Event -> Prop ;
 def
     -- iVCaus  v i e            = Agent (VVerb v) i e ;
@@ -170,16 +170,20 @@ def
     -- iV2 v obj subj e         = And (Agent (V2Verb v) subj e) (Theme (V2Verb v) obj e) ;
     -- iV3 v3 dobj oobj subj e  = And (And
     --     (Agent (V3Verb v3) subj e) (Theme (V3Verb v3) dobj e)) (Recipient v3 oobj e) ;
-    iVCaus v i e             = And (VUnergEvent v e) (Agent i e) ;
-    iVIncho v i e            = And (VUnaccEvent v e) (Theme i e) ;
-    iV2 v obj subj e         = And (V2Event v e) (And (Agent subj e) (Theme obj e)) ;
-    iV3 v3 dobj oobj subj e  = And (V3Event v3 e) (And (Agent subj e) (And
+    iVCaus v i e            = And (VUnergEvent v e) (Agent i e) ;
+    iVIncho v i e           = And (VUnaccEvent v e) (Theme i e) ;
+    iV2 v obj subj e        = And (V2Event v e) (And (Agent subj e) (Theme obj e)) ;
+    iV3 v3 dobj oobj subj e = And (V3Event v3 e) (And (Agent subj e) (And
                                                        (Theme dobj e)
                                                        (Recipient oobj e))) ;
-    iV2Pass v i e            = And (V2Event v e) (Theme i e) ; -- same as iVIncho
-    iV3Pass v3 oobj dobj e   = And (V3Event v3 e) (And (Theme dobj e)
+    iV2Pass v i e           = And (V2Event v e) (Theme i e) ; -- same as iVIncho
+    iV3Pass v3 oobj dobj e  = And (V3Event v3 e) (And (Theme dobj e)
                                                       (Recipient oobj e)) ;
-    iVS vs eprop subj e = And
+    iVV vv vpf subj e       = And (VVEvent vv e) (ExistE (\e2 -> And  
+                                                                    (Xcomp e2 e)
+                                                                    (vpf subj e2)
+                                                                )) ;
+    iVS vs eprop subj e     = And
         (And (VSEvent vs e) (Agent subj e))
         (ExistE (\e2 -> And
             (Ccomp e2 e)
@@ -203,6 +207,7 @@ fun
     Theme       : Ind   -> Event -> Prop ;
     Recipient   : Ind   -> Event -> Prop ;
     Ccomp       : Event -> Event -> Prop ;
+    Xcomp       : Event -> Event -> Prop ;
 
 
 -- interpretation stops at the lexical and morphological interpretation functions
@@ -213,6 +218,7 @@ fun
     VUnaccEvent : VUnacc    -> Event  -> Prop ;
     V2Event     : V2        -> Event  -> Prop ;
     V3Event     : V3        -> Event  -> Prop ;
+    VVEvent     : VV        -> Event  -> Prop ;
     VSEvent     : VS        -> Event  -> Prop ;
 
     -- a noun is a proposition about an individual
