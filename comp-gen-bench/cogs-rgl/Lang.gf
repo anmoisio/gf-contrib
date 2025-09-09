@@ -11,7 +11,7 @@ abstract Lang =
     Question,
     Relative,
     Conjunction,
-    Phrase,
+    -- Phrase,
     Text,
     Structural,
     Idiom,
@@ -28,11 +28,10 @@ abstract Lang =
     -- Markup - [stringMark],
 
     -- from the cogs dataset
+    Cogs,
     CogsLexicon
 
     ** {
-flags startcat=Phr ;
+flags startcat=S ;
 
--- fun
---     PassV3   : V3 -> VP ; -- was given to him by a mailman
 } ;

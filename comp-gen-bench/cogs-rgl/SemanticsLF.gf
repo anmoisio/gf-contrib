@@ -18,7 +18,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         Assert, Presup, Inds, Events           = {s : Str ; isEmpty : IsEmpty} ;
         [Assert], [Presup], [Inds], [Events]   = {s : Str ; isEmpty : IsEmpty } ;
 
-        Utt, Adv, S, Verb, V, V2, V3, VV, VS, A, N, PN, Prep, Tense, Ant, Ind, Event  = {s : Str} ;
+        S, Adv, Verb, V, V2, V3, VV, VS, A, N, PN, Prep, Tense, Ant, Ind, Event = {s : Str} ;
+        VUnerg, VUnacc = {s : Str} ;
 
     oper
         mkListLin : Str -> (f,fs : {s : Str ; isEmpty : IsEmpty}) -> {s : Str ; isEmpty : IsEmpty} =
@@ -59,18 +60,21 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         ConsAssert = mkListLin "∧" ;
 
         BaseEvents = {s = "" ; isEmpty = Empty} ;
-        ConsEvents = mkListLin "∃" ;
+        ConsEvents = mkListLin "," ;
 
         BaseInds = {s = "" ; isEmpty = Empty} ;
-        ConsInds = mkListLin "∃" ;
+        ConsInds = mkListLin "," ;
 
         -- Wrapper combines the quantifiers, assertions and presuppositions into the s field of Prop
         -- Prop -> Prop
         Wrapper prop = {
             s = "(" ++ "∃" ++ prop.events.s ++ "∃" ++ prop.inds.s ++ ")" ++ "(" ++ (mkListLin ";" prop.presups prop.asserts).s ++ ")" ;
-            asserts = BaseAssert ; presups = BasePresup ; events = BaseEvents ;
+            asserts = BaseAssert ;
+            presups = BasePresup ;
+            events = BaseEvents ;
             inds = BaseInds ;
-            property = ""} ;
+            property = ""
+        } ;
 
         -- This is where the bound variables $0 are combined
         -- (Event -> Prop) -> Prop
@@ -113,7 +117,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
 
         
         -- V  -> Event  -> Prop ;
-        VEvent v e = {
+        VUnergEvent v e = {
             s = "" ;
             asserts = ConsAssert {s = v.s ++ "( " ++ e.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
@@ -121,9 +125,10 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             events = BaseEvents ;
             inds = BaseInds
             } ;
-        V2Event = VEvent ;
-        V3Event = VEvent ;
-        VSEvent = VEvent ;
+        VUnaccEvent = VUnergEvent ;
+        V2Event = VUnergEvent ;
+        V3Event = VUnergEvent ;
+        VSEvent = VUnergEvent ;
 
         -- Dot notation predicates
         -- Ind   -> Event -> Prop

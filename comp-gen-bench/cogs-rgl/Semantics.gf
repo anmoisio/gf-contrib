@@ -119,7 +119,8 @@ def
 fun iVP : VP -> Ind -> Event -> Prop ;
 def
     -- UseV applies the lexical verb's meaning directly.
-    iVP (UseV v) i = iVCaus v i ;
+    iVP (UseV (VUnergV v)) i = iVCaus v i ;
+    iVP (UseV (VUnaccV v)) i = iVIncho v i ;
 
     -- The object NP takes the transitive verb as its scope.
     -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
@@ -131,7 +132,7 @@ def
     iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) i = iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
 
     -- passive voice
-    iVP (PassVPSlash (SlashV2a v2)) i       = iVIncho v2 i ;
+    iVP (PassVPSlash (SlashV2a v2)) i       = iV2Pass v2 i ;
     iVP (PassVPSlash (Slash3V3 v3 np_oo)) i = iNP np_oo (\z -> iV3Pass v3 z i) ;
     iVP (AdvVP vp adv) i                    = iAdv adv (iVP vp) i ;
 
@@ -157,10 +158,11 @@ def iCN (UseN n) = iN n ;
 
 -- A verb is a proposition about 1-3 individuals and an event
 fun
-    iVCaus  : V  -> Ind                 -> Event -> Prop ;
-    iVIncho : V2 -> Ind                 -> Event -> Prop ;
+    iVCaus  : VUnerg -> Ind             -> Event -> Prop ;
+    iVIncho : VUnacc -> Ind             -> Event -> Prop ;
     iV2     : V2 -> Ind -> Ind          -> Event -> Prop ;
     iV3     : V3 -> Ind -> Ind -> Ind   -> Event -> Prop ;
+    iV2Pass : V2 -> Ind                 -> Event -> Prop ;
     iV3Pass : V3 -> Ind -> Ind          -> Event -> Prop ;
 def
     -- iVCaus  v i e            = Agent (VVerb v) i e ;
@@ -168,14 +170,16 @@ def
     -- iV2 v obj subj e         = And (Agent (V2Verb v) subj e) (Theme (V2Verb v) obj e) ;
     -- iV3 v3 dobj oobj subj e  = And (And
     --     (Agent (V3Verb v3) subj e) (Theme (V3Verb v3) dobj e)) (Recipient v3 oobj e) ;
-    iVCaus  v i e            = And (VEvent v e) (Agent i e) ;
-    iVIncho v i e            = And (V2Event v e) (Theme i e) ;
+    iVCaus  v i e            = And (VUnergEvent v e) (Agent i e) ;
+    iVIncho v i e            = And (VUnaccEvent v e) (Theme i e) ;
     iV2 v obj subj e         = And (V2Event v e) (And (Agent subj e) (Theme obj e)) ;
     iV3 v3 dobj oobj subj e  = And (V3Event v3 e) (And (Agent subj e) (And
                                                        (Theme dobj e)
                                                        (Recipient oobj e))) ;
-    iV3Pass v3 oobj dobj e  = And (V3Event v3 e) (And (Theme dobj e)
+    iV2Pass v i e            = And (V2Event v e) (Theme i e) ; -- same as iVIncho
+    iV3Pass v3 oobj dobj e   = And (V3Event v3 e) (And (Theme dobj e)
                                                       (Recipient oobj e)) ;
+    
 
 fun iVS : VS -> (Event -> Prop) -> Ind -> Event -> Prop ;
 def
@@ -214,10 +218,11 @@ fun
 
 -- verb is a proposition about an event
 fun
-    VEvent  : V  -> Event  -> Prop ;
-    V2Event : V2 -> Event  -> Prop ;
-    V3Event : V3 -> Event  -> Prop ;
-    VSEvent : VS -> Event  -> Prop ;
+    VUnergEvent : VUnerg    -> Event  -> Prop ;
+    VUnaccEvent : VUnacc    -> Event  -> Prop ;
+    V2Event     : V2        -> Event  -> Prop ;
+    V3Event     : V3        -> Event  -> Prop ;
+    VSEvent     : VS        -> Event  -> Prop ;
 
 
 -- a noun is a proposition about an individual

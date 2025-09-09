@@ -29,7 +29,7 @@ concrete LangEng of Lang =
     -- QuestionEng,
     RelativeEng,
     ConjunctionEng,
-    PhraseEng,
+    -- PhraseEng,
     TextX - [Pol,PPos,PNeg,SC,CAdv],
     StructuralEng - [
         -- want_VV,
@@ -52,7 +52,9 @@ concrete LangEng of Lang =
     -- MarkupEng - [stringMark],
 
     -- from the cogs dataset
+    CogsEng,
     CogsLexiconEng
+
     ** open ResEng, Prelude in {
 
 flags startcat = Phr ; unlexer = text ; lexer = text ;
@@ -60,7 +62,5 @@ flags startcat = Phr ; unlexer = text ; lexer = text ;
 lin
     PPos = {s = [] ; p = CPos} ;
     PNeg = {s = [] ; p = CNeg True} ; -- contracted: don't
-
-    -- PassV3 v = insertObj (\\_ => v.s ! VPPart ++ v.p) (predAux auxBe) ;
 
 } ;

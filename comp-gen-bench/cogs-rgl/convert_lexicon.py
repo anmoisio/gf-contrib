@@ -5,16 +5,18 @@ from cogs_lexicon import *
 
 N = animate_nouns + inanimate_nouns + on_nouns + in_nouns + beside_nouns
 PN = proper_nouns
-pastV = V_trans_omissible + V_unacc + V_unerg
+pastV_unerg = V_trans_omissible + V_unerg
+pastV_unacc = V_unacc
 pastV2 = V_trans_omissible + V_trans_not_omissible + V_unacc
 pastV3 = V_dat
 pastVS = V_cp_taking
 pastVV = V_inf_taking
 
-V = V_inf
-
-V2, V3, VS, VV = [], [], [], []
-for word_list, lemma_word_list in zip([pastV, pastV2, pastV3, pastVS, pastVV], [V, V2, V3, VS, VV]):
+VUnerg = V_inf
+VUnacc, V2, V3, VS, VV = [], [], [], [], []
+for word_list, lemma_word_list in zip(
+        [pastV_unerg, pastV_unacc, pastV2, pastV3, pastVS, pastVV],
+        [VUnerg, VUnacc, V2, V3, VS, VV]):
     for word in word_list:
         lemma_word_list.append(verbs_lemmas[word])
     print("------")
@@ -22,7 +24,7 @@ for word_list, lemma_word_list in zip([pastV, pastV2, pastV3, pastVS, pastVV], [
         print(w)
 
 # missing from cogs_lexicon
-V.append("bake")
+VUnerg.append("bake")
 V2.append("bake")
 verbs_lemmas["baked"] = "bake"
 
@@ -30,7 +32,12 @@ verbs_lemmas["baked"] = "bake"
 lexs = {
     "N": sorted(list(set(N))),
     "PN": sorted(list(set(PN))),
-    "V": sorted(list(set(V))),
+    # unaccusative: e.g. burn. All of these are also V2s in COGS (even though not generally
+    # in English, e.g. arrive, happen, die).
+    # Unaccusatives have different semantics than unergative verbs like "run", namely they
+    # are the Patient/Theme instead of the Agent of the action.
+    "VUnacc": sorted(list(set(VUnacc))),
+    "VUnerg": sorted(list(set(VUnerg))), # unergative: e.g. run
     "V2": sorted(list(set(V2))),
     "V3": sorted(list(set(V3))), # double object construction
     "to_V3": sorted(list(set(V3))), # same as V3 but with "to" preposition
@@ -42,7 +49,7 @@ exclude = ["want"]
 
 # abstract lexicon
 with open("CogsLexicon.gf", "w", encoding="utf-8") as f:
-    f.write("abstract CogsLexicon = Structural ** {\n")
+    f.write("abstract CogsLexicon = Cogs, Structural ** {\n")
     f.write("fun\n")
 
     for wordclass, wordlist in lexs.items():
@@ -51,7 +58,7 @@ with open("CogsLexicon.gf", "w", encoding="utf-8") as f:
                 continue
             f.write(f"    {word.lower()}_{wordclass} \t\t: {wordclass.split('_')[-1]} ;\n")
         f.write("\n")
-    
+
     f.write("    beside_Prep : Prep ;\n")
     f.write("\n}\n")
 
@@ -61,7 +68,8 @@ linfun = { # strings that need to be formatted with the word
     # constructors for regular and irregular verbs
     "N": ("mkN {}", "mkN {}"),
     "PN": ("mkPN {}", "mkPN {}"),
-    "V": ("mkV {}", "irregV {}"),
+    "VUnacc": ("mkV {}", "irregV {}"),
+    "VUnerg": ("mkV {}", "irregV {}"),
     "V2": ("mkV2 {}", "mkV2 (irregV {})"),
     "to_V3": ("mkV3 (regV {}) noPrep toP",    "mkV3 (irregV {}) noPrep toP"), # gave a bone to a dog
     "V3":    ("mkV3 (regV {}) noPrep noPrep", "mkV3 (irregV {}) noPrep noPrep"), # gave a dog a bone
@@ -97,7 +105,7 @@ verb_base2infls["redden"] = ("reddened", "reddened")
 
 
 with open("CogsLexiconEng.gf", "w", encoding="utf-8") as f:
-    f.write("concrete CogsLexiconEng of CogsLexicon = CatEng ** " \
+    f.write("concrete CogsLexiconEng of CogsLexicon = CogsEng ** " \
             + "open ParadigmsEng, IrregEng, Prelude in {\n")
     f.write("lin\n")
     for wordclass, wordlist in lexs.items():
@@ -150,4 +158,3 @@ with open("CogsLexiconLF.gf", "w", encoding="utf-8") as f:
     f.write("    on_Prep = ss \"on\" ;\n")
 
     f.write("\n}\n")
-
