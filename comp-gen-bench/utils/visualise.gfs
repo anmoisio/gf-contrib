@@ -8,4 +8,5 @@ i LangEng.gf
 -- parse "the girl offered the weapon beside a machine to a chicken" | visualize_parse -view=eog
 -- parse "Liam liked that the cake was tossed by Ava" | visualize_parse -view=eog
 -- p "a girl gave a boy a book" | visualize_parse -view=eog
-p "Sebastian gave a rose beside a stage to Mason" | visualize_parse -view=eog
+-- p "Sebastian gave a rose beside a stage to Mason" | visualize_parse -view=eog
+p "a boy was given a book by a girl" | visualize_parse -view=eog
