@@ -24,7 +24,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
     oper
         mkListLin : Str -> (f,fs : {s : Str ; isEmpty : IsEmpty}) -> {s : Str ; isEmpty : IsEmpty} =
             \separ,f,fs ->
-            lin Assert (
+            -- lin Assert (
             let
                 sep : Str = case <f.isEmpty,fs.isEmpty> of {
                                 <_,Empty> => "" ;
@@ -34,7 +34,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
                                 <Empty,Empty> => Empty ;
                                 <_,_> => NonEmpty } ;
             in  {s = f.s ++ sep ++ fs.s ; isEmpty = emptiness}
-            )
+            -- )
             ;
         
         mkDotLin : Str -> (i,e : {s : Str}) -> Prop = \dotstr,i,e ->
@@ -69,10 +69,16 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- Prop -> Prop
         Wrapper prop = {
             s = "(" ++ "∃" ++ prop.events.s ++ "∃" ++ prop.inds.s ++ ")" ++ "(" ++ (mkListLin ";" prop.presups prop.asserts).s ++ ")" ;
-            asserts = BaseAssert ;
-            presups = BasePresup ;
-            events = BaseEvents ;
-            inds = BaseInds ;
+
+            -- copying the fields is much faster than reconstructing the lists, for some reason
+            -- asserts = BaseAssert ;
+            -- presups = BasePresup ;
+            -- events = BaseEvents ;
+            -- inds = BaseInds ;
+            asserts = prop.asserts ;
+            presups = prop.presups ;
+            events = prop.events ;
+            inds = prop.inds ;
             property = ""
         } ;
 
@@ -109,17 +115,20 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         Unique n x = {
             s = "" ;
             asserts = BaseAssert ;
-            presups = ConsPresup {s = "*" ++ n.property ++ "(" ++ x.s ++ ")" ; isEmpty = NonEmpty} BaseAssert ;
+            -- equal to "ConsPresup newPresup BasePresup" but quicker maybe?
+            presups = lin ListPresup ({s = "*" ++ n.property ++ "(" ++ x.s ++ ")" ; isEmpty = NonEmpty}) ;
+            -- presups = ConsPresup {s = "*" ++ n.property ++ "(" ++ x.s ++ ")" ; isEmpty = NonEmpty} BasePresup ;
             property = "" ;
             events = BaseEvents ;
-            inds = BaseInds -- should this include x?
+            inds = BaseInds
         } ;
 
         
         -- V  -> Event  -> Prop ;
         VUnergEvent v e = {
             s = "" ;
-            asserts = ConsAssert {s = v.s ++ "( " ++ e.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
+            asserts = lin ListAssert ({s = v.s ++ "( " ++ e.s ++ " )" ; isEmpty = NonEmpty}) ;
+            -- asserts = ConsAssert {s = v.s ++ "( " ++ e.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
             presups = BasePresup ;
             property = "" ;
             events = BaseEvents ;
@@ -142,13 +151,14 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         Xcomp       = mkDotLin "Xcomp" ;
 
         -- Prep -> Ind -> Ind -> Prop ;
-        Nmod prep a_cat on_a_mat = mkDotLin ("Nmod" ++ "." ++ prep.s) on_a_mat a_cat ;
+        iPrep prep a_cat on_a_mat = mkDotLin ("Nmod" ++ "." ++ prep.s) on_a_mat a_cat ;
 
         -- Time predicate
         -- Tense -> Event -> Prop
         Time t e = {
             s = "" ;
-            asserts = ConsAssert {s = "Time ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
+            -- asserts = ConsAssert {s = "Time ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
+            asserts = lin ListAssert ({s = "Time ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
             property = "" ;
             events = BaseEvents ;
@@ -157,7 +167,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- Ant -> Event -> Prop
         Anteriority t e = {
             s = "" ;
-            asserts = ConsAssert {s = "Anteriority ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
+            -- asserts = ConsAssert {s = "Anteriority ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty} BaseAssert ;
+            asserts = lin ListAssert ({s = "Anteriority ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
             property = "" ;
             events = BaseEvents ;
@@ -176,7 +187,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- N -> Ind -> Prop
         iN n i = {
             s = "" ;
-            asserts = ConsAssert {s = n.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty} BaseAssert ;
+            -- asserts = ConsAssert {s = n.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty} BaseAssert ;
+            asserts = lin ListAssert ({s = n.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
             property = n.s ;
             events = BaseEvents ;
@@ -184,7 +196,9 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
             } ;
         
         -- PN -> Ind ;
-        PNInd pn = {s = pn.s} ;
+        PNInd pn = pn ;
+
+
 
         -- Flat conjunction with AND - combines presuppositions and assertions
         -- Prop -> Prop -> Prop
@@ -201,7 +215,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- Prop -> Prop
         Not p = {
             s = "" ;
-            asserts = ConsAssert {s = "¬( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
+            -- asserts = ConsAssert {s = "¬( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
+            asserts = lin ListAssert ({s = "¬( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty}) ;
             presups = p.presups ;
             property = "" ;
             events = p.events ;
@@ -214,7 +229,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- Ind -> Ind -> Prop
         Equals x y = {
             s = "" ;
-            asserts = ConsAssert {s = x.s ++ " == " ++ y.s ; isEmpty = NonEmpty} BaseAssert ;
+            -- asserts = ConsAssert {s = x.s ++ " == " ++ y.s ; isEmpty = NonEmpty} BaseAssert ;
+            asserts = lin ListAssert ({s = x.s ++ " == " ++ y.s ; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
             property = "" ;
             events = BaseEvents ;
