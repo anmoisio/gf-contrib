@@ -80,7 +80,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- (Event -> Prop) -> Prop
         ExistE f = {
             s = "" ;
-            events = ConsEvents {s = f.$0 ; isEmpty = NonEmpty} (ConsEvents f.events BaseEvents) ;
+            events = ConsEvents {s = f.$0 ; isEmpty = NonEmpty} f.events ;
             asserts = f.asserts ;
             presups = f.presups ;
             property = "" ;
@@ -91,7 +91,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         Exist f = {
             s = "" ;
             events = f.events ;
-            inds = ConsInds {s = f.$0 ; isEmpty = NonEmpty} (ConsInds f.inds BaseInds) ;
+            inds = ConsInds {s = f.$0 ; isEmpty = NonEmpty} f.inds ;
             asserts = f.asserts ;
             presups = f.presups ;
             property = ""
@@ -190,10 +190,10 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- Prop -> Prop -> Prop
         And p q = {
             s = "" ;
-            asserts = ConsAssert p.asserts (ConsAssert q.asserts BaseAssert) ;
-            presups = ConsPresup p.presups (ConsPresup q.presups BasePresup) ;
-            events = ConsEvents p.events (ConsEvents q.events BaseEvents) ;
-            inds = ConsInds p.inds (ConsInds q.inds BaseInds) ;
+            asserts = ConsAssert p.asserts q.asserts ;
+            presups = ConsPresup p.presups q.presups ;
+            events = ConsEvents p.events q.events ;
+            inds = ConsInds p.inds q.inds ;
             property = ""
             } ;
         
@@ -201,7 +201,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- Prop -> Prop
         Not p = {
             s = "" ;
-            asserts = ConsAssert {s = "NOT ( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
+            asserts = ConsAssert {s = "¬( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty} BaseAssert ;
             presups = p.presups ;
             property = "" ;
             events = p.events ;
