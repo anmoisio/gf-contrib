@@ -10,7 +10,7 @@ while IFS="" read -r p || [ -n "$p" ]
 do
     # all trees start with "UseCl"
     if [[ "$p" == UseCl* ]]; then
-        echo "$p" >> "$2"
+        echo "$p" >> "$2".interpreted.txt
         # regex the part between "PhrUtt NoPConj (UttS " and "") NoVoc"
         # regexed=$(echo "$p" | sed -n 's/.*PhrUtt NoPConj (UttS \(.*\)) NoVoc.*/\1/p')
         # echo "$regexed" >> "$2".interpreted.txt
