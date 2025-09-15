@@ -1,32 +1,41 @@
 
+# constants
+orig_data=cogs-from-orig/orig-data/dev.tsv
 
-# parse and interpret in parallel
+filenumber=0
+folder=cogs-rgl
+grammar=LangEng
+parsed=${folder}/parsed-cogs-dev-${grammar}.txt
+
+# semantics=SemanticsLF
+semantics=SemanticsCogsLF
+
+
+# split dev.tsv into smaller files for parallel processing
 split -d -l 500 \
-    cogs-from-orig/orig-data/dev.tsv \
-    cogs-from-orig/orig-data/dev.tsv.
+    ${orig_data} \
+    ${orig_data}.
 
-screen
-filenumber=5
-parsed=cogs-rgl/parsed-cogs-dev.txt
-bash utils/parse-cogs.sh \
-    cogs-from-orig/orig-data/dev.tsv.0${filenumber} \
-    cogs-rgl/LangEng.gf \
+screen -S parse${filenumber} -dm bash utils/parse-cogs.sh \
+    ${orig_data}.0${filenumber} \
+    ${folder}/${grammar}.gf \
     ${parsed}.0${filenumber}
 
-bash utils/interpret-trees.sh \
-    cogs-rgl/SemanticsLF.gf \
+# interpret
+screen -S interpret${filenumber} -dm bash utils/interpret-trees.sh \
+    ${folder}/${semantics}.gf \
     ${parsed}.0${filenumber} \
-    ${parsed}.0${filenumber}.interpreted.txt
+    ${parsed}.0${filenumber}.${semantics}.txt
 
-
-# combine the results
+# combine parsed files
 cat ${parsed}.{00..05} \
-    > cogs-rgl/parsed-cogs-dev-all.txt
+    > ${folder}/parsed-cogs-dev-${grammar}-all.txt
 rm ${parsed}.{00..05}
 
-cat ${parsed}.{00..05}.interpreted.txt \
-    > cogs-rgl/parsed-cogs-dev-all-interpreted.txt
-rm ${parsed}.{00..05}.interpreted.txt
+# combine interpreted files
+cat ${parsed}.{00..05}.${semantics}.txt \
+    > ${folder}/parsed-cogs-dev-${semantics}-all.txt
+rm ${parsed}.{00..05}.${semantics}.txt
 
 
 

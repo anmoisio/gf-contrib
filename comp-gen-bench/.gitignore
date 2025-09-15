@@ -2,5 +2,7 @@
 __pycache__
 *.dot
 *.pdf
-parsed-*.txt
-cogs-from-orig/orig-data/dev.tsv
+parsed-*.txt*
+cogs-from-orig/orig-data/dev.tsv*
+notes/
+example.txt
