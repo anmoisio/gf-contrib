@@ -192,5 +192,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
 
         -- Conjunction for propositions - same as And but for interpretation functions
         -- iConj conj p q = And p q ;
+    
+    -- lindef
+    --     Ind = \s -> {s = "x _" ++ s} ;
 
 }

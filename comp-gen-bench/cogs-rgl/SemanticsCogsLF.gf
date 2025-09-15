@@ -15,7 +15,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         Assert, Presup, Inds, Events           = {s : Str ; isEmpty : IsEmpty} ;
         [Assert], [Presup], [Inds], [Events]   = {s : Str ; isEmpty : IsEmpty } ;
 
-        S, Adv, Verb, V, V2, V3, VV, VS, A, N, PN, Prep, Tense, Ant, Ind, Event = {s : Str} ;
+        S, Adv, Verb, V, V2, V3, VV, VS, A, CN, N, PN, Prep, Tense, Ant, Ind, Event = {s : Str} ;
         VUnerg, VUnacc = {s : Str} ;
 
     lin
@@ -35,7 +35,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         -- Wrapper combines the quantifiers, assertions and presuppositions into the s field of Prop
         -- Prop -> Prop
         Wrapper prop = {
-            s = "(" ++ "∃" ++ prop.events.s ++ "∃" ++ prop.inds.s ++ ")" ++ "(" ++ (mkListLin ";" prop.presups prop.asserts).s ++ ")" ;
+            s = (mkListLin ";" prop.presups prop.asserts).s ;
             asserts = prop.asserts ;
             presups = prop.presups ;
             events = prop.events ;
@@ -100,9 +100,13 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             asserts = lin ListAssert ({s = v.s ++ "." ++ "xcomp" ++ "( " ++ e1.s ++ " , " ++ e2.s ++ " )" ; isEmpty = NonEmpty}) ;
             s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
         -- Prep -> Ind -> Ind -> Prop
-        iPrep n prep i_cat i_obj = {
+        iPrepCN prep nprop i_cat i_obj = {
             asserts = lin ListAssert (
-                {s = n.s ++ ". nmod ." ++ prep.s ++ "( " ++ i_obj.s ++ " , " ++ i_cat.s ++ " )" ; isEmpty = NonEmpty}) ;
+                {s = nprop.property ++ ". nmod ." ++ prep.s ++ "( " ++ i_obj.s ++ " , " ++ i_cat.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+        iPrepPN prep pnind i_cat i_obj = {
+            asserts = lin ListAssert (
+                {s = pnind.s ++ ". nmod ." ++ prep.s ++ "( " ++ i_obj.s ++ " , " ++ i_cat.s ++ " )" ; isEmpty = NonEmpty}) ;
             s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
 
         -- Tense -> Event -> Prop

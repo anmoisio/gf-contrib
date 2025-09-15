@@ -98,10 +98,12 @@ def
 -- so iNP is modified too
 fun iNP : NP -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
-    iNP (DetCN det cn)                 vpf = iDet det (iCN cn) vpf ;
-    iNP (UsePN pn)                     vpf = iPN pn vpf ;
-    iNP (AdvNP np (PrepNP prep np_pp)) vpf
-        = iNP np (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrep prep x y)) e) ;
+    iNP (DetCN det cn)                              vpf = iDet det (iCN cn) vpf ;
+    iNP (UsePN pn)                                  vpf = iPN pn vpf ;
+    iNP (AdvNP (DetCN det cn) (PrepNP prep np_pp))  vpf
+        = iNP (DetCN det cn) (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrepCN prep (iCN cn x) x y)) e) ;
+    iNP (AdvNP (UsePN pn) (PrepNP prep np_pp))  vpf
+        = iNP (UsePN pn) (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrepPN prep (PNInd pn) x y)) e) ;
 
 cat
     Verb ;
@@ -120,4 +122,6 @@ fun
     Ccomp       : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
     Xcomp       : VV -> Event   -> Event -> Prop ;
 
+    iPrepCN       : Prep -> Prop -> Ind -> Ind -> Prop ;
+    iPrepPN       : Prep -> Ind  -> Ind -> Ind -> Prop ;
 }
