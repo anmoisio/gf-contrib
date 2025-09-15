@@ -1,7 +1,4 @@
-concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
-
-    param
-        IsEmpty = Empty | NonEmpty ;
+concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
 
     lincat
 
@@ -20,36 +17,6 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
 
         S, Adv, Verb, V, V2, V3, VV, VS, A, N, PN, Prep, Tense, Ant, Ind, Event = {s : Str} ;
         VUnerg, VUnacc = {s : Str} ;
-
-    oper
-        mkListLin : Str -> (f,fs : {s : Str ; isEmpty : IsEmpty}) -> {s : Str ; isEmpty : IsEmpty} =
-            \separ,f,fs ->
-            -- lin Assert (
-            let
-                sep : Str = case <f.isEmpty,fs.isEmpty> of {
-                                <_,Empty> => "" ;
-                                <Empty,_> => "" ;
-                                <_,_> => separ } ;
-                emptiness : IsEmpty = case <f.isEmpty,fs.isEmpty> of {
-                                <Empty,Empty> => Empty ;
-                                <_,_> => NonEmpty } ;
-            in  {s = f.s ++ sep ++ fs.s ; isEmpty = emptiness}
-            -- )
-            ;
-        
-        mkDotLin : Str -> (i,e : {s : Str}) -> Prop = \dotstr,i,e ->
-            lin Prop ( 
-            {s = "" ;
-            asserts = ConsAssert {
-                    s = dotstr ++ "( " ++ e.s ++ " , " ++ i.s ++ " )" ;
-                    isEmpty = NonEmpty}
-                BaseAssert ;
-            presups = BasePresup ;
-            property = "" ;
-            events = BaseEvents ;
-            inds = BaseInds}
-            )
-            ;
 
     lin
 
@@ -143,15 +110,34 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open Prelude in {
         -- Dot notation predicates
         -- Ind   -> Event -> Prop
         -- TODO: change the order of arguments (Event -> Ind -> Prop in the abstract syntax)
-        Agent       = mkDotLin "Agent" ;
-        Theme       = mkDotLin "Theme" ;
-        Recipient   = mkDotLin "Recipient" ;
-        -- Event -> Event -> Prop
-        Ccomp       = mkDotLin "Ccomp" ;
-        Xcomp       = mkDotLin "Xcomp" ;
+        -- Agent       = mkDotLin "Agent" ;
+        -- Theme       = mkDotLin "Theme" ;
+        -- Recipient   = mkDotLin "Recipient" ;
+        -- -- Event -> Event -> Prop
+        -- Ccomp       = mkDotLin "Ccomp" ;
+        -- Xcomp       = mkDotLin "Xcomp" ;
 
-        -- Prep -> Ind -> Ind -> Prop ;
-        iPrep prep a_cat on_a_mat = mkDotLin ("Nmod" ++ "." ++ prep.s) on_a_mat a_cat ;
+        -- -- Prep -> Ind -> Ind -> Prop ;
+        -- iPrep prep a_cat on_a_mat = mkDotLin ("Nmod" ++ "." ++ prep.s) on_a_mat a_cat ;
+        Agent i e = {
+            asserts = lin ListAssert ({s = "Agent" ++ "( " ++ e.s ++ " , " ++ i.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+        Theme i e = {
+            asserts = lin ListAssert ({s = "Theme" ++ "( " ++ e.s ++ " , " ++ i.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+        Recipient i e = {
+            asserts = lin ListAssert ({s = "Recipient" ++ "( " ++ e.s ++ " , " ++ i.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+        Ccomp e1 e2 = {
+            asserts = lin ListAssert ({s = "Ccomp" ++ "( " ++ e1.s ++ " , " ++ e2.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+        Xcomp e1 e2 = {
+            asserts = lin ListAssert ({s = "Xcomp" ++ "( " ++ e1.s ++ " , " ++ e2.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+        iPrep prep i_cat i_obj = {
+            asserts = lin ListAssert (
+                {s = "Nmod ." ++ prep.s ++ "( " ++ i_obj.s ++ " , " ++ i_cat.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
 
         -- Time predicate
         -- Tense -> Event -> Prop
