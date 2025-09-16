@@ -4,5 +4,7 @@ __pycache__
 *.pdf
 parsed-*.txt*
 cogs-from-orig/orig-data/dev.tsv*
+cogs-from-orig/orig-data/gen.tsv*
+cogs-from-orig/orig-data/train.tsv*
 notes/
 example.txt
