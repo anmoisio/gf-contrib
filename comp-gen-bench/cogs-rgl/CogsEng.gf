@@ -1,7 +1,10 @@
 
 concrete CogsEng of Cogs = CatEng ** open ResEng in {
-    lincat VUnerg, VUnacc = Verb ;
+    lincat
+        VUnerg, VUnacc = Verb ;
+        V3doc = Verb ** {c2, c3 : Str} ;
     lin
         VUnergV v = v ;
         VUnaccV v = v ;
+        V3docV3 v = v ;
 } ;

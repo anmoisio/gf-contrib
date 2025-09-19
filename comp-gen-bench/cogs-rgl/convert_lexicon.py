@@ -39,7 +39,7 @@ lexs = {
     "VUnacc": sorted(list(set(VUnacc))),
     "VUnerg": sorted(list(set(VUnerg))), # unergative: e.g. run
     "V2": sorted(list(set(V2))),
-    "V3": sorted(list(set(V3))), # double object construction
+    "V3doc": sorted(list(set(V3))), # double object construction
     "to_V3": sorted(list(set(V3))), # same as V3 but with "to" preposition
     "VS": sorted(list(set(VS))),
     "VV": sorted(list(set(VV)))
@@ -50,7 +50,7 @@ exclude = ["want"]
 # abstract lexicon
 with open("CogsLexicon.gf", "w", encoding="utf-8") as f:
     f.write("abstract CogsLexicon = Cogs, Structural ** {\n")
-    f.write("fun\n")
+    f.write("data\n")
 
     for wordclass, wordlist in lexs.items():
         for word in wordlist:
@@ -72,7 +72,7 @@ linfun = { # strings that need to be formatted with the word
     "VUnerg": ("mkV {}", "irregV {}"),
     "V2": ("mkV2 {}", "mkV2 (irregV {})"),
     "to_V3": ("mkV3 (regV {}) noPrep toP",    "mkV3 (irregV {}) noPrep toP"), # gave a bone to a dog
-    "V3":    ("mkV3 (regV {}) noPrep noPrep", "mkV3 (irregV {}) noPrep noPrep"), # gave a dog a bone
+    "V3doc": ("mkV3 (regV {}) noPrep noPrep", "mkV3 (irregV {}) noPrep noPrep"), # gave a dog a bone
     "VS": ("mkVS (regV {})", "mkVS (irregV {})"),
     "VV": ("mkVV (regV {})", "mkVV (irregV {})")
 }

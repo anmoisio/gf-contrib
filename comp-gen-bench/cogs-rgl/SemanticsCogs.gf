@@ -3,8 +3,7 @@ abstract SemanticsCogs = Semantics - [
     ,iAdv
     ,iNP
     ,iPrep
-    ,iVCaus
-    ,iVIncho
+    ,iV
     ,iV2
     ,iV3
     ,iV2Pass
@@ -38,27 +37,34 @@ cat
 fun iVP : VP -> Ind -> Event -> Prop ;
 def
     -- UseV applies the lexical verb's meaning directly.
-    iVP (UseV (VUnergV v)) = iVCaus v ;
-    iVP (UseV (VUnaccV v)) = iVIncho v ;
+    iVP (UseV v) = iV v ;
 
     -- The object NP takes the transitive verb as its scope.
     -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
     -- The result of `iNP np (...)` is the final Event -> Prop for the subject `i`.
-    iVP (ComplSlash (SlashV2a v2) np) = \i -> iNP np (\y -> iV2 v2 y i) ;
+    iVP (ComplSlash (SlashV2a v2) np) = \subj -> iNP np (\obj -> iV2 v2 subj obj) ;
 
     -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places; the have the same meaning
-    iVP (ComplSlash (Slash2V3 v3 np_do) np_oo) = \i -> iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
-    iVP (ComplSlash (Slash3V3 v3 np_oo) np_do) = \i -> iNP np_oo (\z -> iNP np_do (\y -> iV3 v3 y z i)) ;
+    -- DOC: "give a dog a bone" vs. the normal "give a bone to a dog" also switches the order of the arguments
+    -- so there are 2x2 possibilities.
+    -- If v3 is a DOC, then arg1 is the indirect object (oobj) and arg2 the direct object (dobj).
+    iVP (ComplSlash (Slash2V3 v3 arg1) arg2) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
+    iVP (ComplSlash (Slash3V3 v3 arg2) arg1) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
 
     -- passive voice
-    iVP (PassVPSlash (SlashV2a v2))       = iV2Pass v2 ;
-    iVP (PassVPSlash (Slash3V3 v3 np_oo)) = \i -> iNP np_oo (\z -> iV3Pass v3 z i) ;
-    iVP (AdvVP (PassVPSlash (SlashV2a v2)) (PrepNP by8agent_Prep np)) = \i -> iNP np (\y,e -> And
-                                                                (Agent (V2Verb v2) y e)
-                                                                (iV2Pass v2 i e)) ;
-    iVP (AdvVP (PassVPSlash (Slash3V3 v3 np_oo)) (PrepNP by8agent_Prep np)) = \i -> iNP np (\y,e -> And
-                                                                (Agent (V3Verb v3) y e)
-                                                                (iNP np_oo (\z -> iV3Pass v3 z i) e)) ;
+    iVP (PassVPSlash (SlashV2a v2))      = iV2Pass v2 ;
+    iVP (AdvVP (PassVPSlash (SlashV2a v2)) (PrepNP by8agent_Prep np)) = \obj -> iNP np (\subj,e -> And
+                                                                (iV2Pass v2 obj e)
+                                                                (Agent (V2Verb v2) subj e)) ;
+    iVP (PassVPSlash (Slash3V3 v3 arg2)) = \x1 -> iNP arg2 (\x2 -> iV3Pass v3 x1 x2) ;
+    iVP (AdvVP (PassVPSlash (Slash3V3 (V3docV3 v3) np_arg2)) (PrepNP by8agent_Prep np_subj)) =
+        \x1 -> iNP np_subj (\subj,e -> And
+            (iNP np_arg2 (\x2 -> iV3Pass (V3docV3 v3) x1 x2) e)
+            (Agent (V3docVerb v3) subj e)) ;
+    iVP (AdvVP (PassVPSlash (Slash3V3 v3 np_arg2)) (PrepNP by8agent_Prep np_subj)) =
+        \x1 -> iNP np_subj (\subj,e -> And
+        (iNP np_arg2 (\x2 -> iV3Pass v3 x1 x2) e)
+        (Agent (V3Verb v3) subj e)) ;
 
     -- sentence as complement
     iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) =
@@ -70,8 +76,7 @@ def
 
 -- A verb is combined with 1-3 individuals, an event, and sometimes a complement
 fun
-    iVCaus  : VUnerg -> Ind                         -> Event -> Prop ;
-    iVIncho : VUnacc -> Ind                         -> Event -> Prop ;
+    iV      : V -> Ind                              -> Event -> Prop ;
     iV2     : V2 -> Ind -> Ind                      -> Event -> Prop ;
     iV3     : V3 -> Ind -> Ind -> Ind               -> Event -> Prop ;
     iV2Pass : V2 -> Ind                             -> Event -> Prop ;
@@ -79,20 +84,30 @@ fun
     iVV     : VV -> (Ind -> Event -> Prop) -> Ind   -> Event -> Prop ;
     iVS     : VS -> (Event -> Prop) -> Ind          -> Event -> Prop ;
 def
-    iVCaus  v i e            = Agent (VUnergVerb v) i e ;
-    iVIncho v i e            = Theme (VUnaccVerb v) i e ;
-    iV2 v obj subj e         = And (Agent (V2Verb v) subj e) (Theme (V2Verb v) obj e) ;
-    iV3 v3 dobj oobj subj e  = And (And
-        (Agent (V3Verb v3) subj e) (Theme (V3Verb v3) dobj e)) (Recipient v3 oobj e) ;
-    iV2Pass v i e           = Theme (V2Verb v) i e ; -- same as iVIncho
-    iV3Pass v3 oobj dobj e  = And (Theme (V3Verb v3) dobj e) (Recipient v3 oobj e) ;
-    iVV vv vpf subj e       = ExistE (\e2 -> And (Xcomp vv e2 e) (vpf subj e2)) ;
-    iVS vs eprop subj e     = And
-        (Agent (VSVerb vs) subj e)
-        (ExistE (\e2 -> And
-            (Ccomp vs e2 e)
-            (eprop e2)
-        )) ;
+    iV (VUnergV v) i e                  = Agent (VUnergVerb v) i e ;
+    iV (VUnaccV v) i e                  = Theme (VUnaccVerb v) i e ;
+    iV2 v subj obj e                    = And (Agent (V2Verb v) subj e) (Theme (V2Verb v) obj e) ;
+    iV3 (V3docV3 v3) subj oobj dobj e   = And (And
+                                            (Agent (V3docVerb v3) subj e)
+                                            (Recipient (V3docVerb v3) oobj e))
+                                            (Theme (V3docVerb v3) dobj e) ;
+    iV3 v3 subj dobj oobj e             = And (And
+                                            (Agent (V3Verb v3) subj e)
+                                            (Theme (V3Verb v3) dobj e))
+                                            (Recipient (V3Verb v3) oobj e) ;
+    iV2Pass v i e                       = Theme (V2Verb v) i e ;
+    iV3Pass (V3docV3 v3) oobj dobj e    = And (Recipient (V3docVerb v3) oobj e) (Theme (V3docVerb v3) dobj e) ;
+    iV3Pass v3 dobj oobj e              = And (Theme (V3Verb v3) dobj e)    (Recipient (V3Verb v3) oobj e) ;
+    iVV vv vpf subj e                   = ExistE (\e2 -> And (And
+                                            (Agent (VVVerb vv) subj e)
+                                            (Xcomp vv e e2))
+                                            (vpf subj e2)) ;
+    iVS vs eprop subj e                 = And
+                                            (Agent (VSVerb vs) subj e)
+                                            (ExistE (\e2 -> And
+                                                (Ccomp vs e e2)
+                                                (eprop e2)
+                                            )) ;
 
 -- nmod needs to include the noun "mat . nmod . on ( x , y )"
 -- so iNP is modified too
@@ -112,13 +127,14 @@ fun
     VUnaccVerb : VUnacc  -> Verb ;
     V2Verb : V2 -> Verb ;
     V3Verb : V3 -> Verb ;
+    V3docVerb : V3doc -> Verb ;
     VSVerb : VS -> Verb ;
     VVVerb : VV -> Verb ;
 
     -- Thematic Role Predicates with the dot notation structure
     Agent       : Verb -> Ind   -> Event -> Prop ;  -- e.g. "paint . agent ( e , x )"
     Theme       : Verb -> Ind   -> Event -> Prop ;
-    Recipient   : V3 -> Ind     -> Event -> Prop ;
+    Recipient   : Verb -> Ind   -> Event -> Prop ;
     Ccomp       : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
     Xcomp       : VV -> Event   -> Event -> Prop ;
 

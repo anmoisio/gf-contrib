@@ -16,7 +16,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         [Assert], [Presup], [Inds], [Events]   = {s : Str ; isEmpty : IsEmpty } ;
 
         S, Adv, Verb, V, V2, V3, VV, VS, A, CN, N, PN, Prep, Tense, Ant, Ind, Event = {s : Str} ;
-        VUnerg, VUnacc = {s : Str} ;
+        VUnerg, VUnacc, V3doc = {s : Str} ;
 
     lin
 
@@ -79,6 +79,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         VUnaccVerb v = v ;
         V2Verb v = v ;
         V3Verb v = v ;
+        V3docVerb v = v ;
         VSVerb v = v ;
         VVVerb v = v ;
 
@@ -102,11 +103,11 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         -- Prep -> Ind -> Ind -> Prop
         iPrepCN prep nprop i_cat i_obj = {
             asserts = lin ListAssert (
-                {s = nprop.property ++ ". nmod ." ++ prep.s ++ "( " ++ i_obj.s ++ " , " ++ i_cat.s ++ " )" ; isEmpty = NonEmpty}) ;
+                {s = nprop.property ++ ". nmod ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_obj.s ++ " )" ; isEmpty = NonEmpty}) ;
             s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
         iPrepPN prep pnind i_cat i_obj = {
             asserts = lin ListAssert (
-                {s = pnind.s ++ ". nmod ." ++ prep.s ++ "( " ++ i_obj.s ++ " , " ++ i_cat.s ++ " )" ; isEmpty = NonEmpty}) ;
+                {s = pnind.s ++ ". nmod ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_obj.s ++ " )" ; isEmpty = NonEmpty}) ;
             s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
 
         -- Tense -> Event -> Prop

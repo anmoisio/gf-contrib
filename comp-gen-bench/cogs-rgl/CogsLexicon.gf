@@ -1,5 +1,5 @@
 abstract CogsLexicon = Cogs, Structural ** {
-fun
+data
     tv_N 		: N ;
     baby_N 		: N ;
     backpack_N 		: N ;
@@ -631,26 +631,26 @@ fun
     value_V2 		: V2 ;
     worship_V2 		: V2 ;
 
-    award_V3 		: V3 ;
-    bring_V3 		: V3 ;
-    feed_V3 		: V3 ;
-    forward_V3 		: V3 ;
-    give_V3 		: V3 ;
-    hand_V3 		: V3 ;
-    lend_V3 		: V3 ;
-    loan_V3 		: V3 ;
-    mail_V3 		: V3 ;
-    offer_V3 		: V3 ;
-    pass_V3 		: V3 ;
-    post_V3 		: V3 ;
-    promise_V3 		: V3 ;
-    rent_V3 		: V3 ;
-    return_V3 		: V3 ;
-    sell_V3 		: V3 ;
-    send_V3 		: V3 ;
-    serve_V3 		: V3 ;
-    slip_V3 		: V3 ;
-    wire_V3 		: V3 ;
+    award_V3doc 		: V3doc ;
+    bring_V3doc 		: V3doc ;
+    feed_V3doc 		: V3doc ;
+    forward_V3doc 		: V3doc ;
+    give_V3doc 		: V3doc ;
+    hand_V3doc 		: V3doc ;
+    lend_V3doc 		: V3doc ;
+    loan_V3doc 		: V3doc ;
+    mail_V3doc 		: V3doc ;
+    offer_V3doc 		: V3doc ;
+    pass_V3doc 		: V3doc ;
+    post_V3doc 		: V3doc ;
+    promise_V3doc 		: V3doc ;
+    rent_V3doc 		: V3doc ;
+    return_V3doc 		: V3doc ;
+    sell_V3doc 		: V3doc ;
+    send_V3doc 		: V3doc ;
+    serve_V3doc 		: V3doc ;
+    slip_V3doc 		: V3doc ;
+    wire_V3doc 		: V3doc ;
 
     award_to_V3 		: V3 ;
     bring_to_V3 		: V3 ;
