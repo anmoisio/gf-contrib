@@ -19,6 +19,7 @@ concrete LangEng of Lang =
         ReflVP,
         UseComp,
         ExtAdvVP
+        ,Slash2V3 -- having Slash3V3 is enough for COGS
     ],
     AdjectiveEng,
     AdverbEng - [

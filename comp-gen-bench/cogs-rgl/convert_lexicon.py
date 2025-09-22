@@ -115,7 +115,7 @@ with open("CogsLexiconEng.gf", "w", encoding="utf-8") as f:
             if any(wordclass.startswith(prefix) for prefix in ["to_V", "V"]) and \
                     (word in verb_base2infls and \
                     verb_base2infls[word][0] != word + "ed" and \
-                    verb_base2infls[word][0] != word[:-1] + "ed") or word == "shorten":
+                    verb_base2infls[word][0] != word[:-1] + "ed") or word in ["shorten", "redden"]:
                     # verb_base2infls[word][0] != word + word[-1] + "ed":
                 forms = f'"{word}" "{verb_base2infls[word][0]}" "{verb_base2infls[word][1]}"'
                 linf = linfun[wordclass][1]

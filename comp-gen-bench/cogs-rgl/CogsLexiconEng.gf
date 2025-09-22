@@ -519,7 +519,7 @@ lin
     grow_VUnacc 		= irregV "grow" "grew" "grown" ;
     improve_VUnacc 		= mkV "improve" ;
     inflate_VUnacc 		= mkV "inflate" ;
-    redden_VUnacc 		= mkV "redden" ;
+    redden_VUnacc 		= irregV "redden" "reddened" "reddened" ;
     roll_VUnacc 		= mkV "roll" ;
     shorten_VUnacc 		= irregV "shorten" "shortened" "shortened" ;
     slide_VUnacc 		= irregV "slide" "slid" "slid" ;
@@ -613,7 +613,7 @@ lin
     paint_V2 		= mkV2 "paint" ;
     pierce_V2 		= mkV2 "pierce" ;
     poke_V2 		= mkV2 "poke" ;
-    redden_V2 		= mkV2 "redden" ;
+    redden_V2 		= mkV2 (irregV "redden" "reddened" "reddened") ;
     respect_V2 		= mkV2 "respect" ;
     roll_V2 		= mkV2 "roll" ;
     see_V2 		= mkV2 (irregV "see" "saw" "seen") ;

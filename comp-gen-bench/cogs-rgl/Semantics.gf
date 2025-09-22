@@ -128,7 +128,7 @@ def
     -- DOC: "give a dog a bone" vs. the normal "give a bone to a dog" also switches the order of the arguments
     -- so there are 2x2 possibilities.
     -- If v3 is a DOC, then arg1 is the indirect object (oobj) and arg2 the direct object (dobj).
-    iVP (ComplSlash (Slash2V3 v3 arg1) arg2) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
+    -- iVP (ComplSlash (Slash2V3 v3 arg1) arg2) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
     iVP (ComplSlash (Slash3V3 v3 arg2) arg1) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
 
     -- passive voice
