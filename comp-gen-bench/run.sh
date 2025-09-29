@@ -1,11 +1,13 @@
 
 # constants
-orig_data=cogs-from-orig/orig-data/dev.tsv
+# orig_data=cogs-from-orig/orig-data/dev.tsv
+orig_data=cogs-from-orig/orig-data/gen.tsv
+orig_data_filename=$(basename ${orig_data} .tsv)
 
 filenumber=1
 folder=cogs-rgl
 grammar=LangEng
-parsed=${folder}/parsed-cogs-dev-${grammar}.txt
+parsed=${folder}/parsed-cogs-${orig_data_filename}-${grammar}.txt
 
 # semantics=SemanticsLF
 semantics=SemanticsCogsLF
@@ -17,10 +19,12 @@ split -d -l 500 \
     ${orig_data}.
 
 # parse
-screen -S parse${grammar}-${filenumber} -dm bash utils/parse-cogs.sh \
-    ${orig_data}.0${filenumber} \
-    ${folder}/${grammar}.gf \
-    ${parsed}.0${filenumber}
+for filenumber in {11..21}; do
+    screen -S parse${grammar}-${filenumber} -dm bash utils/parse-cogs.sh \
+        ${orig_data}.${filenumber} \
+        ${folder}/${grammar}.gf \
+        ${parsed}.${filenumber}
+done
 
 # interpret and linearise
 screen -S interpret${semantics}-${filenumber} -dm bash utils/interpret-trees.sh \
