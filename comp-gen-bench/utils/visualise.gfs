@@ -1,5 +1,5 @@
 
--- run in bash with "gf --run < visualise.gfs"
+-- run in bash with "gf --run < ../utils/visualise.gfs"
 
 i LangEng.gf
 -- parse "a melon was given to a girl by the guard" | visualize_tree -view=eog
@@ -9,4 +9,4 @@ i LangEng.gf
 -- parse "Liam liked that the cake was tossed by Ava" | visualize_parse -view=eog
 -- p "a girl gave a boy a book" | visualize_parse -view=eog
 -- p "Sebastian gave a rose beside a stage to Mason" | visualize_parse -view=eog
-p "a boy was given a book by a girl" | visualize_parse -view=eog
+p "a boy has painted a tree" | visualize_parse -view=eog
