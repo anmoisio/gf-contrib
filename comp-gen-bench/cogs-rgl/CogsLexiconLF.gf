@@ -86,6 +86,8 @@ lin
     cloth_N 		= ss "cloth" ;
     cloud_N 		= ss "cloud" ;
     coach_N 		= ss "coach" ;
+    cobra_N 		= ss "cobra" ;
+    cockroach_N 		= ss "cockroach" ;
     coffin_N 		= ss "coffin" ;
     coin_N 		= ss "coin" ;
     computer_N 		= ss "computer" ;
@@ -177,9 +179,11 @@ lin
     haystack_N 		= ss "haystack" ;
     headmaster_N 		= ss "headmaster" ;
     hedge_N 		= ss "hedge" ;
+    hedgehog_N 		= ss "hedgehog" ;
     helicopter_N 		= ss "helicopter" ;
     hen_N 		= ss "hen" ;
     hero_N 		= ss "hero" ;
+    hippo_N 		= ss "hippo" ;
     hole_N 		= ss "hole" ;
     horse_N 		= ss "horse" ;
     host_N 		= ss "host" ;
@@ -314,6 +318,7 @@ lin
     seat_N 		= ss "seat" ;
     seed_N 		= ss "seed" ;
     servant_N 		= ss "servant" ;
+    shark_N 		= ss "shark" ;
     sheep_N 		= ss "sheep" ;
     sheet_N 		= ss "sheet" ;
     shelf_N 		= ss "shelf" ;
@@ -424,6 +429,7 @@ lin
     caleb_PN 		= ss "Caleb" ;
     camila_PN 		= ss "Camila" ;
     carter_PN 		= ss "Carter" ;
+    charlie_PN 		= ss "Charlie" ;
     charlotte_PN 		= ss "Charlotte" ;
     chloe_PN 		= ss "Chloe" ;
     christopher_PN 		= ss "Christopher" ;
@@ -466,6 +472,7 @@ lin
     liam_PN 		= ss "Liam" ;
     lillian_PN 		= ss "Lillian" ;
     lily_PN 		= ss "Lily" ;
+    lina_PN 		= ss "Lina" ;
     lincoln_PN 		= ss "Lincoln" ;
     logan_PN 		= ss "Logan" ;
     lucas_PN 		= ss "Lucas" ;
@@ -485,6 +492,7 @@ lin
     oliver_PN 		= ss "Oliver" ;
     olivia_PN 		= ss "Olivia" ;
     owen_PN 		= ss "Owen" ;
+    paula_PN 		= ss "Paula" ;
     penelope_PN 		= ss "Penelope" ;
     riley_PN 		= ss "Riley" ;
     ryan_PN 		= ss "Ryan" ;
@@ -530,6 +538,7 @@ lin
     call_VUnerg 		= ss "call" ;
     clean_VUnerg 		= ss "clean" ;
     cook_VUnerg 		= ss "cook" ;
+    crawl_VUnerg 		= ss "crawl" ;
     cry_VUnerg 		= ss "cry" ;
     dance_VUnerg 		= ss "dance" ;
     draw_VUnerg 		= ss "draw" ;
@@ -557,6 +566,7 @@ lin
     scoff_VUnerg 		= ss "scoff" ;
     scream_VUnerg 		= ss "scream" ;
     see_VUnerg 		= ss "see" ;
+    shatter_VUnerg 		= ss "shatter" ;
     sketch_VUnerg 		= ss "sketch" ;
     sleep_VUnerg 		= ss "sleep" ;
     smile_VUnerg 		= ss "smile" ;
@@ -573,6 +583,7 @@ lin
     adore_V2 		= ss "adore" ;
     appreciate_V2 		= ss "appreciate" ;
     bake_V2 		= ss "bake" ;
+    bless_V2 		= ss "bless" ;
     break_V2 		= ss "break" ;
     burn_V2 		= ss "burn" ;
     call_V2 		= ss "call" ;
@@ -617,11 +628,13 @@ lin
     respect_V2 		= ss "respect" ;
     roll_V2 		= ss "roll" ;
     see_V2 		= ss "see" ;
+    shatter_V2 		= ss "shatter" ;
     shorten_V2 		= ss "shorten" ;
     sketch_V2 		= ss "sketch" ;
     slide_V2 		= ss "slide" ;
     snap_V2 		= ss "snap" ;
     split_V2 		= ss "split" ;
+    squeeze_V2 		= ss "squeeze" ;
     stab_V2 		= ss "stab" ;
     study_V2 		= ss "study" ;
     throw_V2 		= ss "throw" ;
@@ -649,7 +662,9 @@ lin
     sell_V3doc 		= ss "sell" ;
     send_V3doc 		= ss "send" ;
     serve_V3doc 		= ss "serve" ;
+    ship_V3doc 		= ss "ship" ;
     slip_V3doc 		= ss "slip" ;
+    teleport_V3doc 		= ss "teleport" ;
     wire_V3doc 		= ss "wire" ;
 
     award_to_V3 		= ss "award" ;
@@ -670,7 +685,9 @@ lin
     sell_to_V3 		= ss "sell" ;
     send_to_V3 		= ss "send" ;
     serve_to_V3 		= ss "serve" ;
+    ship_to_V3 		= ss "ship" ;
     slip_to_V3 		= ss "slip" ;
+    teleport_to_V3 		= ss "teleport" ;
     wire_to_V3 		= ss "wire" ;
 
     admire_VS 		= ss "admire" ;

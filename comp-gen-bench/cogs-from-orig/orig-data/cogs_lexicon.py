@@ -16,6 +16,8 @@ animate_nouns = [
     'guy', 'dealer', 'duke', 'tourist', 'landlord', 'human', 'host', 'priest', 'journalist', 'poet'
 ]
 assert len(set(animate_nouns)) == 100
+# missing
+animate_nouns += ['cobra', 'cockroach', 'hedgehog', 'hippo', 'shark']
 
 inanimate_nouns = [
     'cake', 'donut', 'cookie', 'box', 'rose', 'drink', 'raisin', 'melon', 'sandwich', 'strawberry', 
@@ -47,6 +49,8 @@ proper_nouns = [
 ]
 
 assert len(set(proper_nouns)) == 100
+# missing 
+proper_nouns += ['Charlie', 'Lina', 'Paula']
 
 # P + N: N from BNC + COCA
 
@@ -198,6 +202,14 @@ V_dat_pp = [
 ]
 
 assert len(set(V_dat)) == len(set(V_dat_pp)) == 20
+
+
+# missing
+V_inf += ['crawl']
+V_trans_omissible += ['shattered']
+V_trans_not_omissible += ['blessed', 'squeezed']
+V_dat += ['teleported', 'shipped']
+
 
 # print(len(set(V_trans_omissible + V_trans_not_omissible + V_cp_taking + V_unacc + V_unerg + V_dat)))
 

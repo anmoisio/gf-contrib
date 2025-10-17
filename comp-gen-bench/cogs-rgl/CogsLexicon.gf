@@ -86,6 +86,8 @@ data
     cloth_N 		: N ;
     cloud_N 		: N ;
     coach_N 		: N ;
+    cobra_N 		: N ;
+    cockroach_N 		: N ;
     coffin_N 		: N ;
     coin_N 		: N ;
     computer_N 		: N ;
@@ -177,9 +179,11 @@ data
     haystack_N 		: N ;
     headmaster_N 		: N ;
     hedge_N 		: N ;
+    hedgehog_N 		: N ;
     helicopter_N 		: N ;
     hen_N 		: N ;
     hero_N 		: N ;
+    hippo_N 		: N ;
     hole_N 		: N ;
     horse_N 		: N ;
     host_N 		: N ;
@@ -314,6 +318,7 @@ data
     seat_N 		: N ;
     seed_N 		: N ;
     servant_N 		: N ;
+    shark_N 		: N ;
     sheep_N 		: N ;
     sheet_N 		: N ;
     shelf_N 		: N ;
@@ -424,6 +429,7 @@ data
     caleb_PN 		: PN ;
     camila_PN 		: PN ;
     carter_PN 		: PN ;
+    charlie_PN 		: PN ;
     charlotte_PN 		: PN ;
     chloe_PN 		: PN ;
     christopher_PN 		: PN ;
@@ -466,6 +472,7 @@ data
     liam_PN 		: PN ;
     lillian_PN 		: PN ;
     lily_PN 		: PN ;
+    lina_PN 		: PN ;
     lincoln_PN 		: PN ;
     logan_PN 		: PN ;
     lucas_PN 		: PN ;
@@ -485,6 +492,7 @@ data
     oliver_PN 		: PN ;
     olivia_PN 		: PN ;
     owen_PN 		: PN ;
+    paula_PN 		: PN ;
     penelope_PN 		: PN ;
     riley_PN 		: PN ;
     ryan_PN 		: PN ;
@@ -530,6 +538,7 @@ data
     call_VUnerg 		: VUnerg ;
     clean_VUnerg 		: VUnerg ;
     cook_VUnerg 		: VUnerg ;
+    crawl_VUnerg 		: VUnerg ;
     cry_VUnerg 		: VUnerg ;
     dance_VUnerg 		: VUnerg ;
     draw_VUnerg 		: VUnerg ;
@@ -557,6 +566,7 @@ data
     scoff_VUnerg 		: VUnerg ;
     scream_VUnerg 		: VUnerg ;
     see_VUnerg 		: VUnerg ;
+    shatter_VUnerg 		: VUnerg ;
     sketch_VUnerg 		: VUnerg ;
     sleep_VUnerg 		: VUnerg ;
     smile_VUnerg 		: VUnerg ;
@@ -573,6 +583,7 @@ data
     adore_V2 		: V2 ;
     appreciate_V2 		: V2 ;
     bake_V2 		: V2 ;
+    bless_V2 		: V2 ;
     break_V2 		: V2 ;
     burn_V2 		: V2 ;
     call_V2 		: V2 ;
@@ -617,11 +628,13 @@ data
     respect_V2 		: V2 ;
     roll_V2 		: V2 ;
     see_V2 		: V2 ;
+    shatter_V2 		: V2 ;
     shorten_V2 		: V2 ;
     sketch_V2 		: V2 ;
     slide_V2 		: V2 ;
     snap_V2 		: V2 ;
     split_V2 		: V2 ;
+    squeeze_V2 		: V2 ;
     stab_V2 		: V2 ;
     study_V2 		: V2 ;
     throw_V2 		: V2 ;
@@ -649,7 +662,9 @@ data
     sell_V3doc 		: V3doc ;
     send_V3doc 		: V3doc ;
     serve_V3doc 		: V3doc ;
+    ship_V3doc 		: V3doc ;
     slip_V3doc 		: V3doc ;
+    teleport_V3doc 		: V3doc ;
     wire_V3doc 		: V3doc ;
 
     award_to_V3 		: V3 ;
@@ -670,7 +685,9 @@ data
     sell_to_V3 		: V3 ;
     send_to_V3 		: V3 ;
     serve_to_V3 		: V3 ;
+    ship_to_V3 		: V3 ;
     slip_to_V3 		: V3 ;
+    teleport_to_V3 		: V3 ;
     wire_to_V3 		: V3 ;
 
     admire_VS 		: VS ;

@@ -86,6 +86,8 @@ lin
     cloth_N 		= mkN "cloth" ;
     cloud_N 		= mkN "cloud" ;
     coach_N 		= mkN "coach" ;
+    cobra_N 		= mkN "cobra" ;
+    cockroach_N 		= mkN "cockroach" ;
     coffin_N 		= mkN "coffin" ;
     coin_N 		= mkN "coin" ;
     computer_N 		= mkN "computer" ;
@@ -177,9 +179,11 @@ lin
     haystack_N 		= mkN "haystack" ;
     headmaster_N 		= mkN "headmaster" ;
     hedge_N 		= mkN "hedge" ;
+    hedgehog_N 		= mkN "hedgehog" ;
     helicopter_N 		= mkN "helicopter" ;
     hen_N 		= mkN "hen" ;
     hero_N 		= mkN "hero" ;
+    hippo_N 		= mkN "hippo" ;
     hole_N 		= mkN "hole" ;
     horse_N 		= mkN "horse" ;
     host_N 		= mkN "host" ;
@@ -314,6 +318,7 @@ lin
     seat_N 		= mkN "seat" ;
     seed_N 		= mkN "seed" ;
     servant_N 		= mkN "servant" ;
+    shark_N 		= mkN "shark" ;
     sheep_N 		= mkN "sheep" ;
     sheet_N 		= mkN "sheet" ;
     shelf_N 		= mkN "shelf" ;
@@ -424,6 +429,7 @@ lin
     caleb_PN 		= mkPN "Caleb" ;
     camila_PN 		= mkPN "Camila" ;
     carter_PN 		= mkPN "Carter" ;
+    charlie_PN 		= mkPN "Charlie" ;
     charlotte_PN 		= mkPN "Charlotte" ;
     chloe_PN 		= mkPN "Chloe" ;
     christopher_PN 		= mkPN "Christopher" ;
@@ -466,6 +472,7 @@ lin
     liam_PN 		= mkPN "Liam" ;
     lillian_PN 		= mkPN "Lillian" ;
     lily_PN 		= mkPN "Lily" ;
+    lina_PN 		= mkPN "Lina" ;
     lincoln_PN 		= mkPN "Lincoln" ;
     logan_PN 		= mkPN "Logan" ;
     lucas_PN 		= mkPN "Lucas" ;
@@ -485,6 +492,7 @@ lin
     oliver_PN 		= mkPN "Oliver" ;
     olivia_PN 		= mkPN "Olivia" ;
     owen_PN 		= mkPN "Owen" ;
+    paula_PN 		= mkPN "Paula" ;
     penelope_PN 		= mkPN "Penelope" ;
     riley_PN 		= mkPN "Riley" ;
     ryan_PN 		= mkPN "Ryan" ;
@@ -530,6 +538,7 @@ lin
     call_VUnerg 		= mkV "call" ;
     clean_VUnerg 		= mkV "clean" ;
     cook_VUnerg 		= mkV "cook" ;
+    crawl_VUnerg 		= mkV "crawl" ;
     cry_VUnerg 		= mkV "cry" ;
     dance_VUnerg 		= mkV "dance" ;
     draw_VUnerg 		= irregV "draw" "drew" "drawn" ;
@@ -557,6 +566,7 @@ lin
     scoff_VUnerg 		= mkV "scoff" ;
     scream_VUnerg 		= mkV "scream" ;
     see_VUnerg 		= irregV "see" "saw" "seen" ;
+    shatter_VUnerg 		= mkV "shatter" ;
     sketch_VUnerg 		= mkV "sketch" ;
     sleep_VUnerg 		= irregV "sleep" "slept" "slept" ;
     smile_VUnerg 		= mkV "smile" ;
@@ -573,6 +583,7 @@ lin
     adore_V2 		= mkV2 "adore" ;
     appreciate_V2 		= mkV2 "appreciate" ;
     bake_V2 		= mkV2 "bake" ;
+    bless_V2 		= mkV2 "bless" ;
     break_V2 		= mkV2 (irregV "break" "broke" "broken") ;
     burn_V2 		= mkV2 "burn" ;
     call_V2 		= mkV2 "call" ;
@@ -617,11 +628,13 @@ lin
     respect_V2 		= mkV2 "respect" ;
     roll_V2 		= mkV2 "roll" ;
     see_V2 		= mkV2 (irregV "see" "saw" "seen") ;
+    shatter_V2 		= mkV2 "shatter" ;
     shorten_V2 		= mkV2 (irregV "shorten" "shortened" "shortened") ;
     sketch_V2 		= mkV2 "sketch" ;
     slide_V2 		= mkV2 (irregV "slide" "slid" "slid") ;
     snap_V2 		= mkV2 (irregV "snap" "snapped" "snapped") ;
     split_V2 		= mkV2 (irregV "split" "split" "split") ;
+    squeeze_V2 		= mkV2 "squeeze" ;
     stab_V2 		= mkV2 (irregV "stab" "stabbed" "stabbed") ;
     study_V2 		= mkV2 (irregV "study" "studied" "studied") ;
     throw_V2 		= mkV2 (irregV "throw" "threw" "thrown") ;
@@ -649,7 +662,9 @@ lin
     sell_V3doc 		= mkV3 (irregV "sell" "sold" "sold") noPrep noPrep ;
     send_V3doc 		= mkV3 (irregV "send" "sent" "sent") noPrep noPrep ;
     serve_V3doc 		= mkV3 (regV "serve") noPrep noPrep ;
+    ship_V3doc 		= mkV3 (regV "ship") noPrep noPrep ;
     slip_V3doc 		= mkV3 (irregV "slip" "slipped" "slipped") noPrep noPrep ;
+    teleport_V3doc 		= mkV3 (regV "teleport") noPrep noPrep ;
     wire_V3doc 		= mkV3 (regV "wire") noPrep noPrep ;
 
     award_to_V3 		= mkV3 (regV "award") noPrep toP ;
@@ -670,7 +685,9 @@ lin
     sell_to_V3 		= mkV3 (irregV "sell" "sold" "sold") noPrep toP ;
     send_to_V3 		= mkV3 (irregV "send" "sent" "sent") noPrep toP ;
     serve_to_V3 		= mkV3 (regV "serve") noPrep toP ;
+    ship_to_V3 		= mkV3 (regV "ship") noPrep toP ;
     slip_to_V3 		= mkV3 (irregV "slip" "slipped" "slipped") noPrep toP ;
+    teleport_to_V3 		= mkV3 (regV "teleport") noPrep toP ;
     wire_to_V3 		= mkV3 (regV "wire") noPrep toP ;
 
     admire_VS 		= mkVS (regV "admire") ;
