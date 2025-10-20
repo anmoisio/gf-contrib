@@ -3,8 +3,8 @@ __pycache__
 *.dot
 *.pdf
 parsed-*.txt*
-cogs-from-orig/orig-data/dev.tsv*
-cogs-from-orig/orig-data/gen.tsv*
-cogs-from-orig/orig-data/train.tsv*
+cogs-from-orig/orig-data/dev.*
+cogs-from-orig/orig-data/gen.*
+cogs-from-orig/orig-data/train.*
 notes/
 example.txt

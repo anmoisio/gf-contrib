@@ -2,6 +2,7 @@ abstract SemanticsCogs = Semantics - [
     iVP
     ,iAdv
     ,iNP
+    ,iPP
     ,iPrep
     ,iV
     ,iV2
@@ -43,6 +44,7 @@ def
     -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
     -- The result of `iNP np (...)` is the final Event -> Prop for the subject `i`.
     iVP (ComplSlash (SlashV2a v2) np) = \subj -> iNP np (\obj -> iV2 v2 subj obj) ;
+    iVP (ComplSlashadv (SlashV2a v2) np) = \subj -> iNPadv np (\obj -> iV2 v2 subj obj) ; -- for restricting PP scope
 
     -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places; the have the same meaning
     -- DOC: "give a dog a bone" vs. the normal "give a bone to a dog" also switches the order of the arguments
@@ -50,25 +52,50 @@ def
     -- If v3 is a DOC, then arg1 is the indirect object (oobj) and arg2 the direct object (dobj).
     -- iVP (ComplSlash (Slash2V3 v3 arg1) arg2) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
     iVP (ComplSlash (Slash3V3 v3 arg2) arg1) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
+    iVP (ComplSlashadv (Slash3V3 v3 arg2) arg1) = \subj -> iNPadv arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ; -- for restricting PP scope
+    iVP (ComplSlash (Slash3V3adv v3 arg2) arg1) = \subj -> iNP arg1 (\x1 -> iNPadv arg2 (\x2 -> iV3 v3 subj x1 x2)) ; -- for restricting PP scope
+    iVP (ComplSlashadv (Slash3V3adv v3 arg2) arg1) = \subj -> iNPadv arg1 (\x1 -> iNPadv arg2 (\x2 -> iV3 v3 subj x1 x2)) ; -- for restricting PP scope
 
     -- passive voice
     iVP (PassVPSlash (SlashV2a v2))      = iV2Pass v2 ;
-    iVP (AdvVP (PassVPSlash (SlashV2a v2)) (PrepNP by8agent_Prep np)) = \obj -> iNP np (\subj,e -> And
+    -- iVP (AdvVP (PassVPSlash (SlashV2a v2)) (PrepNP by8agent_Prep np)) = \obj -> iNP np (\subj,e -> And
+    --                                                             (iV2Pass v2 obj e)
+    --                                                             (Agent (V2Verb v2) subj e)) ;
+    iVP (AdvVPnew (PassVPSlash (SlashV2a v2)) (PrepNPforverb by8agent_VerbPrep np)) = \obj -> iNP np (\subj,e -> And -- for restricting PP scope
                                                                 (iV2Pass v2 obj e)
                                                                 (Agent (V2Verb v2) subj e)) ;
     iVP (PassVPSlash (Slash3V3 v3 arg2)) = \x1 -> iNP arg2 (\x2 -> iV3Pass v3 x1 x2) ;
-    iVP (AdvVP (PassVPSlash (Slash3V3 (V3docV3 v3) np_arg2)) (PrepNP by8agent_Prep np_subj)) =
+    iVP (PassVPSlash (Slash3V3adv v3 arg2)) = \x1 -> iNPadv arg2 (\x2 -> iV3Pass v3 x1 x2) ; -- for restricting PP scope
+    -- iVP (AdvVP (PassVPSlash (Slash3V3 (V3docV3 v3) np_arg2)) (PrepNP by8agent_Prep np_subj)) =
+    --     \x1 -> iNP np_subj (\subj,e -> And
+    --         (iNP np_arg2 (\x2 -> iV3Pass (V3docV3 v3) x1 x2) e)
+    --         (Agent (V3docVerb v3) subj e)) ;
+    iVP (AdvVPnew (PassVPSlash (Slash3V3 (V3docV3 v3) np_arg2)) (PrepNPforverb by8agent_VerbPrep np_subj)) = -- for restricting PP scope
         \x1 -> iNP np_subj (\subj,e -> And
             (iNP np_arg2 (\x2 -> iV3Pass (V3docV3 v3) x1 x2) e)
             (Agent (V3docVerb v3) subj e)) ;
-    iVP (AdvVP (PassVPSlash (Slash3V3 v3 np_arg2)) (PrepNP by8agent_Prep np_subj)) =
+    iVP (AdvVPnew (PassVPSlash (Slash3V3adv (V3docV3 v3) np_arg2)) (PrepNPforverb by8agent_VerbPrep np_subj)) = -- for restricting PP scope
+        \x1 -> iNP np_subj (\subj,e -> And
+            (iNPadv np_arg2 (\x2 -> iV3Pass (V3docV3 v3) x1 x2) e)
+            (Agent (V3docVerb v3) subj e)) ;
+    -- iVP (AdvVP (PassVPSlash (Slash3V3 v3 np_arg2)) (PrepNP by8agent_Prep np_subj)) =
+    --     \x1 -> iNP np_subj (\subj,e -> And
+    --     (iNP np_arg2 (\x2 -> iV3Pass v3 x1 x2) e)
+    --     (Agent (V3Verb v3) subj e)) ;
+    iVP (AdvVPnew (PassVPSlash (Slash3V3 v3 np_arg2)) (PrepNPforverb by8agent_VerbPrep np_subj)) = -- for restricting PP scope
         \x1 -> iNP np_subj (\subj,e -> And
         (iNP np_arg2 (\x2 -> iV3Pass v3 x1 x2) e)
+        (Agent (V3Verb v3) subj e)) ;
+    iVP (AdvVPnew (PassVPSlash (Slash3V3adv v3 np_arg2)) (PrepNPforverb by8agent_VerbPrep np_subj)) = -- for restricting PP scope
+        \x1 -> iNP np_subj (\subj,e -> And
+        (iNPadv np_arg2 (\x2 -> iV3Pass v3 x1 x2) e)
         (Agent (V3Verb v3) subj e)) ;
 
     -- sentence as complement
     iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) =
         iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
+    iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) =
+        iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ; -- for restricting PP scope
 
     -- verb as complement
     iVP (ComplVV vv vp) = iVV vv (iVP vp) ;
@@ -115,10 +142,36 @@ fun iNP : NP -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
     iNP (DetCN det cn)                              vpf = iDet det (iCN cn) vpf ;
     iNP (UsePN pn)                                  vpf = iPN pn vpf ;
-    iNP (AdvNP (DetCN det cn) (PrepNP prep np_pp))  vpf
-        = iNP (DetCN det cn) (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrepCN prep (iCN cn x) x y)) e) ;
-    iNP (AdvNP (UsePN pn) (PrepNP prep np_pp))  vpf
-        = iNP (UsePN pn) (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrepPN prep (PNInd pn) x y)) e) ;
+    iNP (AdvNP np pp) vpf = iPP pp (iNP np) vpf ;
+
+    -- iNP (AdvNP (DetCN det (UseN n)) (PrepNP prep np_pp))  vpf
+    --     = iNP (DetCN det (UseN n)) (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrep prep x y)) e) ;
+    -- iNP (AdvNP (UsePN pn) (PrepNP prep np_pp))  vpf
+    --     = iNP (UsePN pn) (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrepPN prep (PNInd pn) x y)) e) ;
+    -- iNP (AdvNPnew (DetCN det cn) (PrepNP prep np_pp))  vpf -- for restricting PP scope
+    --     = iNP (DetCN det cn) (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrepCN prep (iCN cn x) x y)) e) ;
+    -- iNP (AdvNPnew (UsePN pn) (PrepNP prep np_pp))  vpf -- for restricting PP scope
+    --     = iNP (UsePN pn) (\x,e -> iNP np_pp (\y,e -> And (vpf x e) (iPrepPN prep (PNInd pn) x y)) e) ;
+    -- iNP (AdvNP (DetCN det cn) (PrepNPadv prep np_pp))  vpf -- for restricting PP scope
+    --     = iNP (DetCN det cn) (\x,e -> iNPadv np_pp (\y,e -> And (vpf x e) (iPrepCN prep (iCN cn x) x y)) e) ;
+    -- iNP (AdvNP (UsePN pn) (PrepNPadv prep np_pp))  vpf -- for restricting PP scope
+    --     = iNP (UsePN pn) (\x,e -> iNPadv np_pp (\y,e -> And (vpf x e) (iPrepPN prep (PNInd pn) x y)) e) ;
+    -- iNP (AdvNPnew (DetCN det cn) (PrepNPadv prep np_pp))  vpf -- for restricting PP scope
+    --     = iNP (DetCN det cn) (\x,e -> iNPadv np_pp (\y,e -> And (vpf x e) (iPrepCN prep (iCN cn x) x y)) e) ;
+    -- iNP (AdvNPnew (UsePN pn) (PrepNPadv prep np_pp))  vpf -- for restricting PP scope
+    --     = iNP (UsePN pn) (\x,e -> iNPadv np_pp (\y,e -> And (vpf x e) (iPrepPN prep (PNInd pn) x y)) e) ;
+
+fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
+                  (Ind -> Event -> Prop) -> Event -> Prop ;
+def iPP (PrepNP prep np) npf vpf =
+    npf (\x,e -> iNP np (\y,e -> And (vpf x e) (iPrep prep (\a,b -> npf a b) x y)) e);
+def iPP (PrepNPadv prep (AdvNPnew np adv)) npf vpf = -- for restricting PP scope
+    npf (\x,e -> iNPadv (AdvNPnew np adv) (\y,e -> And (vpf x e) (iPrep prep (\a,b -> npf a b) x y)) e) ;
+-- def iPP (PrepNPadv prep (UsePN pn)) npf vpf = -- for restricting PP scope
+--     npf (\x,e -> iNPadv (UsePN pn) (\y,e -> And (vpf x e) (iPrepPN prep (PNInd pn) x y)) e) ;
+
+fun
+    iPrep : Prep -> ((Ind -> Event -> Prop) -> Event -> Prop) -> Ind -> Ind -> Prop ;
 
 cat
     Verb ;
@@ -138,6 +191,6 @@ fun
     Ccomp       : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
     Xcomp       : VV -> Event   -> Event -> Prop ;
 
-    iPrepCN       : Prep -> Prop -> Ind -> Ind -> Prop ;
-    iPrepPN       : Prep -> Ind  -> Ind -> Ind -> Prop ;
+    -- iPrepCN       : Prep -> Prop -> Ind -> Ind -> Prop ;
+    -- iPrepPN       : Prep -> Ind  -> Ind -> Ind -> Prop ;
 }
