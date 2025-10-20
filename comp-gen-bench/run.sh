@@ -1,16 +1,19 @@
 
 # constants
 # orig_data=cogs-from-orig/orig-data/dev.tsv
-orig_data=cogs-from-orig/orig-data/gen.tsv
+# orig_data=cogs-from-orig/orig-data/gen.tsv
+orig_data=cogs-from-orig/orig-data/train.tsv
 orig_data_filename=$(basename ${orig_data} .tsv)
 
-filenumber=1
+filenumber=0
 folder=cogs-rgl
-grammar=LangEng
+# grammar=LangEng
+grammar=LangRestrictedEng
 parsed=${folder}/parsed-cogs-${orig_data_filename}-${grammar}.txt
 
 # semantics=SemanticsLF
-semantics=SemanticsCogsLF
+# semantics=SemanticsCogsLF
+semantics=SemanticsRestrictedCogsLF
 
 
 # split dev.tsv into smaller files for parallel processing
@@ -19,7 +22,7 @@ split -d -l 500 \
     ${orig_data}.
 
 # parse
-for filenumber in {11..21}; do
+for filenumber in {04..48}; do
     screen -S parse${grammar}-${filenumber} -dm bash utils/parse-cogs.sh \
         ${orig_data}.${filenumber} \
         ${folder}/${grammar}.gf \
@@ -33,15 +36,17 @@ screen -S interpret${semantics}-${filenumber} -dm bash utils/interpret-trees.sh 
     ${parsed}.0${filenumber}.${semantics}.txt
 
 # parse and interpret in one go
-screen -S parse${grammar}-and-interpret${semantics}-${filenumber} -dm bash -c "\
-    bash utils/parse-cogs.sh \
-    ${orig_data}.0${filenumber} \
-    ${folder}/${grammar}.gf \
-    ${parsed}.0${filenumber} \
-    && bash utils/interpret-trees.sh \
-    ${folder}/${semantics}.gf \
-    ${parsed}.0${filenumber} \
-    ${parsed}.0${filenumber}.${semantics}.txt"
+for filenumber in {01..01}; do
+    screen -S parse${grammar}-and-interpret${semantics}-${filenumber} -dm bash -c "\
+        bash utils/parse-cogs.sh \
+        ${orig_data}.${filenumber} \
+        ${folder}/${grammar}.gf \
+        ${parsed}.${filenumber} \
+        && bash utils/interpret-trees.sh \
+        ${folder}/${semantics}.gf \
+        ${parsed}.${filenumber} \
+        ${parsed}.${filenumber}.${semantics}.txt"
+done
 
 # combine parsed files
 cat ${parsed}.{00..05} \

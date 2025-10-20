@@ -1,4 +1,11 @@
-"""Reorder conjuncts in the logical form."""
+"""Reorder conjuncts in the logical form.
+
+e.g.
+python3 utils/reorder.py \
+    --format gf \
+    --input_file cogs-rgl/parsed-cogs-train-LangEng.txt.01.SemanticsCogsLF.txt \
+    --gold_file cogs-from-orig/orig-data/train.tsv.01
+"""
 import argparse
 from cogs_lexicon import verbs_lemmas
 
@@ -57,10 +64,20 @@ elif args.format == 'gf':
     with open(args.input_file, 'r', encoding='utf-8') as f:
         text = f.read()
     sent_blocks = text.split('sentence: ')
-    for i, block in enumerate(sent_blocks):
+    if len(sent_blocks) != len(gold_sents_and_lf):
+        print(f"Warning: Expected {len(gold_sents_and_lf)} sentences, got {len(sent_blocks)}")
+        print("\tassuming some sentences are not parsed correctly and continuing...")
+    i = -1
+    for block in sent_blocks:
+        i += 1
         if not block.strip():
+            print(f"Warning: Skipping empty block at index {i}")
             continue
         sent = block.splitlines()[0]
+        if any(sent.startswith(msg) for msg in ["The parser failed at token", "The sentence is not complete"]):
+            print(f"Warning: Skipping sentence {i} that failed parsing in block: {block.strip()}")
+            i -= 1
+            continue
         block = block[len(sent):].strip()
         sent = sent.strip()
         treeblocks = block.split('tree: ')
@@ -73,8 +90,8 @@ elif args.format == 'gf':
             if len(interp_lin) < 2:
                 continue
             if len(interp_lin) > 2 and any(l.strip() for l in interp_lin[2:]): 
-                print("Expected 2 parts after 'interpretation and linearisation',")
-                print(f"got {len(interp_lin)} in block:\n{treeblock}")
+                print("Warning: Expected 2 parts after 'interpretation and linearisation',")
+                print(f"\tgot {len(interp_lin)} in block:\n{treeblock}")
             interpreted, linearised = [l.strip() for l in interp_lin][:2]
 
             linearised = linearised.split(' AND Anteriority')[0].strip() # todo: remove
@@ -205,9 +222,14 @@ results = {i+1: 0 for i in range(500)}
 for sentnum, gold in enumerate(gold_sents_and_lf[:500]):
     try:
         sentnum += 1
-        gold_sent, gold_lf, _ = gold
+        gold_sent, gold_lf, tag = gold
+        if tag == "primitive":
+            print(f"Skipping sentence {sentnum} as it is primitive")
+            continue
         for processed in data[sentnum]:
-            assert gold_sent == processed['sent']
+            if gold_sent != processed['sent']:
+                print(f"Sent {sentnum} mismatch:\n{gold_sent}\n{processed['sent']}")
+                exit(1)
 
             lf_reordered       = processed['lf_reordered']
             sent                = processed['sent']
@@ -220,7 +242,7 @@ for sentnum, gold in enumerate(gold_sents_and_lf[:500]):
                 results[sentnum] = 1
                 break
     except KeyError:
-        # print(f"Warning: sentence number {sentnum} not found in processed data")
+        print(f"Warning: sentence number {sentnum+1} not found in processed data")
         pass
 
 print(f"\n{sum(results.values())}/{len(data)} correct")

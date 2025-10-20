@@ -7,7 +7,7 @@ concrete LangFin of Lang =
         AdvCN,
         ExtAdvNP,
         RelNP,
-        ApposCN,
+        ApposCN
         -- DefArt, -- no articles in finnish, everything is indefinite
         -- MassNP
     ],
