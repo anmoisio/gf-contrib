@@ -1,0 +1,1 @@
+concrete SemanticsRestrictedCogsLF of SemanticsRestrictedCogs = SemanticsCogsLF

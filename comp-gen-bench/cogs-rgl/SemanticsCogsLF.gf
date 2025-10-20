@@ -65,25 +65,26 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
 
         -- Uniqueness operator generates a presupposition
         -- (Ind -> Prop) -> Ind -> Prop
-        -- Unique n x = {
-        --     s = "" ;
-        --     asserts = BaseAssert ;
-        --     -- equal to "ConsPresup newPresup BasePresup"
-        --     presups = lin ListPresup ({s = "*" ++ n.property ++ "(" ++ x.s ++ ")" ; isEmpty = NonEmpty}) ;
-        --     property = n.property ;
-        --     events = BaseEvents ;
-        --     inds = BaseInds
-        -- } ;
-
-        Unique prop = {
-            s = prop.s ;
+        Unique n x = {
+            s = "" ;
             asserts = BaseAssert ;
             -- equal to "ConsPresup newPresup BasePresup"
-            presups = lin ListPresup ({s = "*" ++ prop.asserts.s ; isEmpty = NonEmpty}) ;
-            property = prop.property ;
+            presups = lin ListPresup ({s = "*" ++ n.property ++ "(" ++ x.s ++ ")" ; isEmpty = NonEmpty}) ;
+            property = n.property ;
             events = BaseEvents ;
             inds = BaseInds
         } ;
+
+        -- Prop -> Prop
+        -- Unique prop = {
+        --     s = prop.s ;
+        --     asserts = BaseAssert ;
+        --     -- equal to "ConsPresup newPresup BasePresup"
+        --     presups = lin ListPresup ({s = "*" ++ prop.asserts.s ; isEmpty = NonEmpty}) ;
+        --     property = prop.property ;
+        --     events = BaseEvents ;
+        --     inds = BaseInds
+        -- } ;
 
         VUnergVerb v = v ;
         VUnaccVerb v = v ;

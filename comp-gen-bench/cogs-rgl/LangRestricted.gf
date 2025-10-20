@@ -1,5 +1,5 @@
 
-abstract Lang =
+abstract LangRestricted =
 
     -- from abstract/Grammar.gf
     Noun,
@@ -28,7 +28,7 @@ abstract Lang =
     -- Markup - [stringMark],
 
     -- from the cogs dataset
-    -- Cogs,
+    CogsRestricted,
     CogsLexicon
 
     ** {

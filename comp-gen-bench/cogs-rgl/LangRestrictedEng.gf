@@ -1,13 +1,14 @@
 
-concrete LangEng of Lang =
+concrete LangRestrictedEng of LangRestricted =
 
     -- from english/GrammarEng.gf
     NounEng - [
         DetNP,
         AdvCN,
         ExtAdvNP,
-        RelNP,
-        ApposCN
+        RelNP
+        ,ApposCN
+        ,AdvNP -- restrict pp modifier scope to only the immediately previous noun
     ],
     VerbEng - [
         -- AdvVPSlash would be need to modify a verb with a prep phrase
@@ -21,10 +22,12 @@ concrete LangEng of Lang =
         UseComp,
         ExtAdvVP
         ,Slash2V3 -- having Slash3V3 is enough for COGS
+        ,AdvVP
     ],
     AdjectiveEng,
     AdverbEng - [
         SubjS -- SubjS  : Subj -> S -> Adv ; -- when she sleeps
+        -- ,PrepNP
     ],
     -- NumeralEng,
     SentenceEng - [PredSCVP],
@@ -36,6 +39,7 @@ concrete LangEng of Lang =
     StructuralEng - [
         -- want_VV,
         by8means_Prep -- only by8agent_Prep is used
+        ,by8agent_Prep
     ], 
     -- IdiomEng,
     TenseX - [Pol,PPos,PNeg,SC,CAdv],
@@ -54,7 +58,7 @@ concrete LangEng of Lang =
     -- MarkupEng - [stringMark],
 
     -- from the cogs dataset
-    -- CogsEng,
+    CogsRestrictedEng,
     CogsLexiconEng
 
     ** open ResEng, Prelude in {
@@ -64,5 +68,6 @@ flags startcat = Phr ; unlexer = text ; lexer = text ;
 lin
     PPos = {s = [] ; p = CPos} ;
     PNeg = {s = [] ; p = CNeg True} ; -- contracted: don't
+
 
 } ;
