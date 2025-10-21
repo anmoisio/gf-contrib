@@ -28,7 +28,7 @@ concrete LangEng of Lang =
     ],
     -- NumeralEng,
     SentenceEng - [PredSCVP],
-    -- QuestionEng,
+    QuestionEng,
     RelativeEng,
     ConjunctionEng,
     -- PhraseEng,

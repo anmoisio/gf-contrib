@@ -156,6 +156,9 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
         -- PN -> Ind ;
         PNInd pn = pn ;
 
+        -- QInd : Ind ;
+        QInd = {s = "?"} ;
+
         -- Flat conjunction with AND - combines presuppositions and assertions
         -- Prop -> Prop -> Prop
         And p q = {

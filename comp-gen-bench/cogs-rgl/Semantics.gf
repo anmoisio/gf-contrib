@@ -40,6 +40,12 @@ fun Wrapper : Prop -> Prop ;
 fun iS : S -> Prop ;
 def iS (UseCl (TTAnt t ant) p (PredVP np vp)) = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
 
+fun iQS : QS -> Prop ;
+def
+    iQS (UseQCl (TTAnt t ant) p (QuestVP ip vp))                        = ExistE (iTense t (iAnt ant (iIP ip (iPol p (iVP vp))))) ;
+    iQS (UseQCl (TTAnt t ant) p (QuestSlash ip (SlashVP np vpslash)))   = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVPSlash vpslash))))) ;
+
+
 -- After a noun phrase has combined with a verb phrase, the resulting
 -- expression is a function that takes an event as its argument.
 fun iNP : NP -> (Ind -> Event -> Prop) -> Event -> Prop ;
@@ -54,6 +60,18 @@ def
     -- which asserts a single event with two agents (or two events).  
     -- A simpler conjunction can also be defined.                     
     -- iNP (ConjNP conj x y) p = iConj_EP conj (iNP x p) (iNP y p) ;
+
+
+fun iVPSlash : VPSlash -> Ind -> Event -> Prop ;
+def iVPSlash (SlashV2a v2) = \subj -> iV2 v2 subj QInd ;
+
+
+fun iIP : IP -> (Ind -> Event -> Prop) -> Event -> Prop ;
+def iIP who_IP vpf = vpf QInd ;
+
+
+fun QInd : Ind ;
+
 
 -- A noun (a proposition about an individual) and a verb phrase (a proposition about
 -- an individual and an event) combine into a proposition of event.
