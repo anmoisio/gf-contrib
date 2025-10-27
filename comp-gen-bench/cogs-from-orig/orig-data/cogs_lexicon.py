@@ -282,3 +282,130 @@ lexicon = {"animate_nouns" : animate_nouns,
            "V_inf" : V_inf,
            "V_dat_pp" : V_dat_pp,
 }
+
+
+
+animate_nouns_translate_fin = {
+    'girl' : 'tyttö',
+    'boy' : 'poika',
+    'lion': 'leijona', 'monkey': 'apina', 'bear': 'karhu', 'giraffe': 'kirahvi', 'horse': 'hevonen', 'bird': 'lintu', 'duck': 'ankka', 'bunny': 'kani', 'butterfly': 'perhonen', 'penguin': 'pingviini',
+    'student': 'opiskelija', 'professor': 'professori', 'monster': 'hirviö', 'hero': 'sankari', 'sailor': 'merimies', 'lawyer': 'asianajaja', 'customer': 'asiakas', 'scientist': 'tutkija', 'princess': 'prinsessa', 'president': 'presidentti',
+    'cow': 'lehmä', 'crocodile': 'krokotiili', 'goose': 'hanhi', 'hen': 'kana', 'deer': 'peura', 'donkey': 'aasi', 'bee': 'mehiläinen', 'fly': 'kärpänen', 'kitty': 'kissa', 'tiger': 'tiikeri',
+    'wolf': 'susi', 'zebra': 'seepra', 'mother': 'äiti', 'father': 'isä', 'patient': 'potilas', 'manager': 'päällikkö', 'director': 'johtaja', 'king': 'kuningas', 'queen': 'kuningatar', 'kid': 'lapsi',
+    'fish': 'kala', 'moose':  'hirvi', 'pig': 'sika', 'pony': 'poni', 'puppy': 'pennut', 'sheep': 'lammas', 'squirrel': 'orava', 'lamb': 'karitsa', 'turkey': 'kalkkuna', 'turtle': 'kilpikonna',
+    'doctor': 'lääkäri', 'pupil': 'oppilas', 'prince': 'prinssi', 'driver': 'kuljettaja', 'consumer': 'kuluttaja', 'writer': 'kirjailija', 'farmer': 'viljelijä', 'friend': 'ystävä', 'judge': 'tuomari', 'visitor': 'vierailija',
+    'guest': 'vieras', 'servant': 'palvelija', 'chief': 'päällikkö', 'citizen': 'kansalainen', 'champion': 'mestari', 'prisoner': 'vangittu', 'captain': 'kapteeni', 'soldier': 'sotilas', 'passenger': 'matkustaja', 'tenant': 'vuokralainen',
+    'politician': 'poliitikko', 'resident': 'asukas', 'buyer': 'ostaja', 'spokesman': 'puhemies', 'governor': 'kuvernööri', 'guard': 'vartija', 'creature': 'olento', 'coach': 'valmentaja', 'producer': 'tuottaja', 'researcher': 'tutkija',
+    'guy': 'kaveri', 'dealer': 'kauppias', 'duke': 'herttua', 'tourist': 'turisti', 'landlord': 'isäntä', 'human': 'ihminen', 'host': 'isäntä', 'priest': 'pappi', 'journalist': 'journalisti', 'poet': 'runoilija'
+}
+
+inanimate_nouns_translate_fin = {
+    'cake': 'kakku', 'donut': 'donitsi', 'cookie': 'keksi', 'box': 'laatikko', 'rose': 'ruusu', 'drink': 'juoma', 'raisin': 'rusina', 'melon': 'meloni', 'sandwich': 'voileipä', 'strawberry': 'mansikka',
+    'ball': 'pallo', 'balloon': 'ilmapallo', 'bat': 'maila', 'block': 'palikka', 'book': 'kirja', 'crayon': 'väreliitu', 'chalk': 'liitu', 'doll': 'nukke', 'game': 'peli', 'glue': 'liima',
+    'lollipop': 'tikkari', 'hamburger': 'hampurilainen', 'banana': 'banaani', 'biscuit': 'keksi', 'muffin': 'muffinssi', 'pancake': 'pannukakku', 'pizza': 'pizza', 'potato': 'peruna', 'pretzel': 'rinkeli', 'pumpkin': 'kurpitsa',
+    'sweetcorn': 'maissi', 'yogurt': 'jogurtti', 'pickle': 'suolakurkku', 'jigsaw': 'palapeli', 'pen': 'kynä', 'pencil': 'lyijykynä', 'present': 'lahja', 'toy': 'lelu', 'cracker': 'suolakeksi', 'brush': 'harja',
+    'radio': 'radio', 'cloud': 'pilvi', 'mandarin': 'mandariini', 'hat': 'hattu', 'basket': 'kori', 'plant': 'kasvi', 'flower': 'kukka', 'chair': 'tuoli', 'spoon': 'lusikka', 'pillow': 'tyyny',
+    'gumball': 'purukumi', 'scarf': 'huivi', 'shoe': 'kenkä', 'jacket': 'takki', 'hammer': 'vasara', 'bucket': 'ämpäri', 'knife': 'veitsi', 'cup': 'kuppi', 'plate': 'lautanen', 'towel': 'pyyhe',
+    'bottle': 'pullo', 'bowl': 'kulho', 'can': 'tölkki', 'clock': 'kello', 'jar': 'purkki', 'penny': 'penni', 'purse': 'käsilaukku', 'soap': 'saippua', 'toothbrush': 'hammasharja', 'watch': 'rannekello',
+    'newspaper': 'sanomalehti', 'fig': 'viikuna', 'bag': 'kassi', 'wine': 'viini', 'key': 'avain', 'weapon': 'ase', 'brain': 'aivot', 'tool': 'työkalu', 'crown': 'kruunu', 'ring': 'sormus',
+    'leaf': 'lehti', 'fruit': 'hedelmä', 'mirror': 'peili', 'beer': 'olut', 'shirt': 'paita', 'guitar': 'kitara', 'chemical': 'kemikaali', 'seed': 'siemen', 'shell': 'kuori', 'brick': 'tiili',
+    'bell': 'kello', 'coin': 'kolikko', 'button': 'nappi', 'needle': 'neula', 'molecule': 'molekyyli', 'crystal': 'kristalli', 'flag': 'lippu', 'nail': 'naula', 'bean': 'papu', 'liver': 'maksa'
+}
+
+on_nouns_translate_fin = {
+    'table': 'pöytä', 'stage': 'lava', 'bed': 'sänky', 'chair': 'tuoli', 'stool': 'jakkara', 'road': 'tie', 'tree': 'puu', 'box': 'laatikko', 'surface': 'pinta', 'seat': 'istuin',
+    'speaker': 'kaiutin', 'computer': 'tietokone', 'rock': 'kivi', 'boat': 'vene', 'cabinet': 'komero', 'TV': 'TV', 'plate': 'lautanen', 'desk': 'työpöytä', 'bowl': 'kulho', 'bench': 'penkki',
+    'shelf': 'hylly', 'cloth': 'kangas', 'piano': 'piano', 'bible': 'raamattu', 'leaflet': 'esite', 'sheet': 'arkki', 'cupboard': 'kaappi', 'truck': 'kuorma-auto', 'tray': 'tarjotin', 'notebook': 'vihko',
+    'blanket': 'peitto', 'deck': 'kansi', 'coffin': 'arkku', 'log': 'pölkky', 'ladder': 'tikkaat', 'barrel': 'tynnyri', 'rug': 'matto', 'canvas': 'kanvaasi', 'tiger': 'tiikeri', 'towel': 'pyyhe',
+    'throne': 'valtaistuin', 'booklet': 'vihkonen', 'sock': 'sukka', 'corpse': 'ruumis', 'sofa': 'sohva', 'keyboard': 'näppäimistö', 'book': 'kirja', 'pillow': 'tyyny', 'pad': 'alusta', 'train': 'juna',
+    'couch': 'sohva', 'bike': 'pyörä', 'pedestal': 'koroke', 'platter': 'vati', 'paper': 'paperi', 'rack': 'teline', 'board': 'lauta', 'panel': 'paneeli', 'tripod': 'kolmijalka', 'branch': 'oksa',
+    'machine': 'kone', 'floor': 'lattia', 'napkin': 'servetti', 'cookie': 'keksi', 'block': 'palikka', 'cot': 'heteka', 'device': 'laite', 'yacht': 'jahti', 'dog': 'koira', 'mattress': 'patja',
+    'ball': 'pallo', 'stand': 'jalusta', 'stack': 'pino', 'windowsill': 'ikkunalauta', 'counter': 'tiski', 'cushion': 'pehmuste', 'hanger': 'henkari', 'trampoline': 'trampoliini', 'gravel': 'sora', 'cake': 'kakku',
+    'carpet': 'matto', 'plaque': 'plakaatti', 'boulder': 'lohkare', 'leaf': 'lehti', 'mound': 'kumpu', 'bun': 'pulla', 'dish': 'astia', 'cat': 'kissa', 'podium': 'palkintopalli', 'tabletop': 'pöytälevy',
+    'beach': 'ranta', 'bag': 'kassi', 'glacier': 'jäätikkö', 'brick': 'tiili', 'crack': 'halkeama', 'vessel': 'alus', 'futon': 'futon', 'turntable': 'levysoitin', 'rag': 'rätti', 'chessboard': 'shakkilauta'
+}
+
+in_nouns_translate_fin = {
+    'house': 'talo', 'room': 'huone', 'car': 'auto', 'garden': 'puutarha', 'box': 'laatikko', 'cup': 'kuppi', 'glass': 'lasi', 'bag': 'kassi', 'vehicle': 'ajoneuvo', 'hole': 'reikä',
+    'cabinet': 'komero', 'bottle': 'pullo', 'shoe': 'kengät', 'storage': 'varasto', 'cot': 'heteka', 'vessel': 'alus', 'pot': 'pata', 'pit': 'kuoppa', 'tin': 'tina', 'can': 'purkki',
+    'cupboard': 'kaappi', 'envelope': 'kirjekuori', 'nest': 'pesä', 'bush': 'pensaat', 'coffin': 'arkku', 'drawer': 'pöytälaatikko', 'container': 'säiliö', 'basin': 'lavuaari', 'tent': 'teltta', 'soup': 'keitto',
+    'well': 'kaivo', 'barrel': 'tynnyri', 'bucket': 'ämpäri', 'cage': 'häkki', 'sink': 'allas', 'cylinder': 'sylinteri', 'parcel': 'paketti', 'cart': 'kärry', 'sack': 'säkki', 'trunk': 'takakontti',
+    'wardrobe': 'vaatekaappi', 'basket': 'kori', 'bin': 'roskakori', 'fridge': 'jääkaappi', 'mug': 'muki', 'jar': 'purkki', 'corner': 'kulma', 'pool': 'uima-allas', 'blender': 'tehosekoitin', 'closet': 'kaappi',
+    'pile': 'pino', 'van': 'pakettiauto', 'trailer': 'perävaunu', 'saucepan': 'kattila', 'truck': 'kuorma-auto', 'taxi': 'taksi', 'haystack': 'heinäseiväs', 'dumpster': 'roskalaatikko', 'puddle': 'lätäkkö', 'bathtub': 'kylpyamme',
+    'pod': 'palko', 'tub': 'tynnyri', 'trap': 'ansa', 'bun': 'pulla', 'microwave': 'mikroaaltouuni', 'bookstore': 'kirjakauppa', 'package': 'paketti', 'cafe': 'kahvila', 'train': 'juna', 'castle': 'linna',
+    'bunker': 'bunkkeri', 'vase': 'maljakko', 'backpack': 'reppu', 'tube': 'putki', 'hammock': 'riippumatto', 'stadium': 'stadion', 'backyard': 'takapiha', 'swamp': 'suo', 'monastery': 'luostari', 'refrigerator': 'jääkaappi',
+    'palace': 'palatsi', 'cubicle': 'työhuone', 'crib': 'lastensänky', 'condo': 'kerrostalo', 'tower': 'torni', 'crate': 'kuljetuslaatikko', 'dungeon': 'selli', 'teapot': 'teekannu', 'tomb': 'hautakammio', 'casket': 'arkku',
+    'jeep': 'jeeppi', 'shoebox': 'kenkälaatikko', 'wagon': 'vaunu', 'bakery': 'leipomo', 'fishbowl': 'akvaario', 'kennel': 'koirankoppi', 'china': 'posliini', 'spaceship': 'avaruusalus', 'penthouse': 'kattohuoneisto', 'pyramid': 'pyramidi'
+}
+
+beside_nouns_translate_fin = {
+    'table': 'pöytä', 'stage': 'lava', 'bed': 'sänky', 'chair': 'tuoli', 'book': 'kirja', 'road': 'tie', 'tree': 'puu', 'machine': 'kone', 'house': 'talo', 'seat': 'istuin',
+    'speaker': 'kaiutin', 'computer': 'tietokone', 'rock': 'kivi', 'car': 'auto', 'box': 'laatikko', 'cup': 'kuppi', 'glass': 'lasi', 'bag': 'kassi', 'flower': 'kukka', 'boat': 'vene',
+    'vehicle': 'ajoneuvo', 'key': 'avain', 'painting': 'maalaus', 'cabinet': 'kaappi', 'TV': 'televisio', 'bottle': 'pullo', 'cat': 'kissa', 'desk': 'pöytä', 'shoe': 'kengät', 'mirror': 'peili',
+    'clock': 'kello', 'bench': 'penkki', 'bike': 'pyörä', 'lamp': 'lamppu', 'lion': 'leijona', 'piano': 'piano', 'crystal': 'kristalli', 'toy': 'lelu', 'duck': 'ankka', 'sword': 'miekka',
+    'sculpture': 'veistos', 'rod': 'varsi', 'truck': 'kuorma-auto', 'basket': 'kori', 'bear': 'karhu', 'nest': 'pesä', 'sphere': 'pallo', 'bush': 'pensaat', 'surgeon': 'kirurgi', 'poster': 'juliste',
+    'throne': 'valtaistuin', 'giant': 'jättiläinen', 'trophy': 'palkinto', 'hedge': 'aita', 'log': 'pölkky', 'tent': 'teltta', 'ladder': 'tikkaat', 'helicopter': 'helikopteri', 'barrel': 'tynnyri', 'yacht': 'jahti',
+    'statue': 'patsas', 'bucket': 'ämpäri', 'skull': 'kallo', 'beast': 'peto', 'lemon': 'sitruuna', 'whale': 'valas', 'cage': 'häkki', 'gardner': 'puutarhuri', 'fox': 'kettu', 'sink': 'allas',
+    'trainee': 'harjoittelija', 'dragon': 'lohikäärme', 'cylinder': 'sylinteri', 'monk': 'munkki', 'bat': 'lepakkopuku', 'headmaster': 'rehtori', 'philosopher': 'filosofi', 'foreigner': 'ulkomaalainen', 'worm': 'madot', 'chemist': 'kemisti',
+    'corpse': 'ruumis', 'wolf': 'susi', 'torch': 'soihtu', 'sailor': 'merimies', 'valve': 'venttiili', 'hammer': 'vasara', 'doll': 'nukke', 'genius': 'nero', 'baron': 'baroni', 'murderer': 'murhaaja',
+    'bicycle': 'polkupyörä', 'keyboard': 'näppäimistö', 'stool': 'jakkara', 'pepper': 'pippuri', 'warrior': 'soturi', 'pillar': 'pylväs', 'monkey': 'apina', 'cassette': 'kasetti', 'broker': 'välittäjä', 'bin': 'roskakori'
+}
+
+
+verbs_translate_fin = { 
+  'syödä':'eat', 'maalata':'paint', 'piirtää':'draw', 'puhdistaa':'clean',
+  'kokata':'cook', 'pölyttää':'dust', 'metsästää':'hunt', 'hoivata':'nurse',
+  'luonnostella':'sketch', 'pestä':'wash', 'jonglöörata':'juggle', 'kutsua':'call',
+  'piirtää':'draw', 'leipoa':'bake', 'tykätä':'like', 'tietää':'know',
+  'auttaa':'help', 'nähdä':'see', 'löytää':'find', 'kuulla':'hear', 'huomata':'notice',
+  'rakastaa':'love', 'ihailla':'admire', 'palvoa':'adore', 'arvostaa':'appreciate',
+  'kaivata':'miss', 'kunnioittaa':'respect', 'sietää':'tolerate', 'arvostaa':'value',
+  'palvoa':'worship', 'havainnoida':'observe', 'löytää':'discover', 'pitää':'hold',
+  'pistää':'stab', 'koskettaa':'touch', 'lävistää':'pierce', 'tönäistä':'poke',
+  'tietää':'know', 'nähdä':'see', 'lyödä':'hit', 'toivoa':'hope', 'sanoa':'say',
+  'uskoa':'believe', 'myöntää':'confess', 'julistaa':'declare', 'todistaa':'prove',
+  'ajatella':'think', 'tukea':'support', 'toivoa':'wish', 'unelmoida':'dream',
+  'odottaa':'expect', 'kuvitella':'imagine', 'kadehtia':'envy', 'haluta':'want',
+  'suosia':'prefer', 'tarvita':'need', 'aikoa':'intend', 'yrittää':'try',
+  'yrittää':'attempt', 'suunnitella':'plan','himota':'crave','vihata':'hate',
+  'nauttia':'enjoy', 'kääriä':'roll', 'jäätyä':'freeze', 'jäädyttää':'freeze', 'palaa':'burn',
+  'polttaa':'burn', 'lyhentää':'shorten',
+  'leijua':'float', 'kasvaa':'grow', 'liukua':'slide', 'särkeä':'break', 'sortua':'crumple',
+#   'split':'split', 'muuttua':'change', 'snapped':'snap', 'tore':'tear', 'collapsed':'collapse',
+#   'decomposed':'decompose', 'doubled':'double', 'improved':'improve', 'inflated':'inflate',
+#   'enlarged':'enlarge', 'reddened':'redden', 'popped':'pop', 'disintegrated':'disintegrate',
+#   'expanded':'expand', 'cooled':'cool', 'soaked':'soak', 'frozen':'freeze', 'grown':'grow',
+#   'broken':'break', 'torn':'tear', 'slept':'sleep', 'smiled':'smile', 'laughed':'laugh',
+#   'sneezed':'sneeze', 'cried':'cry', 'talked':'talk', 'danced':'dance', 'jogged':'jog',
+#   'walked':'walk', 'ran':'run', 'napped':'nap', 'snoozed':'snooze', 'screamed':'scream',
+#   'stuttered':'stutter', 'frowned':'frown', 'giggled':'giggle', 'scoffed':'scoff',
+#   'snored':'snore', 'snorted':'snort', 'smirked':'smirk', 'gasped':'gasp',
+#   'gave':'give', 'lent':'lend', 'sold':'sell', 'offered':'offer', 'fed':'feed', 
+#   'passed':'pass', 'rented':'rent', 'served':'serve','awarded':'award', 'promised':'promise',
+#   'brought':'bring', 'sent':'send', 'handed':'hand', 'forwarded':'forward', 'mailed':'mail',
+#   'posted':'post','given':'give', 'shipped':'ship', 'packed':'pack', 'studied':'study', 
+#   'examined':'examine', 'investigated':'investigate', 'thrown':'throw', 'threw':'throw',
+#   'tossed':'toss', 'meant':'mean', 'longed':'long', 'yearned':'yearn', 'itched':'itch',
+#   'loaned':'loan', 'returned':'return', 'slipped':'slip', 'wired':'wire', 'crawled':'crawl',
+#   'shattered':'shatter', 'bought':'buy', 'squeezed':'squeeze', 'teleported':'teleport',
+#   'melted':'melt', 'blessed':'bless'
+}
+
+V_unacc_translate_fin = {
+  'roll': 'kieriä', 'freeze': 'jäätyä', 'burn': 'palaa', 'shorten': 'lyhentyä', 'float': 'leijua', 
+  'grow': 'kasvaa', 'slide': 'liukua', 'break': 'särkeä', 'crumple': 'sortua', 'split': 'haljeta', 
+  'change': 'muuttua', 'snap': 'katketa', 'disintegrate': 'hajota', 'collapse': 'romahtaa', 'decompose': 'maatua',
+  'double': 'kaksinkertaistua', 'improve': 'parantua', 'inflate': 'laajentua', 'enlarge': 'suurentua', 'redden': 'punehtua', 
+}
+V_unacc_as_unerg_translate_fin = {
+  'roll': 'kääriä', 'freeze': 'jäätyä', 'burn': 'palaa', 'shorten': 'lyhentyä', 'float': 'leijua', 
+  'grow': 'kasvaa', 'slide': 'liukua', 'break': 'särkeä', 'crumple': 'sortua', 'split': 'haljeta', 
+  'change': 'muuttua', 'snap': 'katketa', 'disintegrate': 'hajota', 'collapse': 'romahtaa', 'decompose': 'maatua',
+  'double': 'kaksinkertaistua', 'improve': 'parantua', 'inflate': 'laajentua', 'enlarge': 'suurentua', 'redden': 'punehtua', 
+}
+V_unerg_translate_fin = {
+  'sleep': 'nukkua', 'smile': 'hymyillä', 'laugh': 'nauraa', 'sneeze': 'aivastaa', 'cry': 'itkeä', 
+  'talk': 'puhua', 'dance': 'tanssia', 'jog': 'hölkätä', 'walk': 'kävellä', 'run': 'juosta', 
+  'nap': 'torkkua', 'snooze': 'nukkua', 'scream': 'huutaa', 'stutter': 'änkyttää', 'frown': 'kurtistaa kulmakarvoja',
+  'giggle': 'kikattaa', 'scoff': 'ivata', 'snore': 'kuorsata', 'smirk': 'virnistää', 'gasp': 'haukkoa henkeä'
+}
