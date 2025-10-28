@@ -529,6 +529,7 @@ data
     inflate_VUnacc 		: VUnacc ;
     redden_VUnacc 		: VUnacc ;
     roll_VUnacc 		: VUnacc ;
+    shatter_VUnacc 		: VUnacc ;
     shorten_VUnacc 		: VUnacc ;
     slide_VUnacc 		: VUnacc ;
     snap_VUnacc 		: VUnacc ;
@@ -566,7 +567,6 @@ data
     scoff_VUnerg 		: VUnerg ;
     scream_VUnerg 		: VUnerg ;
     see_VUnerg 		: VUnerg ;
-    shatter_VUnerg 		: VUnerg ;
     sketch_VUnerg 		: VUnerg ;
     sleep_VUnerg 		: VUnerg ;
     smile_VUnerg 		: VUnerg ;

@@ -529,6 +529,7 @@ lin
     inflate_VUnacc 		= ss "inflate" ;
     redden_VUnacc 		= ss "redden" ;
     roll_VUnacc 		= ss "roll" ;
+    shatter_VUnacc 		= ss "shatter" ;
     shorten_VUnacc 		= ss "shorten" ;
     slide_VUnacc 		= ss "slide" ;
     snap_VUnacc 		= ss "snap" ;
@@ -566,7 +567,6 @@ lin
     scoff_VUnerg 		= ss "scoff" ;
     scream_VUnerg 		= ss "scream" ;
     see_VUnerg 		= ss "see" ;
-    shatter_VUnerg 		= ss "shatter" ;
     sketch_VUnerg 		= ss "sketch" ;
     sleep_VUnerg 		= ss "sleep" ;
     smile_VUnerg 		= ss "smile" ;

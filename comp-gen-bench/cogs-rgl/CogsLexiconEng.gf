@@ -529,6 +529,7 @@ lin
     inflate_VUnacc 		= mkV "inflate" ;
     redden_VUnacc 		= irregV "redden" "reddened" "reddened" ;
     roll_VUnacc 		= mkV "roll" ;
+    shatter_VUnacc 		= mkV "shatter" ;
     shorten_VUnacc 		= irregV "shorten" "shortened" "shortened" ;
     slide_VUnacc 		= irregV "slide" "slid" "slid" ;
     snap_VUnacc 		= irregV "snap" "snapped" "snapped" ;
@@ -566,7 +567,6 @@ lin
     scoff_VUnerg 		= mkV "scoff" ;
     scream_VUnerg 		= mkV "scream" ;
     see_VUnerg 		= irregV "see" "saw" "seen" ;
-    shatter_VUnerg 		= mkV "shatter" ;
     sketch_VUnerg 		= mkV "sketch" ;
     sleep_VUnerg 		= irregV "sleep" "slept" "slept" ;
     smile_VUnerg 		= mkV "smile" ;
