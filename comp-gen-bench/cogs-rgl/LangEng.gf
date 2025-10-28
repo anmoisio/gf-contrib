@@ -3,11 +3,12 @@ concrete LangEng of Lang =
 
     -- from english/GrammarEng.gf
     NounEng - [
-        DetNP,
-        AdvCN,
-        ExtAdvNP,
-        RelNP,
-        ApposCN
+        DetNP
+        -- ,AdvCN
+        ,ExtAdvNP
+        ,RelNP
+        ,ApposCN
+        ,AdvNP -- this is for "Paris today", should not be used for "a house on a hill" which is our use case
     ],
     VerbEng - [
         -- AdvVPSlash would be need to modify a verb with a prep phrase

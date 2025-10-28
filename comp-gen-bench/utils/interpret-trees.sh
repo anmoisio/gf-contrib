@@ -5,16 +5,22 @@ if [ "$#" -ne 3 ]; then
     exit 1
 fi
 
+i=-1
 while IFS="" read -r p || [ -n "$p" ]
 do
     # all trees start with "UseCl"
     if [[ "$p" == UseCl* ]]; then
-        echo "tree: $p" >> "$3"
-        echo "interpretation and linearisation:" >> "$3"
-        echo "pt -compute -tr Wrapper (iS (${p})) | linearize" | gf --run "$1" >> "$3"
+        echo "####tree $i: $p" >> "$3.trees"
+        echo "####interpretation and linearisation $i:" >> "$3.linearised"
+        echo "pt -compute -tr Wrapper (iS (${p})) | linearize" | gf --run "$1" >> "$3.linearised"
     else
         if [ -n "$p" ]; then
-            echo "sentence: $p" >> "$3"
+            # check whether the line includes "The parser failed at token" or "The sentence is not complete"
+            if [[ "$p" == *"The parser failed at token"* ]] || [[ "$p" == *"The sentence is not complete"* ]]; then
+                continue
+            fi
+            i=$((i+1))
+            echo "####sentence $i: $p" >> "$3.sentences"
         fi
     fi
 done < "$2"

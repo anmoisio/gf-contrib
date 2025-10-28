@@ -1,9 +1,8 @@
 abstract SemanticsCogs = Semantics - [
     iVP
-    ,iAdv
-    ,iNP
+    ,iCN
+    ,iAdvCN
     ,iPrep
-    ,iPP
     ,iV
     ,iV2
     ,iV3
@@ -112,19 +111,20 @@ def
                                             )) ;
 
 -- nmod needs to include the noun "mat . nmod . on ( x , y )"
--- so iNP is modified too
-fun iNP : NP -> (Ind -> Event -> Prop) -> Event -> Prop ;
+fun iCN : CN -> Ind -> Prop ;
 def
-    iNP (DetCN det cn)                              vpf = iDet det (iCN cn) vpf ;
-    iNP (UsePN pn)                                  vpf = iPN pn vpf ;
-    iNP (AdvNP np pp) vpf = iPP pp (iNP np) vpf ;
+    iCN (UseN n) = iN n ;
+    iCN (AdvCN cn adv) = \x -> And (iCN cn x) (iAdvCN adv (iCN cn) x) ;
+    iCN (AdjCN adj cn) = \x -> And (iCN cn x) (iAP adj x) ;
 
+fun iAdvCN : Adv -> (Ind -> Prop) -> Ind -> Prop ;
+-- def iAdvCN (PrepNP prep np)  = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep (\a,b -> (iNP np) a b) x y) e) ;
+def iAdvCN (PrepNP prep np) cnf = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep cnf x y) e) ;
 
-fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
-                  (Ind -> Event -> Prop) -> Event -> Prop ;
-def iPP (PrepNP prep np) npf vpf =
-        npf (\x,e -> iNP np (\y,e -> And (vpf x e) (iPrep prep (\a,b -> npf a b) x y)) e) ;
-
+-- fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
+--                   (Ind -> Event -> Prop) -> Event -> Prop ;
+-- def iPP (PrepNP prep np) npf vpf =
+--         npf (\x,e -> iNP np (\y,e -> And (vpf x e) (iPrep prep (\a,b -> npf a b) x y)) e) ;
 
 cat
     Verb ;
@@ -144,5 +144,5 @@ fun
     Ccomp       : VS -> Event   -> Event -> Prop ;  -- e_comp is first event arg
     Xcomp       : VV -> Event   -> Event -> Prop ;
 
-    iPrep : Prep -> ((Ind -> Event -> Prop) -> Event -> Prop) -> Ind -> Ind -> Prop ;
+    iPrep : Prep -> (Ind -> Prop) -> Ind -> Ind -> Prop ;
 }

@@ -68,11 +68,10 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
         Unique n x = {
             s = "" ;
             asserts = BaseAssert ;
-            -- equal to "ConsPresup newPresup BasePresup"
-            presups = lin ListPresup ({s = "*" ++ n.property ++ "(" ++ x.s ++ ")" ; isEmpty = NonEmpty}) ;
-            property = "" ;
+            presups = ConsPresup {s = "*" ++ n.asserts.s ; isEmpty = NonEmpty} n.presups ;
+            property = n.property ;
             events = BaseEvents ;
-            inds = BaseInds
+            inds = n.inds
         } ;
 
         -- V -> Event -> Prop ;
@@ -149,6 +148,16 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
             asserts = lin ListAssert ({s = n.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
             property = n.s ;
+            events = BaseEvents ;
+            inds = BaseInds
+            } ;
+
+        -- A -> Ind -> Prop
+        iA a i = {
+            s = "" ;
+            asserts = lin ListAssert ({s = a.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty}) ;
+            presups = BasePresup ;
+            property = a.s ;
             events = BaseEvents ;
             inds = BaseInds
             } ;

@@ -68,11 +68,10 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         Unique n x = {
             s = "" ;
             asserts = BaseAssert ;
-            -- equal to "ConsPresup newPresup BasePresup"
-            presups = lin ListPresup ({s = "*" ++ n.property ++ "(" ++ x.s ++ ")" ; isEmpty = NonEmpty}) ;
+            presups = ConsPresup {s = "*" ++ n.asserts.s ; isEmpty = NonEmpty} n.presups ;
             property = n.property ;
             events = BaseEvents ;
-            inds = BaseInds
+            inds = n.inds
         } ;
 
         -- Prop -> Prop
@@ -121,10 +120,10 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         --         {s = pnind.s ++ ". nmod ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_obj.s ++ " )" ; isEmpty = NonEmpty}) ;
         --     s = "" ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
         
-        -- Prep -> ((Ind -> Event -> Prop) -> Event -> Prop) -> Ind -> Ind -> Prop
-        iPrep prep npf i_cat i_mat = {
+        -- Prep -> (Ind -> Prop) -> Ind -> Ind -> Prop
+        iPrep prep cnf i_cat i_mat = {
             asserts = lin ListAssert (
-                {s = npf.property ++ ". nmod ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_mat.s ++ " )" ; isEmpty = NonEmpty}) ;
+                {s = cnf.property ++ ". nmod ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_mat.s ++ " )" ; isEmpty = NonEmpty}) ;
             s = prep.s ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
 
 

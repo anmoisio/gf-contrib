@@ -42,17 +42,17 @@ def iS (UseCl (TTAnt t ant) p (PredVP np vp)) = ExistE (iTense t (iAnt ant (iNP 
 
 fun iQS : QS -> Prop ;
 def
-    iQS (UseQCl (TTAnt t ant) p (QuestVP ip vp))                        = ExistE (iTense t (iAnt ant (iIP ip (iPol p (iVP vp))))) ;
-    iQS (UseQCl (TTAnt t ant) p (QuestSlash ip (SlashVP np vpslash)))   = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVPSlash vpslash))))) ;
+    iQS (UseQCl (TTAnt t ant) p (QuestVP ip vp))                    = ExistE (iTense t (iAnt ant (iIP ip (iPol p (iVP vp))))) ;
+    iQS (UseQCl (TTAnt t ant) p (QuestSlash ip (SlashVP np vps)))   = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVPSlash vps))))) ;
 
 
--- After a noun phrase has combined with a verb phrase, the resulting
--- expression is a function that takes an event as its argument.
+-- A noun phrase is interpreted as a function that takes a verb phrase denotation
+-- an returns a proposition about an event
 fun iNP : NP -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
     iNP (DetCN det cn) = iDet det (iCN cn) ;
     iNP (UsePN pn)     = iPN pn ;
-    iNP (AdvNP np pp)  = iPP pp (iNP np) ;
+    -- iNP (AdvNP np pp)  = iAdvNP pp (iNP np) ; -- this is for "Paris today", should not be used for "a house on a hill"
 
     -- NP conjunction creates a complex event property.                
     -- e.g., for "John and Mary ran", this yields                     
@@ -61,25 +61,22 @@ def
     -- A simpler conjunction can also be defined.                     
     -- iNP (ConjNP conj x y) p = iConj_EP conj (iNP x p) (iNP y p) ;
 
-
 fun iVPSlash : VPSlash -> Ind -> Event -> Prop ;
 def iVPSlash (SlashV2a v2) = \subj -> iV2 v2 subj QInd ;
 
-
 fun iIP : IP -> (Ind -> Event -> Prop) -> Event -> Prop ;
-def iIP who_IP vpf = vpf QInd ;
-
+def iIP _ vpf = vpf QInd ; -- doesn't matter if ip is who/what/which/whom (?)
 
 fun QInd : Ind ;
 
-
+-- A determiner is a function from a CN denotation to a NP denotation. 
 -- A noun (a proposition about an individual) and a verb phrase (a proposition about
 -- an individual and an event) combine into a proposition of event.
 fun iDet : Det -> (Ind -> Prop) -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
-    iDet (DetQuant IndefArt NumSg) n vpf  = \e -> Exist (\x -> And (n x) (vpf x e)) ;
+    iDet (DetQuant IndefArt NumSg) cnf vpf  = \e -> Exist (\x -> And (cnf x) (vpf x e)) ;
     -- iDet every_Det n vpf  = \e -> All   (\x -> If  (n x) (vpf x e)) ;
-    iDet (DetQuant DefArt NumSg) n vpf    = \e -> Exist (\x -> And
+    iDet (DetQuant DefArt NumSg) cnf vpf    = \e -> Exist (\x -> And
 
             -- Russelian description:
             -- (n x)
@@ -88,22 +85,11 @@ def
             -- )
 
             -- Using uniqueness operator instead of Russelian description.
-            -- (Unique n x) -- causes "index too large" error because it's not eta-expanded
-            (Unique (\z -> n z) x)
+            -- (Unique cnf x) -- causes "index too large" error because it's not eta-expanded
+            -- (Unique (\z -> cnf z) x)
+            (Unique (\z -> cnf x) x)
             (vpf x e)
         ) ;
-
--- Proper nouns are individuals, and they combine with verb phrases,
--- similarly to nouns in iDet (only simpler).
-fun PNInd : PN -> Ind ;
-fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
-def iPN pn vpf = vpf (PNInd pn) ;
-
--- Same as iAdv, but prepositional phrases modifying a noun phrase.
-fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
-                  (Ind -> Event -> Prop) -> Event -> Prop ;
-def iPP (PrepNP prep np) npf vpf =
-    npf (\x,e -> iNP np (\y,e -> And (vpf x e) (iPrep prep x y)) e) ;
 
 -- Tense adds a temporal predicate to the event property. Same for Ant.
 fun
@@ -146,13 +132,12 @@ def
     -- DOC: "give a dog a bone" vs. the normal "give a bone to a dog" also switches the order of the arguments
     -- so there are 2x2 possibilities.
     -- If v3 is a DOC, then arg1 is the indirect object (oobj) and arg2 the direct object (dobj).
-    -- iVP (ComplSlash (Slash2V3 v3 arg1) arg2) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
     iVP (ComplSlash (Slash3V3 v3 arg2) arg1) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
 
     -- passive voice
     iVP (PassVPSlash (SlashV2a v2))      = iV2Pass v2 ;
     iVP (PassVPSlash (Slash3V3 v3 arg2)) = \x1 -> iNP arg2 (\x2 -> iV3Pass v3 x1 x2) ;
-    iVP (AdvVP vp adv)                    = iAdv adv (iVP vp) ;
+    iVP (AdvVP vp adv)                    = iAdvVP adv (iVP vp) ;
 
     -- sentence as complement
     iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) =
@@ -161,17 +146,41 @@ def
     -- verb as complement
     iVP (ComplVV vv vp) = iVV vv (iVP vp) ;
 
--- Adverbs modify verb phrases.
+-- Adverbs modify verb phrases, e.g. "is painted by a boy"
 -- In COGS the only adverb that modifies a verb phrase is "by" with an agent NP.
 -- To extend COGS, other adverbs could be added here.
-fun iAdv : Adv -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
-def iAdv (PrepNP by8agent_Prep np) vpf = \i -> iNP np (\y,e -> And (vpf i e) (Agent y e)) ;
+fun iAdvVP : Adv -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
+def iAdvVP (PrepNP by8agent_Prep np) vpf = \i -> iNP np (\y,e -> And (vpf i e) (Agent y e)) ;
 
+-- Adverbs can also modify noun phrases, e.g. "Paris today" -- we might include this later
+-- fun iAdvNP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
+--                     (Ind -> Event -> Prop) -> Event -> Prop ;
+-- def iAdvNP (PrepNP prep np) npf vpf =
+--         npf (\x,e -> iNP np (\y,e -> And (vpf x e) (iPrep prep x y)) e) ;
+
+-- Adverbs can also modify common nouns, e.g. "house on a hill"
+-- But we interpret a prepositional phrase (type Adv) as a proposition about an individual
+fun iAdvCN : Adv -> Ind -> Prop ;
+def iAdvCN (PrepNP prep np) = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep x y) e) ;
+
+-- An adjective is a proposition about an individual.
+fun iAP : AP -> Ind -> Prop ;
+def
+    iAP (PositA a) = iA a ;
 
 -- A noun is a proposition about an individual.
--- (iCN is is kind of redundant when the only case is UseN.)
 fun iCN : CN -> Ind -> Prop ;
-def iCN (UseN n) = iN n ;
+def
+    iCN (UseN n) = iN n ;
+    iCN (AdvCN cn adv) = \x -> And (iCN cn x) (iAdvCN adv x) ;
+    iCN (AdjCN adj cn) = \x -> And (iCN cn x) (iAP adj x) ;
+
+
+-- Proper nouns are individuals, and they combine with verb phrases,
+-- similarly to nouns in iDet (only simpler).
+fun PNInd : PN -> Ind ;
+fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
+def iPN pn vpf = vpf (PNInd pn) ;
 
 
 -- A verb is combined with 1-3 individuals, an event, and sometimes a complement
@@ -224,7 +233,6 @@ fun
 
 
 -- interpretation stops at the lexical and morphological interpretation functions
--- in COGS, the lexicon includes nouns, verbs, and prepositions
 fun
     -- verb is a proposition about an event
     VUnergEvent : VUnerg    -> Event -> Prop ;
@@ -235,8 +243,9 @@ fun
     VVEvent     : VV        -> Event -> Prop ;
     VSEvent     : VS        -> Event -> Prop ;
 
-    -- a noun is a proposition about an individual
+    -- each noun and adjective is a proposition about an individual
     iN : N -> Ind -> Prop ;
+    iA : A -> Ind -> Prop ;
 
     -- prepositions are relations between individuals
     iPrep : Prep -> Ind -> Ind -> Prop ;  -- e.g. "nmod . beside ( x , y )"

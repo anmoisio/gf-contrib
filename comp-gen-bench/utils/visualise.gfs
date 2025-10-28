@@ -9,4 +9,5 @@ i LangEng.gf
 -- parse "Liam liked that the cake was tossed by Ava" | visualize_parse -view=eog
 -- p "a girl gave a boy a book" | visualize_parse -view=eog
 -- p "Sebastian gave a rose beside a stage to Mason" | visualize_parse -view=eog
-p "a boy has painted a tree" | visualize_parse -view=eog
+-- p "a boy has painted a tree" | visualize_parse -view=eog
+p "a boy saw a cat that a girl that the shark likes admired"  | visualize_parse  -view=eog
