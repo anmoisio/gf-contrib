@@ -206,7 +206,7 @@ assert len(set(V_dat)) == len(set(V_dat_pp)) == 20
 
 # missing
 V_inf += ['crawl']
-V_trans_omissible += ['shattered']
+V_unacc += ['shattered']
 V_trans_not_omissible += ['blessed', 'squeezed']
 V_dat += ['teleported', 'shipped']
 
