@@ -731,6 +731,23 @@ data
     wish_VV 		: VV ;
     yearn_VV 		: VV ;
 
+    angry_A 		: A ;
+    big_A 		: A ;
+    blue_A 		: A ;
+    fast_A 		: A ;
+    green_A 		: A ;
+    happy_A 		: A ;
+    loud_A 		: A ;
+    old_A 		: A ;
+    quiet_A 		: A ;
+    red_A 		: A ;
+    sad_A 		: A ;
+    short_A 		: A ;
+    slow_A 		: A ;
+    small_A 		: A ;
+    tall_A 		: A ;
+    young_A 		: A ;
+
     beside_Prep : Prep ;
 
 }

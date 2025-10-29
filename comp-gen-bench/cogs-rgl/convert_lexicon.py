@@ -28,6 +28,10 @@ VUnerg.append("bake")
 V2.append("bake")
 verbs_lemmas["baked"] = "bake"
 
+# adjectives
+A = ["big", "small", "red", "blue", "green", "happy", "sad", "angry",
+     "tall", "short", "young", "old", "fast", "slow", "loud", "quiet"]
+
 
 lexs = {
     "N": sorted(list(set(N))),
@@ -42,7 +46,8 @@ lexs = {
     "V3doc": sorted(list(set(V3))), # double object construction
     "to_V3": sorted(list(set(V3))), # same as V3 but with "to" preposition
     "VS": sorted(list(set(VS))),
-    "VV": sorted(list(set(VV)))
+    "VV": sorted(list(set(VV))),
+    "A": sorted(list(set(A)))
 }
 
 exclude = ["want"]
@@ -74,7 +79,8 @@ linfun = { # strings that need to be formatted with the word
     "to_V3": ("mkV3 (regV {}) noPrep toP",    "mkV3 (irregV {}) noPrep toP"), # gave a bone to a dog
     "V3doc": ("mkV3 (regV {}) noPrep noPrep", "mkV3 (irregV {}) noPrep noPrep"), # gave a dog a bone
     "VS": ("mkVS (regV {})", "mkVS (irregV {})"),
-    "VV": ("mkVV (regV {})", "mkVV (irregV {})")
+    "VV": ("mkVV (regV {})", "mkVV (irregV {})"),
+    "A": ("mkA {}", "mkA {}")
 }
 
 verb_base2infls = {}

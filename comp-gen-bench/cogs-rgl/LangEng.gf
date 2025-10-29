@@ -36,7 +36,9 @@ concrete LangEng of Lang =
     TextX - [Pol,PPos,PNeg,SC,CAdv],
     StructuralEng - [
         -- want_VV,
-        by8means_Prep -- only by8agent_Prep is used
+        by8means_Prep   -- only by8agent_Prep is used
+        ,whatPl_IP      -- only use singular IPs
+        ,whoPl_IP
     ], 
     -- IdiomEng,
     TenseX - [Pol,PPos,PNeg,SC,CAdv],

@@ -732,6 +732,23 @@ lin
     wish_VV 		= ss "wish" ;
     yearn_VV 		= ss "yearn" ;
 
+    angry_A 		= ss "angry" ;
+    big_A 		= ss "big" ;
+    blue_A 		= ss "blue" ;
+    fast_A 		= ss "fast" ;
+    green_A 		= ss "green" ;
+    happy_A 		= ss "happy" ;
+    loud_A 		= ss "loud" ;
+    old_A 		= ss "old" ;
+    quiet_A 		= ss "quiet" ;
+    red_A 		= ss "red" ;
+    sad_A 		= ss "sad" ;
+    short_A 		= ss "short" ;
+    slow_A 		= ss "slow" ;
+    small_A 		= ss "small" ;
+    tall_A 		= ss "tall" ;
+    young_A 		= ss "young" ;
+
     beside_Prep = ss "beside" ;
     in_Prep = ss "in" ;
     on_Prep = ss "on" ;

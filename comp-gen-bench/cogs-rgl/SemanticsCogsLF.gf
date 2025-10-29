@@ -164,9 +164,22 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             events = BaseEvents ;
             inds = BaseInds
             } ;
+
+        -- A -> Ind -> Prop
+        iA a i = {
+            s = "" ;
+            asserts = lin ListAssert ({s = a.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty}) ;
+            presups = BasePresup ;
+            property = a.s ;
+            events = BaseEvents ;
+            inds = BaseInds
+            } ;
         
         -- PN -> Ind ;
         PNInd pn = pn ;
+
+        -- QInd : Ind ;
+        QInd = {s = "?"} ;
 
         -- Flat conjunction with AND - combines presuppositions and assertions
         -- Prop -> Prop -> Prop

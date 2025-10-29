@@ -42,8 +42,8 @@ def iS (UseCl (TTAnt t ant) p (PredVP np vp)) = ExistE (iTense t (iAnt ant (iNP 
 
 fun iQS : QS -> Prop ;
 def
-    iQS (UseQCl (TTAnt t ant) p (QuestVP ip vp))                    = ExistE (iTense t (iAnt ant (iIP ip (iPol p (iVP vp))))) ;
-    iQS (UseQCl (TTAnt t ant) p (QuestSlash ip (SlashVP np vps)))   = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVPSlash vps))))) ;
+    iQS (UseQCl (TTAnt t ant) p (QuestVP ip vp))     = ExistE (iTense t (iAnt ant (iIP ip (iPol p (iVP vp))))) ;
+    iQS (UseQCl (TTAnt t ant) p (QuestSlash ip cls)) = ExistE (iTense t (iAnt ant (iIP ip (iPol p (iClSlash cls))))) ;
 
 
 -- A noun phrase is interpreted as a function that takes a verb phrase denotation
@@ -61,11 +61,16 @@ def
     -- A simpler conjunction can also be defined.                     
     -- iNP (ConjNP conj x y) p = iConj_EP conj (iNP x p) (iNP y p) ;
 
-fun iVPSlash : VPSlash -> Ind -> Event -> Prop ;
-def iVPSlash (SlashV2a v2) = \subj -> iV2 v2 subj QInd ;
+-- like iVP but the missing individual is the object instead of subject: (whom) he sees
+fun iClSlash : ClSlash -> Ind -> Event -> Prop ;
+def
+    -- same as "iVP (ComplSlash (SlashV2a v2) np)" except subj and obj switch places
+    iClSlash (SlashVP np (SlashV2a v2)) = \obj -> iNP np (\subj -> iV2 v2 subj obj) ;
 
 fun iIP : IP -> (Ind -> Event -> Prop) -> Event -> Prop ;
-def iIP _ vpf = vpf QInd ; -- doesn't matter if ip is who/what/which/whom (?)
+def
+    iIP (AdvIP _ adv) vpf = \e -> And (vpf QInd e) (iAdvCN adv QInd) ;
+    iIP _ vpf = vpf QInd ; -- doesn't matter if ip is who/what/which/whom (?)
 
 fun QInd : Ind ;
 

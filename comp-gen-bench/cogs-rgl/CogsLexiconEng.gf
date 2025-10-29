@@ -731,6 +731,23 @@ lin
     wish_VV 		= mkVV (regV "wish") ;
     yearn_VV 		= mkVV (regV "yearn") ;
 
+    angry_A 		= mkA "angry" ;
+    big_A 		= mkA "big" ;
+    blue_A 		= mkA "blue" ;
+    fast_A 		= mkA "fast" ;
+    green_A 		= mkA "green" ;
+    happy_A 		= mkA "happy" ;
+    loud_A 		= mkA "loud" ;
+    old_A 		= mkA "old" ;
+    quiet_A 		= mkA "quiet" ;
+    red_A 		= mkA "red" ;
+    sad_A 		= mkA "sad" ;
+    short_A 		= mkA "short" ;
+    slow_A 		= mkA "slow" ;
+    small_A 		= mkA "small" ;
+    tall_A 		= mkA "tall" ;
+    young_A 		= mkA "young" ;
+
     beside_Prep = mkPrep "beside" ;
 oper    aboutP = mkPrep "about" ;
     atP = mkPrep "at" ;
