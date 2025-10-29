@@ -72,8 +72,6 @@ def
     iIP (AdvIP _ adv) vpf = \e -> And (vpf QInd e) (iAdvCN adv QInd) ;
     iIP _ vpf = vpf QInd ; -- doesn't matter if ip is who/what/which/whom (?)
 
-fun QInd : Ind ;
-
 -- A determiner is a function from a CN denotation to a NP denotation. 
 -- A noun (a proposition about an individual) and a verb phrase (a proposition about
 -- an individual and an event) combine into a proposition of event.
@@ -119,7 +117,6 @@ fun iConj_EP : Conj -> (Event -> Prop) -> (Event -> Prop) -> (Event -> Prop) ;
 def
     iConj_EP and_Conj P Q = \e -> And (P e) (Q e) ;
     iConj_EP or_Conj  P Q = \e -> Or (P e) (Q e) ;
-
 
 -- A verb phrase is a function that takes an individual and returns a proposition about an event.
 -- Other individuals are introduced by calling iNP inside iVP.
@@ -180,13 +177,10 @@ def
     iCN (AdvCN cn adv) = \x -> And (iCN cn x) (iAdvCN adv x) ;
     iCN (AdjCN adj cn) = \x -> And (iCN cn x) (iAP adj x) ;
 
-
 -- Proper nouns are individuals, and they combine with verb phrases,
 -- similarly to nouns in iDet (only simpler).
-fun PNInd : PN -> Ind ;
 fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def iPN pn vpf = vpf (PNInd pn) ;
-
 
 -- A verb is combined with 1-3 individuals, an event, and sometimes a complement
 fun
@@ -251,6 +245,12 @@ fun
     -- each noun and adjective is a proposition about an individual
     iN : N -> Ind -> Prop ;
     iA : A -> Ind -> Prop ;
+
+    -- proper noun as Ind
+    PNInd : PN -> Ind ;
+
+    -- the individual in interrogative clauses "who walks?" --> walk(QInd)
+    QInd : Ind ;
 
     -- prepositions are relations between individuals
     iPrep : Prep -> Ind -> Ind -> Prop ;  -- e.g. "nmod . beside ( x , y )"

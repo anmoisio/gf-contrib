@@ -118,13 +118,7 @@ def
     iCN (AdjCN adj cn) = \x -> And (iCN cn x) (iAP adj x) ;
 
 fun iAdvCN : Adv -> (Ind -> Prop) -> Ind -> Prop ;
--- def iAdvCN (PrepNP prep np)  = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep (\a,b -> (iNP np) a b) x y) e) ;
 def iAdvCN (PrepNP prep np) cnf = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep cnf x y) e) ;
-
--- fun iPP : Adv -> ((Ind -> Event -> Prop) -> Event -> Prop) ->
---                   (Ind -> Event -> Prop) -> Event -> Prop ;
--- def iPP (PrepNP prep np) npf vpf =
---         npf (\x,e -> iNP np (\y,e -> And (vpf x e) (iPrep prep (\a,b -> npf a b) x y)) e) ;
 
 cat
     Verb ;
