@@ -8,7 +8,8 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             inds : [Inds] ;
             presups : [Presup] ;
             asserts : [Assert] ;
-            property : Str
+            head : [Assert] ;   -- head of the noun phrase
+            property : Str      -- property of the noun, needed in iPrep
         } ;
 
         -- GF book section 8.7 and blog post https://inariksit.github.io/gf/2021/02/22/lists.html
@@ -40,6 +41,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             presups = prop.presups ;
             events = prop.events ;
             inds = prop.inds ;
+            head = prop.head ;
             property = prop.property
         } ;
 
@@ -50,6 +52,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             events = ConsEvents {s = f.$0 ; isEmpty = NonEmpty} f.events ;
             asserts = f.asserts ;
             presups = f.presups ;
+            head = BaseAssert ;
             property = f.property ;
             inds = f.inds
         } ;
@@ -58,32 +61,23 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             s = f.s ;
             events = f.events ;
             inds = ConsInds {s = f.$0 ; isEmpty = NonEmpty} f.inds ;
-            asserts = f.asserts ;
+            asserts = ConsAssert f.head f.asserts ;
             presups = f.presups ;
-            property = f.property
+            property = f.property ;
+            head = BaseAssert
         } ;
 
         -- Uniqueness operator generates a presupposition
         -- (Ind -> Prop) -> Ind -> Prop
         Unique n x = {
             s = "" ;
-            asserts = BaseAssert ;
-            presups = ConsPresup {s = "*" ++ n.asserts.s ; isEmpty = NonEmpty} n.presups ;
+            asserts = n.asserts ;
+            presups = ConsPresup {s = "*" ++ n.head.s ; isEmpty = NonEmpty} n.presups ;
+            head = BaseAssert ;
             property = n.property ;
             events = BaseEvents ;
             inds = n.inds
         } ;
-
-        -- Prop -> Prop
-        -- Unique prop = {
-        --     s = prop.s ;
-        --     asserts = BaseAssert ;
-        --     -- equal to "ConsPresup newPresup BasePresup"
-        --     presups = lin ListPresup ({s = "*" ++ prop.asserts.s ; isEmpty = NonEmpty}) ;
-        --     property = prop.property ;
-        --     events = BaseEvents ;
-        --     inds = BaseInds
-        -- } ;
 
         VUnergVerb v = v ;
         VUnaccVerb v = v ;
@@ -96,20 +90,20 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         -- V -> Ind -> Event -> Prop
         Agent v i e = {
             asserts = lin ListAssert ({s = v.s ++ "." ++ "agent" ++ "( " ++ e.s ++ " , " ++ i.s ++ " )" ; isEmpty = NonEmpty}) ;
-            s = v.s ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+            s = v.s ; presups = BasePresup ; property = "" ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
         Theme v i e = {
             asserts = lin ListAssert ({s = v.s ++ "." ++ "theme" ++ "( " ++ e.s ++ " , " ++ i.s ++ " )" ; isEmpty = NonEmpty}) ;
-            s = v.s ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+            s = v.s ; presups = BasePresup ; property = "" ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
         Recipient v i e = {
             asserts = lin ListAssert ({s = v.s ++ "." ++ "recipient" ++ "( " ++ e.s ++ " , " ++ i.s ++ " )" ; isEmpty = NonEmpty}) ;
-            s = v.s ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+            s = v.s ; presups = BasePresup ; property = "" ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
         -- V -> Event -> Event -> Prop
         Ccomp v e1 e2 = {
             asserts = lin ListAssert ({s = v.s ++ "." ++ "ccomp" ++ "( " ++ e1.s ++ " , " ++ e2.s ++ " )" ; isEmpty = NonEmpty}) ;
-            s = v.s ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+            s = v.s ; presups = BasePresup ; property = "" ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
         Xcomp v e1 e2 = {
             asserts = lin ListAssert ({s = v.s ++ "." ++ "xcomp" ++ "( " ++ e1.s ++ " , " ++ e2.s ++ " )" ; isEmpty = NonEmpty}) ;
-            s = v.s ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+            s = v.s ; presups = BasePresup ; property = "" ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
         -- Prep -> Prop -> Ind -> Ind -> Prop
         -- iPrepCN prep nprop i_cat i_obj = {
         --     asserts = lin ListAssert (
@@ -124,7 +118,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         iPrep prep cnf i_cat i_mat = {
             asserts = lin ListAssert (
                 {s = cnf.property ++ ". nmod ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_mat.s ++ " )" ; isEmpty = NonEmpty}) ;
-            s = prep.s ; presups = BasePresup ; property = "" ; events = BaseEvents ; inds = BaseInds } ;
+            s = prep.s ; presups = BasePresup ; property = "" ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
 
 
         -- Tense -> Event -> Prop
@@ -132,6 +126,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             s = t.s ;
             asserts = lin ListAssert ({s = "Time ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
+            head = BaseAssert ;
             property = "" ;
             events = BaseEvents ;
             inds = BaseInds
@@ -141,6 +136,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             s = t.s ;
             asserts = lin ListAssert ({s = "Anteriority ( " ++ e.s ++ " , " ++ t.s ++ " )"; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
+            head = BaseAssert ;
             property = "" ;
             events = BaseEvents ;
             inds = BaseInds
@@ -157,9 +153,10 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         -- Nouns
         -- N -> Ind -> Prop
         iN n i = {
-            s = n.s ;
-            asserts = lin ListAssert ({s = n.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty}) ;
+            s = "";
+            asserts = BaseAssert ;
             presups = BasePresup ;
+            head = lin ListAssert ({s = n.s ++ "(" ++ i.s ++ ")" ; isEmpty = NonEmpty}) ;
             property = n.s ;
             events = BaseEvents ;
             inds = BaseInds
@@ -170,6 +167,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             s = "" ;
             asserts = lin ListAssert ({s = a.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
+            head = lin ListAssert ({s = a.s ++ "(" ++ i.s ++ ")"; isEmpty = NonEmpty}) ;
             property = a.s ;
             events = BaseEvents ;
             inds = BaseInds
@@ -184,11 +182,12 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         -- Flat conjunction with AND - combines presuppositions and assertions
         -- Prop -> Prop -> Prop
         And p q = {
-            s = p.s ;
+            s = "" ;
             asserts = ConsAssert p.asserts q.asserts ;
             presups = ConsPresup p.presups q.presups ;
             events = ConsEvents p.events q.events ;
             inds = ConsInds p.inds q.inds ;
+            head = p.head ; -- head of the noun phrase
             property = p.property
             } ;
         
@@ -198,6 +197,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             s = p.s ;
             asserts = lin ListAssert ({s = "¬( " ++ p.asserts.s ++ " )" ; isEmpty = NonEmpty}) ;
             presups = p.presups ;
+            head = p.head ;
             property = p.property ;
             events = p.events ;
             inds = p.inds
@@ -211,6 +211,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
             s = "" ;
             asserts = lin ListAssert ({s = x.s ++ " == " ++ y.s ; isEmpty = NonEmpty}) ;
             presups = BasePresup ;
+            head = BaseAssert ;
             property = "" ;
             events = BaseEvents ;
             inds = BaseInds

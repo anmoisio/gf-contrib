@@ -7,6 +7,7 @@ concrete LangEng of Lang =
         -- ,AdvCN
         ,ExtAdvNP
         ,RelNP
+        ,SentCN
         ,ApposCN
         ,AdvNP -- this is for "Paris today", should not be used for "a house on a hill" which is our use case
     ],

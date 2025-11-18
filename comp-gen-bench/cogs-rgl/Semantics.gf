@@ -67,10 +67,16 @@ def
     -- same as "iVP (ComplSlash (SlashV2a v2) np)" except subj and obj switch places
     iClSlash (SlashVP np (SlashV2a v2)) = \obj -> iNP np (\subj -> iV2 v2 subj obj) ;
 
+-- An interrogative pronoun, e.g. "who walks?" --> walk(QInd)
 fun iIP : IP -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
     iIP (AdvIP _ adv) vpf = \e -> And (vpf QInd e) (iAdvCN adv QInd) ;
     iIP _ vpf = vpf QInd ; -- doesn't matter if ip is who/what/which/whom (?)
+
+-- same as iIP but for relative clauses, e.g. "who walks" in "she saw the man who walks"
+-- fun iRCl : RP -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
+-- def
+--     iRP IdRP vpf = \e -> And (vpf QInd e) (iAdvCN adv QInd) ;
 
 -- A determiner is a function from a CN denotation to a NP denotation. 
 -- A noun (a proposition about an individual) and a verb phrase (a proposition about
@@ -176,6 +182,7 @@ def
     iCN (UseN n) = iN n ;
     iCN (AdvCN cn adv) = \x -> And (iCN cn x) (iAdvCN adv x) ;
     iCN (AdjCN adj cn) = \x -> And (iCN cn x) (iAP adj x) ;
+    -- iCN (RelCN cn (UseRCl (TTAnt t ant) p (RelVP rp vp))) = \x -> And (iCN cn x) (ExistE (iTense t (iAnt ant (iRCl rp (iPol p (iVP vp)))))) ;
 
 -- Proper nouns are individuals, and they combine with verb phrases,
 -- similarly to nouns in iDet (only simpler).

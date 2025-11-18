@@ -12,6 +12,8 @@ do
     sent=$(echo "$p" | cut -f1)
     lowercase="${sent/'The '/'the '}"
     lowercase2="${lowercase/'A '/'a '}"
-    echo p \"${lowercase2}\" | tr -d '.' | gf --run "$2" >> "$3"
+    lowercase3="${lowercase2/'What '/'what '}"
+    lowercase4="${lowercase3/'Who '/'who '}"
+    echo p \"${lowercase4}\" | tr -d '.' | gf --run "$2" >> "$3"
 
 done < "$1"

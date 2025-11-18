@@ -2,15 +2,16 @@
 # constants
 # orig_data=cogs-from-orig/orig-data/dev.tsv
 # orig_data=cogs-from-orig/orig-data/gen.tsv
-# orig_data=cogs-from-orig/orig-data/train.tsv
-orig_data=slog-data/dev.tsv
+orig_data=cogs-from-orig/orig-data/train.tsv
+# orig_data=slog-data/dev.tsv
+orig_data_folder=$(dirname ${orig_data} | sed 's/\//-/')
 orig_data_filename=$(basename ${orig_data} .tsv)
 
-filenumber=0
+filenumber=15
 folder=cogs-rgl
 grammar=LangEng
 # grammar=LangRestrictedEng
-parsed=${folder}/parsed-cogs-${orig_data_filename}-${grammar}.txt
+parsed=${folder}/parsed-${orig_data_folder}-${orig_data_filename}-${grammar}.txt
 
 # semantics=SemanticsLF
 semantics=SemanticsCogsLF
@@ -33,11 +34,11 @@ done
 # interpret and linearise
 screen -S interpret${semantics}-${filenumber} -dm bash utils/interpret-trees.sh \
     ${folder}/${semantics}.gf \
-    ${parsed}.0${filenumber} \
-    ${parsed}.0${filenumber}.${semantics}.txt
+    ${parsed}.${filenumber} \
+    ${parsed}.${filenumber}.${semantics}.txt
 
 # parse and interpret in one go
-for filenumber in {00..00}; do
+for filenumber in {15..15}; do
     screen -S parse${grammar}-and-interpret${semantics}-${filenumber} -dm bash -c "\
         bash utils/parse-cogs.sh \
         ${orig_data}.${filenumber} \
@@ -68,3 +69,11 @@ bash utils/interpret-trees.sh \
     ${concrete} \
     ${parsed} \
     ${parsed}.SemanticsCogsLF.interpreted.txt
+
+
+# reorder and compare to original LFs
+python3 utils/reorder.py \
+    --format gf \
+    --input_file cogs-rgl/parsed-cogs-train-LangEng.txt.01.SemanticsCogsLF.txt \
+    --gold_file cogs-from-orig/orig-data/train.tsv.01
+
