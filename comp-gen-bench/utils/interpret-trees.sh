@@ -13,6 +13,10 @@ do
         echo "####tree $i: $p" >> "$3.trees"
         echo "####interpretation and linearisation $i:" >> "$3.linearised"
         echo "pt -compute -tr Wrapper (iS (${p})) | linearize" | gf --run "$1" >> "$3.linearised"
+    elif [[ "$p" == UseQCl* ]]; then
+        echo "####tree $i: $p" >> "$3.trees"
+        echo "####interpretation and linearisation $i:" >> "$3.linearised"
+        echo "pt -compute -tr Wrapper (iQS (${p})) | linearize" | gf --run "$1" >> "$3.linearised"
     else
         if [ -n "$p" ]; then
             # check whether the line includes "The parser failed at token" or "The sentence is not complete"

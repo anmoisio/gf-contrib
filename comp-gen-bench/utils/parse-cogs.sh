@@ -14,6 +14,12 @@ do
     lowercase2="${lowercase/'A '/'a '}"
     lowercase3="${lowercase2/'What '/'what '}"
     lowercase4="${lowercase3/'Who '/'who '}"
-    echo p \"${lowercase4}\" | tr -d '.' | gf --run "$2" >> "$3"
+    # check if it is a question by seeing if it ends with a question mark
+    if [[ "$lowercase4" == *"?" ]]; then
+        lowercase5="${lowercase4% ?}"
+        echo p -cat=QS \"${lowercase5}\" | tr -d '.' | gf --run "$2" >> "$3"
+    else
+        echo p \"${lowercase4}\" | tr -d '.' | gf --run "$2" >> "$3"
+    fi
 
 done < "$1"

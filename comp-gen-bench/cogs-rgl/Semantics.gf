@@ -64,8 +64,12 @@ def
 -- like iVP but the missing individual is the object instead of subject: (whom) he sees
 fun iClSlash : ClSlash -> Ind -> Event -> Prop ;
 def
-    -- same as "iVP (ComplSlash (SlashV2a v2) np)" except subj and obj switch places
-    iClSlash (SlashVP np (SlashV2a v2)) = \obj -> iNP np (\subj -> iV2 v2 subj obj) ;
+    -- same as "iVP (ComplSlash vpslash np)" except subj and obj switch places
+    iClSlash (SlashVP np vps) =
+        \obj -> iNP np (\subj -> iVPSlash vps subj obj) ;     -- (what) the boy sees 
+    iClSlash (SlashVS np vs (UseSlash (TTAnt t ant) p cls)) = -- (what) the boy says that the cat saw
+                                                              -- obj is in the complement
+        \obj -> iNP np (\subj -> iVS vs (iTense t (iAnt ant ((iPol p (iClSlash cls)) obj))) subj) ;
 
 -- An interrogative pronoun, e.g. "who walks?" --> walk(QInd)
 fun iIP : IP -> (Ind -> Event -> Prop) -> Event -> Prop ;
@@ -74,9 +78,10 @@ def
     iIP _ vpf = vpf QInd ; -- doesn't matter if ip is who/what/which/whom (?)
 
 -- same as iIP but for relative clauses, e.g. "who walks" in "she saw the man who walks"
--- fun iRCl : RP -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
--- def
---     iRP IdRP vpf = \e -> And (vpf QInd e) (iAdvCN adv QInd) ;
+-- in SLOG the rp is always "that"
+fun iRCl : RP -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
+def
+    iRCl IdRP vf i = vf i ;
 
 -- A determiner is a function from a CN denotation to a NP denotation. 
 -- A noun (a proposition about an individual) and a verb phrase (a proposition about
@@ -108,7 +113,7 @@ def
     iTense t p = \e -> And (p e) (Time t e) ;
     iAnt ant p = \e -> And (p e) (Anteriority ant e) ;
 
-fun iPol : Pol -> (Ind -> Event -> Prop) -> (Ind -> Event -> Prop) ;
+fun iPol : Pol -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
 def
     iPol PPos vpf = vpf ;
     iPol PNeg vpf = \i,e -> Not (vpf i e) ;
@@ -134,13 +139,14 @@ def
     -- The object NP takes the transitive verb as its scope.
     -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
     -- The result of `iNP np (...)` is the final Event -> Prop for the subject `i`.
-    iVP (ComplSlash (SlashV2a v2) np) = \subj -> iNP np (\obj -> iV2 v2 subj obj) ;
+    -- iVP (ComplSlash (SlashV2a v2) np) = \subj -> iNP np (\obj -> iV2 v2 subj obj) ;
+    iVP (ComplSlash vpslash np) = \subj -> iNP np (\obj -> iVPSlash vpslash subj obj) ;
 
     -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places; the have the same meaning
     -- DOC: "give a dog a bone" vs. the normal "give a bone to a dog" also switches the order of the arguments
     -- so there are 2x2 possibilities.
     -- If v3 is a DOC, then arg1 is the indirect object (oobj) and arg2 the direct object (dobj).
-    iVP (ComplSlash (Slash3V3 v3 arg2) arg1) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
+    -- iVP (ComplSlash (Slash3V3 v3 arg2) arg1) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
 
     -- passive voice
     iVP (PassVPSlash (SlashV2a v2))      = iV2Pass v2 ;
@@ -148,11 +154,18 @@ def
     iVP (AdvVP vp adv)                    = iAdvVP adv (iVP vp) ;
 
     -- sentence as complement
-    iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) =
+    iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) = -- said that the boy walked
         iVS vs (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
 
     -- verb as complement
     iVP (ComplVV vv vp) = iVV vv (iVP vp) ;
+
+-- slashed verb is a proposition about an event and two noun phrases, the subject and object
+fun iVPSlash : VPSlash -> Ind -> Ind -> Event -> Prop ;
+def
+    iVPSlash (SlashV2a v2) = iV2 v2 ;
+    iVPSlash (Slash3V3 v3 n_oobj) = \subj,dobj -> iNP n_oobj (\oobj -> iV3 v3 subj dobj oobj) ;
+
 
 -- Adverbs modify verb phrases, e.g. "is painted by a boy"
 -- In COGS the only adverb that modifies a verb phrase is "by" with an agent NP.
@@ -182,7 +195,8 @@ def
     iCN (UseN n) = iN n ;
     iCN (AdvCN cn adv) = \x -> And (iCN cn x) (iAdvCN adv x) ;
     iCN (AdjCN adj cn) = \x -> And (iCN cn x) (iAP adj x) ;
-    -- iCN (RelCN cn (UseRCl (TTAnt t ant) p (RelVP rp vp))) = \x -> And (iCN cn x) (ExistE (iTense t (iAnt ant (iRCl rp (iPol p (iVP vp)))))) ;
+    iCN (RelCN cn (UseRCl (TTAnt t ant) p (RelVP rp vp)))         = \x -> And (iCN cn x) (ExistE (iTense t (iAnt ant (iRCl rp (iPol p (iVP vp)) x)))) ;
+    iCN (RelCN cn (UseRCl (TTAnt t ant) p (RelSlash rp clslash))) = \x -> And (iCN cn x) (ExistE (iTense t (iAnt ant (iRCl rp (iPol p (iClSlash clslash)) x)))) ;
 
 -- Proper nouns are individuals, and they combine with verb phrases,
 -- similarly to nouns in iDet (only simpler).

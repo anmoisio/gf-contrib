@@ -2,24 +2,25 @@
 # constants
 # orig_data=cogs-from-orig/orig-data/dev.tsv
 # orig_data=cogs-from-orig/orig-data/gen.tsv
-orig_data=cogs-from-orig/orig-data/train.tsv
-# orig_data=slog-data/dev.tsv
+# orig_data=cogs-from-orig/orig-data/train.tsv
+orig_data=slog-data/dev.tsv
 orig_data_folder=$(dirname ${orig_data} | sed 's/\//-/')
 orig_data_filename=$(basename ${orig_data} .tsv)
 
-filenumber=15
+filenumber=40
 folder=cogs-rgl
 grammar=LangEng
 # grammar=LangRestrictedEng
 parsed=${folder}/parsed-${orig_data_folder}-${orig_data_filename}-${grammar}.txt
 
 # semantics=SemanticsLF
-semantics=SemanticsCogsLF
+# semantics=SemanticsCogsLF
 # semantics=SemanticsRestrictedCogsLF
+semantics=SemanticsReCogsLF
 
 
 # split dev.tsv into smaller files for parallel processing
-split -d -l 500 \
+split -d -l 100 \
     ${orig_data} \
     ${orig_data}.
 
@@ -32,13 +33,16 @@ for filenumber in {00..00}; do
 done
 
 # interpret and linearise
-screen -S interpret${semantics}-${filenumber} -dm bash utils/interpret-trees.sh \
-    ${folder}/${semantics}.gf \
-    ${parsed}.${filenumber} \
-    ${parsed}.${filenumber}.${semantics}.txt
+for filenumber in {37..37}; do
+    screen -S interpret${semantics}-${filenumber} -dm bash utils/interpret-trees.sh \
+        ${folder}/${semantics}.gf \
+        ${parsed}.${filenumber} \
+        ${parsed}.${filenumber}.${semantics}.txt
+done
 
-# parse and interpret in one go
-for filenumber in {15..15}; do
+
+# parse + interpret&linearise in one go
+for filenumber in {37..39}; do
     screen -S parse${grammar}-and-interpret${semantics}-${filenumber} -dm bash -c "\
         bash utils/parse-cogs.sh \
         ${orig_data}.${filenumber} \
@@ -74,6 +78,6 @@ bash utils/interpret-trees.sh \
 # reorder and compare to original LFs
 python3 utils/reorder.py \
     --format gf \
-    --input_file cogs-rgl/parsed-cogs-train-LangEng.txt.01.SemanticsCogsLF.txt \
-    --gold_file cogs-from-orig/orig-data/train.tsv.01
+    --input_file ${parsed}.${filenumber}.${semantics}.txt \
+    --gold_file ${orig_data}.${filenumber}
 
