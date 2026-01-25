@@ -81,3 +81,30 @@ python3 utils/reorder.py \
     --input_file ${parsed}.${filenumber}.${semantics}.txt \
     --gold_file ${orig_data}.${filenumber}
 
+
+########################################################################
+# SCAN structural generalisation data generation
+########################################################################
+
+# grammar=scan/ScanStructGen
+# generated=scan/struct-gen/noopposites/trees.txt
+# processed=scan/struct-gen/noopposites/
+
+# grammar=scan/ScanStructGenMore
+# generated=scan/struct-gen/5more/trees.txt
+# processed=scan/struct-gen/5more/
+
+grammar=scan/ScanStructGen12More
+generated=scan/struct-gen/12more/trees.txt
+processed=scan/struct-gen/12more/
+
+number=10000
+
+mkdir -p "$(dirname "$generated")"
+echo "gt -depth=60 -number=10000000 | l -tabtreebank" | \
+    gf --run ${grammar}Input.gf ${grammar}Output.gf > "$generated".all
+
+# take a random subset of generated data for processing
+shuf -n $number "$generated".all > "${generated}"
+
+python utils/complement.py "$generated" "$processed"
