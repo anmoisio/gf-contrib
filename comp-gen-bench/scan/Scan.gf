@@ -24,13 +24,13 @@ abstract Scan = {
         Twice       : VP -> Imp ;               -- walk twice
         Thrice      : VP -> Imp ;               -- walk thrice
         
-        UseV        : V             -> VP ;
+        UseV        : V             -> VP ;       -- walk
         DirVP       : Verb -> Adv   -> VP ;       -- walk left
         OppositeVP  : Verb -> Adv   -> VP ;       -- walk opposite left
         AroundVP    : Verb -> Adv   -> VP ;       -- walk around left
 
-        VVerb       : V     -> Verb ;
-        VDVerb      : VD    -> Verb ;
+        VVerb       : V     -> Verb ;           -- walk/run/look/jump
+        VDVerb      : VD    -> Verb ;           -- turn
 
         left_Adv, right_Adv             : Adv ;
         turn_VD                         : VD ;

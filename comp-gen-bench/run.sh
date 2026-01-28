@@ -86,25 +86,5 @@ python3 utils/reorder.py \
 # SCAN structural generalisation data generation
 ########################################################################
 
-# grammar=scan/ScanStructGen
-# generated=scan/struct-gen/noopposites/trees.txt
-# processed=scan/struct-gen/noopposites/
+python utils/new_scan_funs.py --number_of_funs 120 180 240 300
 
-# grammar=scan/ScanStructGenMore
-# generated=scan/struct-gen/5more/trees.txt
-# processed=scan/struct-gen/5more/
-
-grammar=scan/ScanStructGen12More
-generated=scan/struct-gen/12more/trees.txt
-processed=scan/struct-gen/12more/
-
-number=10000
-
-mkdir -p "$(dirname "$generated")"
-echo "gt -depth=60 -number=10000000 | l -tabtreebank" | \
-    gf --run ${grammar}Input.gf ${grammar}Output.gf > "$generated".all
-
-# take a random subset of generated data for processing
-shuf -n $number "$generated".all > "${generated}"
-
-python utils/complement.py "$generated" "$processed"

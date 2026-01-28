@@ -1,5 +1,5 @@
 
-abstract ScanStructGenMore = Scan
+abstract ScanNoOpposite5More = Scan
     - [OppositeVP]
     **
 {

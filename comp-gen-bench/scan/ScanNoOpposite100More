@@ -1,0 +1,5 @@
+Namespace(number_of_funs=['2', '0'], maxlen_of_funs=8, output_file_path='scan/ScanNoOpposite100More')
+Namespace(number_of_funs=['4', '0'], maxlen_of_funs=8, output_file_path='scan/ScanNoOpposite100More')
+Namespace(number_of_funs=['6', '0'], maxlen_of_funs=8, output_file_path='scan/ScanNoOpposite100More')
+Namespace(number_of_funs=['8', '0'], maxlen_of_funs=8, output_file_path='scan/ScanNoOpposite100More')
+Namespace(number_of_funs=['1', '0', '0'], maxlen_of_funs=8, output_file_path='scan/ScanNoOpposite100More')

@@ -1,8 +1,5 @@
 
-abstract ScanStructGen = Scan
-    - [OppositeVP]
-    **
-{
+abstract ScanNoOpposite = Scan - [OppositeVP] ** {
     flags startcat = Utt ;
 
     cat VPopp ;

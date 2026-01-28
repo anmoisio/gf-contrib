@@ -1,0 +1,70 @@
+abstract ScanNoOpposite60More = Scan - [OppositeVP] ** {
+	flags startcat = Utt ;
+
+	cat VPopp ;
+
+	data
+		UseVPopp		: VPopp -> Utt ;
+		OppositeVP		: Verb -> Adv -> VPopp ;
+		AdvVerbAdvAdvAdvVerb		: Verb -> Adv -> VP ;
+		VerbAdvAdvVerbAdvAdvAdv		: Verb -> Adv -> VP ;
+		AdvAdvAdvAdvVerbVerbVerb		: Verb -> Adv -> VP ;
+		AdvVerbAdv		: Verb -> Adv -> VP ;
+		AdvAdvVerbAdvVerbAdv		: Verb -> Adv -> VP ;
+		VerbVerbVerbVerbAdv		: Verb -> Adv -> VP ;
+		VerbVerbVerbVerbAdvAdvVerb		: Verb -> Adv -> VP ;
+		VerbVerbAdvAdvAdvVerb		: Verb -> Adv -> VP ;
+		VerbAdvAdvAdvVerbAdvVerbAdv		: Verb -> Adv -> VP ;
+		VerbVerbAdv		: Verb -> Adv -> VP ;
+		AdvVerbVerbVerbAdv		: Verb -> Adv -> VP ;
+		VerbAdvAdvAdvAdvAdvAdvAdv		: Verb -> Adv -> VP ;
+		AdvVerbAdvVerbAdvAdvVerbAdv		: Verb -> Adv -> VP ;
+		VerbVerbVerbVerbVerbVerbVerbAdv		: Verb -> Adv -> VP ;
+		VerbVerbVerbVerbAdvVerb		: Verb -> Adv -> VP ;
+		VerbAdvVerbAdv		: Verb -> Adv -> VP ;
+		VerbAdvAdvVerbVerbVerbVerbVerb		: Verb -> Adv -> VP ;
+		VerbAdvAdv		: Verb -> Adv -> VP ;
+		AdvAdvVerbVerbVerbVerb		: Verb -> Adv -> VP ;
+		AdvAdvVerbVerbAdvAdvAdv		: Verb -> Adv -> VP ;
+		VerbVerbVerbAdv		: Verb -> Adv -> VP ;
+		AdvVerbVerbAdv		: Verb -> Adv -> VP ;
+		VerbAdvAdvAdvAdvVerbAdvAdv		: Verb -> Adv -> VP ;
+		AdvVerbAdvVerb		: Verb -> Adv -> VP ;
+		VerbVerbVerbAdvAdvVerbAdv		: Verb -> Adv -> VP ;
+		AdvVerbAdvAdvVerbVerbAdv		: Verb -> Adv -> VP ;
+		AdvVerbAdvAdv		: Verb -> Adv -> VP ;
+		AdvAdvAdvVerbVerb		: Verb -> Adv -> VP ;
+		AdvVerbVerbAdvVerb		: Verb -> Adv -> VP ;
+		AdvAdvVerbVerbVerbAdvAdvAdv		: Verb -> Adv -> VP ;
+		AdvAdvAdvVerbVerbAdvAdv		: Verb -> Adv -> VP ;
+		VerbVerbAdvAdvVerb		: Verb -> Adv -> VP ;
+		AdvAdvVerbVerb		: Verb -> Adv -> VP ;
+		AdvAdvAdvVerbAdvAdvAdvVerb		: Verb -> Adv -> VP ;
+		AdvAdvAdvVerb		: Verb -> Adv -> VP ;
+		VerbAdvVerbVerbAdv		: Verb -> Adv -> VP ;
+		VerbAdvVerbAdvVerbVerb		: Verb -> Adv -> VP ;
+		AdvVerbAdvAdvVerbVerbVerbVerb		: Verb -> Adv -> VP ;
+		VerbAdvVerbVerbVerbAdv		: Verb -> Adv -> VP ;
+		VerbVerbVerbAdvVerb		: Verb -> Adv -> VP ;
+		VerbAdvAdvVerbAdv		: Verb -> Adv -> VP ;
+		AdvAdvVerbVerbVerbVerbVerb		: Verb -> Adv -> VP ;
+		VerbVerbAdvAdv		: Verb -> Adv -> VP ;
+		VerbAdvVerbAdvAdv		: Verb -> Adv -> VP ;
+		VerbAdvVerb		: Verb -> Adv -> VP ;
+		AdvAdvVerbAdv		: Verb -> Adv -> VP ;
+		AdvVerbAdvVerbVerbVerb		: Verb -> Adv -> VP ;
+		AdvVerbAdvAdvAdv		: Verb -> Adv -> VP ;
+		VerbAdvVerbAdvAdvAdv		: Verb -> Adv -> VP ;
+		AdvAdvVerbAdvAdvVerb		: Verb -> Adv -> VP ;
+		AdvAdvVerbAdvVerbVerbAdvAdv		: Verb -> Adv -> VP ;
+		VerbAdvVerbVerbAdvVerb		: Verb -> Adv -> VP ;
+		AdvAdvAdvVerbAdvVerbVerb		: Verb -> Adv -> VP ;
+		AdvAdvVerbAdvVerb		: Verb -> Adv -> VP ;
+		AdvVerbVerbVerb		: Verb -> Adv -> VP ;
+		VerbVerbVerbAdvAdvVerbVerb		: Verb -> Adv -> VP ;
+		AdvAdvAdvVerbVerbVerbVerbVerb		: Verb -> Adv -> VP ;
+		AdvAdvVerbVerbVerbAdvAdv		: Verb -> Adv -> VP ;
+		AdvVerbVerb		: Verb -> Adv -> VP ;
+		VerbVerbAdvVerb		: Verb -> Adv -> VP ;
+
+}
