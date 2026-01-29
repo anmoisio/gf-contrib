@@ -9,5 +9,5 @@ abstract ScanAddJump = Scan
 
     data
         UseVJ      : VJ -> Utt ;
-        jump_VJ    : VJ ;
+        jump_V     : VJ ;
 }
