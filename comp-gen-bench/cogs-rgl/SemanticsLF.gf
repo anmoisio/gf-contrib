@@ -24,7 +24,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
         ConsPresup = mkListLin ";" ;
 
         BaseAssert = {s = "" ; isEmpty = Empty} ;
-        ConsAssert = mkListLin "∧" ;
+        ConsAssert = mkListLin "AND" ;
 
         BaseEvents = {s = "" ; isEmpty = Empty} ;
         ConsEvents = mkListLin "," ;
@@ -35,7 +35,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
         -- Wrapper combines the quantifiers, assertions and presuppositions into the s field of Prop
         -- Prop -> Prop
         Wrapper prop = {
-            s = "(" ++ "∃" ++ prop.events.s ++ "∃" ++ prop.inds.s ++ ")" ++ "(" ++ (mkListLin ";" prop.presups prop.asserts).s ++ ")" ;
+            -- s = "(" ++ "∃" ++ prop.events.s ++ prop.inds.s ++ ")" ++ "(" ++ (mkListLin ";" prop.presups prop.asserts).s ++ ")" ;
+            s = (mkListLin ";" prop.presups prop.asserts).s ;
             asserts = prop.asserts ;
             presups = prop.presups ;
             events = prop.events ;
