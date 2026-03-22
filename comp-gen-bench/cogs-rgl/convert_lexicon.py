@@ -1,6 +1,6 @@
 """Convert the lexicon from cogs-lexicon to GF format."""
 #!/usr/bin/env python3
-from utils.cogs_lexicon import *
+from cogs_lexicon import *
 
 N = animate_nouns + inanimate_nouns + on_nouns + in_nouns + beside_nouns
 PN = proper_nouns
@@ -26,6 +26,10 @@ for word_list, lemma_word_list in zip(
 VUnerg.append("bake")
 V2.append("bake")
 verbs_lemmas["baked"] = "bake"
+
+# adding three V2 to use as replacements for the PP in the PP to PV conversion
+V2.extend(["wait", "impress", "accompany"])
+
 
 # adjectives
 A = ["big", "small", "red", "blue", "green", "happy", "sad", "angry",

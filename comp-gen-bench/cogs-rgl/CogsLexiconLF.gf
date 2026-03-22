@@ -579,6 +579,7 @@ lin
     talk_VUnerg 		= ss "talk" ;
     walk_VUnerg 		= ss "walk" ;
 
+    accompany_V2 		= ss "accompany" ;
     admire_V2 		= ss "admire" ;
     adore_V2 		= ss "adore" ;
     appreciate_V2 		= ss "appreciate" ;
@@ -609,6 +610,7 @@ lin
     help_V2 		= ss "help" ;
     hold_V2 		= ss "hold" ;
     hunt_V2 		= ss "hunt" ;
+    impress_V2 		= ss "impress" ;
     improve_V2 		= ss "improve" ;
     inflate_V2 		= ss "inflate" ;
     investigate_V2 		= ss "investigate" ;
@@ -642,6 +644,7 @@ lin
     toss_V2 		= ss "toss" ;
     touch_V2 		= ss "touch" ;
     value_V2 		= ss "value" ;
+    wait_V2 		= ss "wait" ;
     worship_V2 		= ss "worship" ;
 
     award_V3doc 		= ss "award" ;

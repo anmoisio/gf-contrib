@@ -579,6 +579,7 @@ data
     talk_VUnerg 		: VUnerg ;
     walk_VUnerg 		: VUnerg ;
 
+    accompany_V2 		: V2 ;
     admire_V2 		: V2 ;
     adore_V2 		: V2 ;
     appreciate_V2 		: V2 ;
@@ -609,6 +610,7 @@ data
     help_V2 		: V2 ;
     hold_V2 		: V2 ;
     hunt_V2 		: V2 ;
+    impress_V2 		: V2 ;
     improve_V2 		: V2 ;
     inflate_V2 		: V2 ;
     investigate_V2 		: V2 ;
@@ -642,6 +644,7 @@ data
     toss_V2 		: V2 ;
     touch_V2 		: V2 ;
     value_V2 		: V2 ;
+    wait_V2 		: V2 ;
     worship_V2 		: V2 ;
 
     award_V3doc 		: V3doc ;

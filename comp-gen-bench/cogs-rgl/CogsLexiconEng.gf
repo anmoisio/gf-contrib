@@ -579,6 +579,7 @@ lin
     talk_VUnerg 		= mkV "talk" ;
     walk_VUnerg 		= mkV "walk" ;
 
+    accompany_V2 		= mkV2 "accompany" ;
     admire_V2 		= mkV2 "admire" ;
     adore_V2 		= mkV2 "adore" ;
     appreciate_V2 		= mkV2 "appreciate" ;
@@ -609,6 +610,7 @@ lin
     help_V2 		= mkV2 "help" ;
     hold_V2 		= mkV2 (irregV "hold" "held" "held") ;
     hunt_V2 		= mkV2 "hunt" ;
+    impress_V2 		= mkV2 "impress" ;
     improve_V2 		= mkV2 "improve" ;
     inflate_V2 		= mkV2 "inflate" ;
     investigate_V2 		= mkV2 "investigate" ;
@@ -642,6 +644,7 @@ lin
     toss_V2 		= mkV2 "toss" ;
     touch_V2 		= mkV2 "touch" ;
     value_V2 		= mkV2 "value" ;
+    wait_V2 		= mkV2 "wait" ;
     worship_V2 		= mkV2 (irregV "worship" "worshipped" "worshipped") ;
 
     award_V3doc 		= mkV3 (regV "award") noPrep noPrep ;
