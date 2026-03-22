@@ -46,11 +46,14 @@ concrete LangEng of Lang =
     -- NamesEng
 
     -- not in Grammar.gf
-    ExtraEng [
-        PassVPSlash,
-        passVPSlash
+    ExtendEng [
+        PassVPSlash
+        ,passVPSlash
         -- ,PassAgentVPSlash
+        ,PresPartAP     -- participial construction
     ],
+
+    
 
     -- from english/LangEng.gf
     -- ConstructionEng,

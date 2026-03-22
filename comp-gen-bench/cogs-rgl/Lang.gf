@@ -20,7 +20,8 @@ abstract Lang =
     -- Transfer,
 
     -- not in Grammar.gf
-    Extra,
+    -- Extra,
+    Extend,
 
     -- from abstract/Lang.gf
     -- Construction,

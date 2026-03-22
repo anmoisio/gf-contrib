@@ -17,7 +17,7 @@ abstract Semantics =
     -- Transfer,
 
     -- not in Grammar.gf
-    Extra,
+    Extend,
 
     CogsLexicon,
     
@@ -187,7 +187,10 @@ def iAdvCN (PrepNP prep np) = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep x 
 -- An adjective is a proposition about an individual.
 fun iAP : AP -> Ind -> Prop ;
 def
+    -- simple adjective
     iAP (PositA a) = iA a ;
+    -- participial phrase
+    iAP (PresPartAP vp) = \x -> ExistE (\e -> (iVP vp x e)) ;
 
 -- A noun is a proposition about an individual.
 fun iCN : CN -> Ind -> Prop ;
