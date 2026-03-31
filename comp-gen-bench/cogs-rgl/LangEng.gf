@@ -24,7 +24,10 @@ concrete LangEng of Lang =
         ExtAdvVP
         ,Slash2V3 -- having Slash3V3 is enough for COGS
     ],
-    AdjectiveEng,
+    AdjectiveEng - [
+        -- AdvAP would be needed to modify an adjective with a prep phrase
+        AdvAP
+    ],
     AdverbEng - [
         SubjS -- SubjS  : Subj -> S -> Adv ; -- when she sleeps
     ],

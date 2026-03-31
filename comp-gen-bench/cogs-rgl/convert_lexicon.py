@@ -1,6 +1,6 @@
 """Convert the lexicon from cogs-lexicon to GF format."""
 #!/usr/bin/env python3
-from cogs_lexicon import *
+from utils.cogs_lexicon import *
 
 N = animate_nouns + inanimate_nouns + on_nouns + in_nouns + beside_nouns
 PN = proper_nouns
@@ -32,8 +32,19 @@ V2.extend(["wait", "impress", "accompany"])
 
 
 # adjectives
-A = ["big", "small", "red", "blue", "green", "happy", "sad", "angry",
-     "tall", "short", "young", "old", "fast", "slow", "loud", "quiet"]
+A = [
+    'big',
+    'blue',
+    'fast',
+    'green',
+    'happy',
+    'loud',
+    'quiet',
+    'red',
+    'slow',
+    'small',
+    'tall'
+]
 
 lexs = {
     "N": sorted(list(set(N))),
