@@ -38,13 +38,19 @@ fun Wrapper : Prop -> Prop ;
 
 -- A sentence is a proposition.
 fun iS : S -> Prop ;
-def iS (UseCl (TTAnt t ant) p (PredVP np vp)) = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
+def
+    iS (UseCl (TTAnt t ant) p (PredVP np vp)) = ExistE (iTense t (iAnt ant (iNP np (iPol p (iVP vp))))) ;
+    iS (ConjS conj (BaseS s1 s2)) = iConj conj (iS s1) (iS s2) ;
 
 fun iQS : QS -> Prop ;
 def
     iQS (UseQCl (TTAnt t ant) p (QuestVP ip vp))     = ExistE (iTense t (iAnt ant (iIP ip (iPol p (iVP vp))))) ;
     iQS (UseQCl (TTAnt t ant) p (QuestSlash ip cls)) = ExistE (iTense t (iAnt ant (iIP ip (iPol p (iClSlash cls))))) ;
 
+fun iRS : RS -> Ind -> Prop ;
+def
+    iRS (UseRCl (TTAnt t ant) p (RelVP rp vp))          = \x -> ExistE (iTense t (iAnt ant (iRP rp (iPol p (iVP vp)) x))) ;
+    iRS (UseRCl (TTAnt t ant) p (RelSlash rp clslash))  = \x -> ExistE (iTense t (iAnt ant (iRP rp (iPol p (iClSlash clslash)) x))) ;
 
 -- A noun phrase is interpreted as a function that takes a verb phrase denotation
 -- an returns a proposition about an event
@@ -77,11 +83,12 @@ def
     iIP (AdvIP _ adv) vpf = \e -> And (vpf QInd e) (iAdvCN adv QInd) ;
     iIP _ vpf = vpf QInd ; -- doesn't matter if ip is who/what/which/whom (?)
 
+-- Relative pronoun
 -- same as iIP but for relative clauses, e.g. "who walks" in "she saw the man who walks"
 -- in SLOG the rp is always "that"
-fun iRCl : RP -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
+fun iRP : RP -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
 def
-    iRCl IdRP vf i = vf i ;
+    iRP IdRP vf i = vf i ;
 
 -- A determiner is a function from a CN denotation to a NP denotation. 
 -- A noun (a proposition about an individual) and a verb phrase (a proposition about
@@ -136,17 +143,8 @@ def
     -- UseV applies the lexical verb's meaning directly.
     iVP (UseV v) = iV v ;
 
-    -- The object NP takes the transitive verb as its scope.
-    -- `i` is the subject, `y` will be the direct object variable, and z the oblique object.
-    -- The result of `iNP np (...)` is the final Event -> Prop for the subject `i`.
-    -- iVP (ComplSlash (SlashV2a v2) np) = \subj -> iNP np (\obj -> iV2 v2 subj obj) ;
+    -- slashed verb (2 and 3 place verbs)
     iVP (ComplSlash vpslash np) = \subj -> iNP np (\obj -> iVPSlash vpslash subj obj) ;
-
-    -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places; the have the same meaning
-    -- DOC: "give a dog a bone" vs. the normal "give a bone to a dog" also switches the order of the arguments
-    -- so there are 2x2 possibilities.
-    -- If v3 is a DOC, then arg1 is the indirect object (oobj) and arg2 the direct object (dobj).
-    -- iVP (ComplSlash (Slash3V3 v3 arg2) arg1) = \subj -> iNP arg1 (\x1 -> iNP arg2 (\x2 -> iV3 v3 subj x1 x2)) ;
 
     -- passive voice
     iVP (PassVPSlash (SlashV2a v2))      = iV2Pass v2 ;
@@ -164,8 +162,9 @@ def
 fun iVPSlash : VPSlash -> Ind -> Ind -> Event -> Prop ;
 def
     iVPSlash (SlashV2a v2) = iV2 v2 ;
+    -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places
+    iVPSlash (Slash2V3 v3 n_dobj) = \subj,oobj -> iNP n_dobj (\dobj -> iV3 v3 subj dobj oobj) ;
     iVPSlash (Slash3V3 v3 n_oobj) = \subj,dobj -> iNP n_oobj (\oobj -> iV3 v3 subj dobj oobj) ;
-
 
 -- Adverbs modify verb phrases, e.g. "is painted by a boy"
 -- In COGS the only adverb that modifies a verb phrase is "by" with an agent NP.
@@ -198,8 +197,7 @@ def
     iCN (UseN n) = iN n ;
     iCN (AdvCN cn adv) = \x -> And (iCN cn x) (iAdvCN adv x) ;
     iCN (AdjCN adj cn) = \x -> And (iCN cn x) (iAP adj x) ;
-    iCN (RelCN cn (UseRCl (TTAnt t ant) p (RelVP rp vp)))         = \x -> And (iCN cn x) (ExistE (iTense t (iAnt ant (iRCl rp (iPol p (iVP vp)) x)))) ;
-    iCN (RelCN cn (UseRCl (TTAnt t ant) p (RelSlash rp clslash))) = \x -> And (iCN cn x) (ExistE (iTense t (iAnt ant (iRCl rp (iPol p (iClSlash clslash)) x)))) ;
+    iCN (RelCN cn rs)  = \x -> And (iCN cn x) (iRS rs x) ;
 
 -- Proper nouns are individuals, and they combine with verb phrases,
 -- similarly to nouns in iDet (only simpler).

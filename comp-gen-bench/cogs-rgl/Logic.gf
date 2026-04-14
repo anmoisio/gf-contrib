@@ -9,4 +9,5 @@ abstract Logic = {
         All, Exist  : (Ind -> Prop) -> Prop ;
         ExistE      : (Event -> Prop) -> Prop ;
         Equals      : Ind -> Ind -> Prop ;
+        EmptyProp    : Event -> Prop ;
 }

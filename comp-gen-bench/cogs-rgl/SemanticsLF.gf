@@ -204,6 +204,15 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
             events = BaseEvents ;
             inds = BaseInds
             } ;
+        
+        EmptyProp e = {
+            s = "" ;
+            asserts = BaseAssert ;
+            presups = BasePresup ;
+            head = BaseAssert ;
+            events = BaseEvents ;
+            inds = BaseInds
+            } ;
 
 
         -- Conjunction for propositions - same as And but for interpretation functions
