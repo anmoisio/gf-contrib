@@ -57,7 +57,7 @@ lexs = {
     "VUnerg": sorted(list(set(VUnerg))), # unergative: e.g. run
     "V2": sorted(list(set(V2))),
     "V3doc": sorted(list(set(V3))), # double object construction
-    "to_V3": sorted(list(set(V3))), # same as V3 but with "to" preposition
+    "V3to": sorted(list(set(V3))), # same as V3 but with "to" preposition
     "VS": sorted(list(set(VS))),
     "VV": sorted(list(set(VV))),
     "A": sorted(list(set(A)))
@@ -72,7 +72,7 @@ linfun = { # strings that need to be formatted with the word
     "VUnacc": ("mkV {}", "irregV {}"),
     "VUnerg": ("mkV {}", "irregV {}"),
     "V2": ("mkV2 {}", "mkV2 (irregV {})"),
-    "to_V3": ("mkV3 (regV {}) noPrep toP",    "mkV3 (irregV {}) noPrep toP"), # gave a bone to a dog
+    "V3to": ("mkV3 (regV {}) noPrep toP",    "mkV3 (irregV {}) noPrep toP"), # gave a bone to a dog
     "V3doc": ("mkV3 (regV {}) noPrep noPrep", "mkV3 (irregV {}) noPrep noPrep"), # gave a dog a bone
     "VS": ("mkVS (regV {})", "mkVS (irregV {})"),
     "VV": ("mkVV (regV {})", "mkVV (irregV {})"),
@@ -106,9 +106,13 @@ verb_base2infls["redden"] = ("reddened", "reddened")
 
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("path_to_cogs_lexicon", help="Path to the cogs-lexicon.py file.")
+    args = parser.parse_args()
 
     # abstract lexicon
-    with open("CogsLexicon.gf", "w", encoding="utf-8") as f:
+    with open(args.path_to_cogs_lexicon + "/CogsLexicon.gf", "w", encoding="utf-8") as f:
         f.write("abstract CogsLexicon = Cogs, Structural ** {\n")
         f.write("data\n")
         for wordclass, wordlist in lexs.items():
@@ -122,7 +126,7 @@ if __name__ == "__main__":
 
     # concrete lexicon LexiconEng
     # only lins needed, no lincat
-    with open("CogsLexiconEng.gf", "w", encoding="utf-8") as f:
+    with open(args.path_to_cogs_lexicon + "/CogsLexiconEng.gf", "w", encoding="utf-8") as f:
         f.write("concrete CogsLexiconEng of CogsLexicon = CogsEng ** " \
                 + "open ParadigmsEng, IrregEng, Prelude in {\n")
         f.write("lin\n")
@@ -161,7 +165,7 @@ if __name__ == "__main__":
 
 
     ##### for the logical forms
-    with open("CogsLexiconLF.gf", "w", encoding="utf-8") as f:
+    with open(args.path_to_cogs_lexicon + "/CogsLexiconLF.gf", "w", encoding="utf-8") as f:
         f.write("concrete CogsLexiconLF of CogsLexicon = open Prelude in {\n")
         f.write("lin\n")
         for wordclass, wordlist in lexs.items():

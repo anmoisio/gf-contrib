@@ -163,6 +163,7 @@ fun iVPSlash : VPSlash -> Ind -> Ind -> Event -> Prop ;
 def
     iVPSlash (SlashV2a v2) = iV2 v2 ;
     -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places
+    -- they switch places also if V3 is a DOC 
     iVPSlash (Slash2V3 v3 n_dobj) = \subj,oobj -> iNP n_dobj (\dobj -> iV3 v3 subj dobj oobj) ;
     iVPSlash (Slash3V3 v3 n_oobj) = \subj,dobj -> iNP n_oobj (\oobj -> iV3 v3 subj dobj oobj) ;
 
@@ -221,13 +222,13 @@ def
                                             (Agent subj e)
                                             (Recipient oobj e))
                                             (Theme dobj e)) ;
-    iV3 v3           subj dobj oobj e   = And (V3Event v3 e) (And (And
+    iV3 (V3toV3 v3)  subj dobj oobj e   = And (V3toEvent v3 e) (And (And
                                             (Agent subj e)
                                             (Theme dobj e))
                                             (Recipient oobj e)) ;
     iV2Pass v obj e                     = And (V2Event v e) (Theme obj e) ;
     iV3Pass (V3docV3 v3) oobj dobj e    = And (V3docEvent v3 e) (And (Recipient oobj e) (Theme dobj e)) ;
-    iV3Pass v3           dobj oobj e    = And (V3Event    v3 e) (And (Theme dobj e) (Recipient oobj e)) ;
+    iV3Pass (V3toV3 v3)  dobj oobj e    = And (V3toEvent  v3 e) (And (Theme dobj e) (Recipient oobj e)) ;
     iVV vv vpf subj e                   = And (VVEvent vv e) (ExistE (\e2 -> And (And
                                             (Agent subj e)
                                             (Xcomp e e2)) 
@@ -259,7 +260,7 @@ fun
     VUnergEvent : VUnerg    -> Event -> Prop ;
     VUnaccEvent : VUnacc    -> Event -> Prop ;
     V2Event     : V2        -> Event -> Prop ;
-    V3Event     : V3        -> Event -> Prop ;
+    V3toEvent   : V3to      -> Event -> Prop ;
     V3docEvent  : V3doc     -> Event -> Prop ;
     VVEvent     : VV        -> Event -> Prop ;
     VSEvent     : VS        -> Event -> Prop ;

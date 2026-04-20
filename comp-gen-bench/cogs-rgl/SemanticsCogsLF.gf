@@ -17,7 +17,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         [Assert], [Presup], [Inds], [Events]   = {s : Str ; isEmpty : IsEmpty } ;
 
         S, Adv, Verb, V, V2, V3, VV, VS, A, CN, N, PN, Prep, Tense, Ant, Ind, Event = {s : Str} ;
-        VUnerg, VUnacc, V3doc = {s : Str} ;
+        VUnerg, VUnacc, V3doc, V3to = {s : Str} ;
 
     lin
 
@@ -82,7 +82,7 @@ concrete SemanticsCogsLF of SemanticsCogs = CogsLexiconLF ** open ResLF, Prelude
         VUnergVerb v = v ;
         VUnaccVerb v = v ;
         V2Verb v = v ;
-        V3Verb v = v ;
+        V3toVerb v = v ;
         V3docVerb v = v ;
         VSVerb v = v ;
         VVVerb v = v ;

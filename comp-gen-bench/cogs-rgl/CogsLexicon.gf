@@ -670,28 +670,28 @@ data
     teleport_V3doc 		: V3doc ;
     wire_V3doc 		: V3doc ;
 
-    award_to_V3 		: V3 ;
-    bring_to_V3 		: V3 ;
-    feed_to_V3 		: V3 ;
-    forward_to_V3 		: V3 ;
-    give_to_V3 		: V3 ;
-    hand_to_V3 		: V3 ;
-    lend_to_V3 		: V3 ;
-    loan_to_V3 		: V3 ;
-    mail_to_V3 		: V3 ;
-    offer_to_V3 		: V3 ;
-    pass_to_V3 		: V3 ;
-    post_to_V3 		: V3 ;
-    promise_to_V3 		: V3 ;
-    rent_to_V3 		: V3 ;
-    return_to_V3 		: V3 ;
-    sell_to_V3 		: V3 ;
-    send_to_V3 		: V3 ;
-    serve_to_V3 		: V3 ;
-    ship_to_V3 		: V3 ;
-    slip_to_V3 		: V3 ;
-    teleport_to_V3 		: V3 ;
-    wire_to_V3 		: V3 ;
+    award_V3to 		: V3to ;
+    bring_V3to 		: V3to ;
+    feed_V3to 		: V3to ;
+    forward_V3to 		: V3to ;
+    give_V3to 		: V3to ;
+    hand_V3to 		: V3to ;
+    lend_V3to 		: V3to ;
+    loan_V3to 		: V3to ;
+    mail_V3to 		: V3to ;
+    offer_V3to 		: V3to ;
+    pass_V3to 		: V3to ;
+    post_V3to 		: V3to ;
+    promise_V3to 		: V3to ;
+    rent_V3to 		: V3to ;
+    return_V3to 		: V3to ;
+    sell_V3to 		: V3to ;
+    send_V3to 		: V3to ;
+    serve_V3to 		: V3to ;
+    ship_V3to 		: V3to ;
+    slip_V3to 		: V3to ;
+    teleport_V3to 		: V3to ;
+    wire_V3to 		: V3to ;
 
     admire_VS 		: VS ;
     appreciate_VS 		: VS ;
@@ -734,22 +734,17 @@ data
     wish_VV 		: VV ;
     yearn_VV 		: VV ;
 
-    angry_A 		: A ;
     big_A 		: A ;
     blue_A 		: A ;
     fast_A 		: A ;
     green_A 		: A ;
     happy_A 		: A ;
     loud_A 		: A ;
-    old_A 		: A ;
     quiet_A 		: A ;
     red_A 		: A ;
-    sad_A 		: A ;
-    short_A 		: A ;
     slow_A 		: A ;
     small_A 		: A ;
     tall_A 		: A ;
-    young_A 		: A ;
 
     beside_Prep : Prep ;
 
