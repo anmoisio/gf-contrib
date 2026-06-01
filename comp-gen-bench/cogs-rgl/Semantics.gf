@@ -182,7 +182,10 @@ def iAdvVP (PrepNP by8agent_Prep np) vpf = \i -> iNP np (\y,e -> And (vpf i e) (
 -- Adverbs can also modify common nouns, e.g. "house on a hill"
 -- But we interpret a prepositional phrase (type Adv) as a proposition about an individual
 fun iAdvCN : Adv -> Ind -> Prop ;
-def iAdvCN (PrepNP prep np) = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep x y) e) ;
+def
+    -- iAdvCN (PrepNP prep np) = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep x y) e) ;
+    iAdvCN (PrepNP prep np) = \x -> iNP np (\y,_ -> iPrep prep x y) DummyEvent ;
+
 
 -- An adjective is a proposition about an individual.
 fun iAP : AP -> Ind -> Prop ;
@@ -229,29 +232,16 @@ def
     iV2Pass v obj e                     = And (V2Event v e) (Theme obj e) ;
     iV3Pass (V3docV3 v3) oobj dobj e    = And (V3docEvent v3 e) (And (Recipient oobj e) (Theme dobj e)) ;
     iV3Pass (V3toV3 v3)  dobj oobj e    = And (V3toEvent  v3 e) (And (Theme dobj e) (Recipient oobj e)) ;
-    iVV vv vpf subj e                   = And (VVEvent vv e) (ExistE (\e2 -> And (And
-                                            (Agent subj e)
-                                            (Xcomp e e2)) 
-                                            (vpf subj e2))) ;
+    iVV vv vpf subj e                   = And (And (VVEvent vv e) (Agent subj e))
+                                            (ExistE (\e2 -> And
+                                                (Xcomp e e2)
+                                                (vpf subj e2))) ;
     iVS vs eprop subj e                 = And
                                             (And (VSEvent vs e) (Agent subj e))
                                             (ExistE (\e2 -> And
                                                 (Ccomp e e2)
                                                 (eprop e2)
                                             )) ;
-
-
--- these could got to Logic.gf
-fun
-    -- Uniqueness operator for definite descriptions
-    Unique      : (Ind -> Prop) -> Ind -> Prop ;
-
-    -- thematic role predicates
-    Agent       : Ind   -> Event -> Prop ;  -- agent ( e , x )
-    Theme       : Ind   -> Event -> Prop ;
-    Recipient   : Ind   -> Event -> Prop ;
-    Ccomp       : Event -> Event -> Prop ;
-    Xcomp       : Event -> Event -> Prop ;
 
 
 -- interpretation stops at the lexical and morphological interpretation functions
@@ -271,9 +261,6 @@ fun
 
     -- proper noun as Ind
     PNInd : PN -> Ind ;
-
-    -- the individual in interrogative clauses "who walks?" --> walk(QInd)
-    QInd : Ind ;
 
     -- prepositions are relations between individuals
     iPrep : Prep -> Ind -> Ind -> Prop ;  -- e.g. "nmod . beside ( x , y )"
