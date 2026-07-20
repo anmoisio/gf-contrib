@@ -1,5 +1,5 @@
 
-concrete CogsEng of Cogs = CatEng ** open ResEng, ParadigmsEng, Prelude  in {
+concrete CogsEng of Cogs = CatEng ** open ResEng, Prelude in {
     lincat
         VUnerg, VUnacc = Verb ;
         V3doc, V3to = Verb ** {c2, c3 : Str} ;

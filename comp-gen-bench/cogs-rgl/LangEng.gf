@@ -28,6 +28,8 @@ concrete LangEng of Lang =
     ], 
     AdjectiveEng [
         PositA
+        ,UseComparA
+        ,AdjOrd
     ],
     AdverbEng [
         PrepNP
@@ -72,10 +74,13 @@ concrete LangEng of Lang =
     TenseX [
         TTAnt
         -- ,PPos
-        -- ,TPres
+        -- ,PNeg
+        ,TPres
         ,TPast
+        ,TFut
+        ,TCond
         ,ASimul
-        -- ,AAnter
+        ,AAnter
     ],
     -- Names,
     -- Transfer,

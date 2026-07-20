@@ -1,4 +1,4 @@
-abstract CogsLexicon = Cogs, Structural ** {
+abstract CogsLexicon = Cogs, Structural  - [want_VV] ** {
 data
     tv_N 		: N ;
     baby_N 		: N ;
@@ -731,6 +731,7 @@ data
     plan_VV 		: VV ;
     prefer_VV 		: VV ;
     try_VV 		: VV ;
+    want_VV 		: VV ;
     wish_VV 		: VV ;
     yearn_VV 		: VV ;
 

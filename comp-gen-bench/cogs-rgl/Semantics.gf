@@ -10,7 +10,7 @@ abstract Semantics =
     Conjunction,
     Phrase,
     Text,
-    Structural,
+    Structural - [want_VV],
     Idiom,
     Tense,
     Names,
@@ -95,9 +95,13 @@ def
 -- an individual and an event) combine into a proposition of event.
 fun iDet : Det -> (Ind -> Prop) -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def
-    iDet (DetQuant IndefArt NumSg) cnf vpf  = \e -> Exist (\x -> And (cnf x) (vpf x e)) ;
-    -- iDet every_Det n vpf  = \e -> All   (\x -> If  (n x) (vpf x e)) ;
-    iDet (DetQuant DefArt NumSg) cnf vpf    = \e -> Exist (\x -> And
+    -- Number (sg/pl) is a predicate on the individual, like Time on the event.
+    -- Definite plurals reuse the same definiteness (uniqueness) presupposition as
+    -- singulars; number is an independent conjunct.
+    iDet (DetQuant IndefArt NumSg) cnf vpf  = \e -> Exist (\x -> And (And (cnf x) (Number NumSg x)) (vpf x e)) ;
+    iDet (DetQuant IndefArt NumPl) cnf vpf  = \e -> Exist (\x -> And (And (cnf x) (Number NumPl x)) (vpf x e)) ;
+    -- iDet every_Det cnf vpf               = \e -> All   (\x -> If  (cnf x) (vpf x e)) ;
+    iDet (DetQuant DefArt NumSg) cnf vpf    = \e -> Exist (\x -> And (And
 
             -- Russelian description:
             -- (n x)
@@ -109,6 +113,12 @@ def
             -- (Unique cnf x) -- causes "index too large" error because it's not eta-expanded
             -- (Unique (\z -> cnf z) x)
             (Unique (\z -> cnf x) x)
+            (Number NumSg x))
+            (vpf x e)
+        ) ;
+    iDet (DetQuant DefArt NumPl) cnf vpf    = \e -> Exist (\x -> And (And
+            (Unique (\z -> cnf x) x)
+            (Number NumPl x))
             (vpf x e)
         ) ;
 
@@ -268,5 +278,6 @@ fun
     -- morphological features
     Time        : Tense -> Event -> Prop ;
     Anteriority : Ant   -> Event -> Prop ;
+    Number      : Num   -> Ind   -> Prop ;
 
 }

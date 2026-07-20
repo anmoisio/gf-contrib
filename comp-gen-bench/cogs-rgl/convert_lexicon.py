@@ -63,7 +63,7 @@ lexs = {
     "A": sorted(list(set(A)))
 }
 
-exclude = ["want"]
+#exclude = ["want"]
 
 linfun = { # strings that need to be formatted with the word
     # constructors for regular and irregular verbs
@@ -109,41 +109,99 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("path_to_cogs_lexicon", help="Path to the cogs-lexicon.py file.")
+    parser.add_argument("--segment", action="store_true")
     args = parser.parse_args()
+
+
+    if args.segment:
+        SEG_TAG = "Seg"
+        EXCLUDING = " - [want_VV]"
+
+        # missing irregular verbs
+        verb_base2infls["say"] = ("sai d", "sai d")
+        verb_base2infls["know"] = ("knew", "know n")
+        verb_base2infls["mean"] = ("mean t", "mean t")
+        # verb_base2infls["dream"] = ("dreamt", "dreamt") -- cogs uses dreamed so this is not needed
+        verb_base2infls["think"] = ("thought", "thought")
+        verb_base2infls["hear"] = ("hear d", "hear d")
+        verb_base2infls["sleep"] = ("slep t", "slep t")
+        verb_base2infls["run"] = ("ran", "run")
+        verb_base2infls["prefer"] = ("prefer r ed", "prefer r ed")
+
+        # shorten and redden need to be hadled as irregular because in ParadigmsEng.gf
+        # all verbs ending in a consonant get the last consonant duplicated, e.g. shortenned
+        verb_base2infls["shorten"] = ("shorten ed", "shorten ed")
+        verb_base2infls["redden"] = ("redden ed", "redden ed")
+
+        verb_base2infls["break"] = ("broke", "broke n")
+        verb_base2infls["freez e"] = ("froze", "froze n")
+        verb_base2infls["grow"] = ("grew", "grow n")
+        verb_base2infls["slid e"] = ("slid", "slid")
+        verb_base2infls["draw"] = ("drew", "draw n")
+        verb_base2infls["eat"] = ("ate", "eat e n")
+        verb_base2infls["see"] = ("saw", "see n")
+        verb_base2infls["throw"] = ("threw", "throw n")
+        verb_base2infls["give"] = ("gave", "give n")
+    else:
+        SEG_TAG = ""
+        EXCLUDING = ""
 
     # abstract lexicon
     with open(args.path_to_cogs_lexicon + "/CogsLexicon.gf", "w", encoding="utf-8") as f:
-        f.write("abstract CogsLexicon = Cogs, Structural ** {\n")
-        f.write("data\n")
+        f.write(f"abstract CogsLexicon = Cogs, Structural {EXCLUDING} **" + " {\ndata\n")
         for wordclass, wordlist in lexs.items():
             for word in wordlist:
-                if word in exclude:
-                    continue
+                # if word in exclude:
+                #     continue
                 f.write(f"    {word.lower()}_{wordclass} \t\t: {wordclass.split('_')[-1]} ;\n")
             f.write("\n")
         f.write("    beside_Prep : Prep ;\n")
         f.write("\n}\n")
 
+
     # concrete lexicon LexiconEng
     # only lins needed, no lincat
-    with open(args.path_to_cogs_lexicon + "/CogsLexiconEng.gf", "w", encoding="utf-8") as f:
-        f.write("concrete CogsLexiconEng of CogsLexicon = CogsEng ** " \
-                + "open ParadigmsEng, IrregEng, Prelude in {\n")
-        f.write("lin\n")
+    with open(args.path_to_cogs_lexicon + f"/CogsLexicon{SEG_TAG}Eng.gf", "w", encoding="utf-8") as f:
+        f.write(f"concrete CogsLexicon{SEG_TAG}Eng of CogsLexicon = CogsEng{EXCLUDING} ** " \
+                + f"open Paradigms{SEG_TAG}Eng, IrregEng, Prelude in" + " {\nlin\n")
         for wordclass, wordlist in lexs.items():
             for word in wordlist:
-                if word in exclude:
-                    continue
-                if any(wordclass.startswith(prefix) for prefix in ["to_V", "V"]) and \
+                # if word in exclude:
+                #     continue
+                # irregular
+                # if not args.segment:
+                if wordclass.startswith("V") and \
                         (word in verb_base2infls and \
                         verb_base2infls[word][0] != word + "ed" and \
-                        verb_base2infls[word][0] != word[:-1] + "ed") or word in ["shorten", "redden"]:
+                        verb_base2infls[word][0] != word[:-1] + "ed" and \
+                        verb_base2infls[word][0] != word + word[-1] + "ed" and \
+                        verb_base2infls[word][0] != word[:-1] + "ied"
+                        ) or word in ["shorten", "redden", "freeze"]:
                         # verb_base2infls[word][0] != word + word[-1] + "ed":
-                    forms = f'"{word}" "{verb_base2infls[word][0]}" "{verb_base2infls[word][1]}"'
+                    
                     linf = linfun[wordclass][1]
+
+                    if word == "freeze": # irregular that end in e that should be segmented (not "see")
+                        forms = '"freez e" "froze" "froze n"'
+                    elif word == "slide": # irregular that end in e that should be segmented (not "see")
+                        forms = '"slid e" "slid" "slid"'
+                    elif word in ["shorten", "redden"]:
+                        forms = f'"{word}" "{word} ed" "{word} ed" "{word} ing"'
+                        if wordclass == "VUnacc":
+                            linf = "irreg4V {}"
+                        elif wordclass == "V2":
+                            linf = "mkV2 (irreg4V {})"
+                    else:
+                        forms = f'"{word}" "{verb_base2infls[word][0]}" "{verb_base2infls[word][1]}"'
+                    
+                # regular
                 else:
-                    forms = f'"{word}"'
                     linf = linfun[wordclass][0]
+                    forms = f'"{word}"'
+                    if wordclass.startswith("V"): # separate the e
+                        if word[-1] in ["e", "y"]:
+                            forms = f'"{word[:-1]} {word[-1]}"'
+                    
 
                 f.write(f"    {word.lower()}_{wordclass} \t\t= {linf.format(forms)} ;\n")
             f.write("\n")

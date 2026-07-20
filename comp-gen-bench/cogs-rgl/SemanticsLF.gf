@@ -15,7 +15,7 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
         Assert, Presup, Inds, Events           = {s : Str ; isEmpty : IsEmpty} ;
         [Assert], [Presup], [Inds], [Events]   = {s : Str ; isEmpty : IsEmpty } ;
 
-        S, Adv, Verb, V, V2, V3, VV, VS, A, N, PN, Prep, Tense, Ant, Ind, Event = {s : Str} ;
+        S, Adv, Verb, V, V2, V3, VV, VS, A, N, PN, Prep, Tense, Ant, Num, Ind, Event = {s : Str} ;
         VUnerg, VUnacc, V3doc, V3to = {s : Str} ;
 
     lin
@@ -133,6 +133,20 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
             events = BaseEvents ;
             inds = BaseInds
             } ;
+
+        -- Num -> Ind -> Prop
+        Number n x = {
+            s = "" ;
+            asserts = lin ListAssert ({s = "Number ( " ++ x.s ++ " , " ++ n.s ++ " )"; isEmpty = NonEmpty}) ;
+            presups = BasePresup ;
+            head = BaseAssert ;
+            events = BaseEvents ;
+            inds = BaseInds
+            } ;
+
+        -- Num
+        NumSg = {s = "Sg"} ;
+        NumPl = {s = "Pl"} ;
 
         -- Tense
         TPres = {s = "Pres"} ;

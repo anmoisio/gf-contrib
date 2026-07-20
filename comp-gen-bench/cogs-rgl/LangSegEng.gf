@@ -1,7 +1,7 @@
 
-abstract Lang =
-    -- from abstract/Grammar.gf
-    Noun [
+concrete LangSegEng of Lang =
+
+    NounEng [
         DetCN
         ,DetQuant
         ,NumSg
@@ -14,7 +14,7 @@ abstract Lang =
         ,RelCN
         ,AdvCN
     ],
-    Verb [
+    VerbEng [
         UseV
         ,ComplVV
         ,ComplVS
@@ -26,16 +26,16 @@ abstract Lang =
         ,ComplSlash
         ,AdvVP
     ], 
-    Adjective [
+    AdjectiveEng [
         PositA
         ,UseComparA
         ,AdjOrd
     ],
-    Adverb [
+    AdverbEng [
         PrepNP
     ],
     -- Numeral,
-    Sentence [
+    SentenceEng [
         PredVP
         ,SlashVP
         ,SlashVS
@@ -43,13 +43,14 @@ abstract Lang =
         ,UseQCl
         ,UseRCl
         ,UseSlash
+        ,ctr
     ],
-    Question [
+    QuestionEng [
         QuestVP
         ,QuestSlash
         ,AdvIP
     ],
-    Relative [
+    RelativeEng [
         RelVP
         ,RelSlash
         ,IdRP
@@ -60,7 +61,7 @@ abstract Lang =
     ],
     -- Phrase,
     -- Text,
-    Structural [
+    StructuralEng [
         by8agent_Prep
         ,in_Prep
         ,on_Prep
@@ -70,10 +71,10 @@ abstract Lang =
         ,and_Conj
     ],
     -- Idiom,
-    Tense [
+    TenseX [
         TTAnt
-        ,PPos
-        ,PNeg
+        -- ,PPos
+        -- ,PNeg
         ,TPres
         ,TPast
         ,TFut
@@ -86,8 +87,9 @@ abstract Lang =
 
     -- not in Grammar.gf
     -- Extra,
-    Extend [
+    ExtendEng [
         PresPartAP
+        ,passVPSlash
         ,PassVPSlash
     ],
 
@@ -98,9 +100,14 @@ abstract Lang =
 
     -- from the cogs dataset
     -- Cogs,
-    CogsLexicon
+    CogsLexiconSegEng
 
-    ** {
-flags startcat=S ;
+    ** open ResEng, Prelude in {
+
+flags startcat = Phr ; unlexer = text ; lexer = text ;
+
+lin
+    PPos = {s = [] ; p = CPos} ;
+    PNeg = {s = [] ; p = CNeg True} ; -- contracted: don't
 
 } ;
