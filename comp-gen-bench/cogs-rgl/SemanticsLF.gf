@@ -18,6 +18,8 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
         S, Adv, Verb, V, V2, V3, VV, VS, A, N, PN, Prep, Tense, Ant, Num, Ind, Event = {s : Str} ;
         VUnerg, VUnacc, V3doc, V3to = {s : Str} ;
 
+        PrepArtif1, PrepArtif2 = {s : Str} ;
+
     lin
 
         BasePresup = {s = "" ; isEmpty = Empty} ;
@@ -90,6 +92,14 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
         VSEvent = VUnergEvent ;
         VVEvent = VUnergEvent ;
         V3docEvent = VUnergEvent ;
+
+        DummyVP _ _ = {
+            asserts = BaseAssert ;
+            s = "" ;
+            presups = BasePresup ;
+            head = BaseAssert ;
+            events = BaseEvents ;
+            inds = BaseInds } ;
         
 
         -- Ind -> Event -> Prop
@@ -114,6 +124,31 @@ concrete SemanticsLF of Semantics = CogsLexiconLF ** open ResLF, Prelude in {
             asserts = lin ListAssert (
                 {s = "Nmod ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_obj.s ++ " )" ; isEmpty = NonEmpty}) ;
             s = "" ; presups = BasePresup ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
+
+
+        iPrepArtif1NP prep i_cat i_obj = {
+            asserts = lin ListAssert (
+                {s = "PrepArtif1 ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_obj.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
+
+        iPrepArtif2NP prep i_cat i_obj = {
+            asserts = lin ListAssert (
+                {s = "PrepArtif2 ." ++ prep.s ++ "( " ++ i_cat.s ++ " , " ++ i_obj.s ++ " )" ; isEmpty = NonEmpty}) ;
+            s = "" ; presups = BasePresup ; head = BaseAssert ; events = BaseEvents ; inds = BaseInds } ;
+
+        a_PrepArtif1 = {s = "a1"} ;
+        b_PrepArtif1 = {s = "b1"} ;
+        c_PrepArtif1 = {s = "c1"} ;
+        d_PrepArtif1 = {s = "d1"} ;
+        e_PrepArtif1 = {s = "e1"} ;
+
+        a_PrepArtif2 = {s = "a2"} ;
+        b_PrepArtif2 = {s = "b2"} ;
+        c_PrepArtif2 = {s = "c2"} ;
+        d_PrepArtif2 = {s = "d2"} ;
+        e_PrepArtif2 = {s = "e2"} ;
+
+
 
         -- Tense -> Event -> Prop
         Time t e = {

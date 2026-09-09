@@ -102,6 +102,9 @@ concrete LangEng of Lang =
     -- Cogs,
     CogsLexiconEng
 
+    ,ArtificialCNsEng
+
+
     ** open ResEng, Prelude in {
 
 flags startcat = Phr ; unlexer = text ; lexer = text ;

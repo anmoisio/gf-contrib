@@ -3,7 +3,7 @@
 abstract Logic = {
     cat
         Prop ; Ind ; Event ;
-    data
+    fun
         And, Or, If : Prop -> Prop -> Prop ;
         Not         : Prop -> Prop ;
         All, Exist  : (Ind -> Prop) -> Prop ;

@@ -3,6 +3,7 @@
 from utils.cogs_lexicon import *
 
 N = animate_nouns + inanimate_nouns + on_nouns + in_nouns + beside_nouns
+N = [x for x in N if x != "TV"] + ["tv"]
 PN = proper_nouns
 pastV_unerg = V_trans_omissible + V_unerg
 pastV_unacc = V_unacc

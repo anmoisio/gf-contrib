@@ -20,6 +20,8 @@ abstract Semantics =
     Extend,
 
     CogsLexicon,
+
+    ArtificialCNs,
     
     Logic ** {
 
@@ -98,10 +100,9 @@ def
     -- Number (sg/pl) is a predicate on the individual, like Time on the event.
     -- Definite plurals reuse the same definiteness (uniqueness) presupposition as
     -- singulars; number is an independent conjunct.
-    iDet (DetQuant IndefArt NumSg) cnf vpf  = \e -> Exist (\x -> And (And (cnf x) (Number NumSg x)) (vpf x e)) ;
-    iDet (DetQuant IndefArt NumPl) cnf vpf  = \e -> Exist (\x -> And (And (cnf x) (Number NumPl x)) (vpf x e)) ;
+    iDet (DetQuant IndefArt number) cnf vpf  = \e -> Exist (\x -> And (And (cnf x) (Number number x)) (vpf x e)) ;
     -- iDet every_Det cnf vpf               = \e -> All   (\x -> If  (cnf x) (vpf x e)) ;
-    iDet (DetQuant DefArt NumSg) cnf vpf    = \e -> Exist (\x -> And (And
+    iDet (DetQuant DefArt number) cnf vpf    = \e -> Exist (\x -> And (And
 
             -- Russelian description:
             -- (n x)
@@ -113,14 +114,10 @@ def
             -- (Unique cnf x) -- causes "index too large" error because it's not eta-expanded
             -- (Unique (\z -> cnf z) x)
             (Unique (\z -> cnf x) x)
-            (Number NumSg x))
+            (Number number x))
             (vpf x e)
         ) ;
-    iDet (DetQuant DefArt NumPl) cnf vpf    = \e -> Exist (\x -> And (And
-            (Unique (\z -> cnf x) x)
-            (Number NumPl x))
-            (vpf x e)
-        ) ;
+
 
 -- Tense adds a temporal predicate to the event property. Same for Ant.
 fun
@@ -159,7 +156,7 @@ def
     -- passive voice
     iVP (PassVPSlash (SlashV2a v2))      = iV2Pass v2 ;
     iVP (PassVPSlash (Slash3V3 v3 arg2)) = \x1 -> iNP arg2 (\x2 -> iV3Pass v3 x1 x2) ;
-    iVP (AdvVP vp adv)                    = iAdvVP adv (iVP vp) ;
+    iVP (AdvVP vp adv)                   = iAdvVP adv (iVP vp) ;
 
     -- sentence as complement
     iVP (ComplVS vs (UseCl (TTAnt t ant) p (PredVP np vp))) = -- said that the boy walked
@@ -173,7 +170,7 @@ fun iVPSlash : VPSlash -> Ind -> Ind -> Event -> Prop ;
 def
     iVPSlash (SlashV2a v2) = iV2 v2 ;
     -- Slash2V3 and Slash3V3 are same but np_oo and np_do switch places
-    -- they switch places also if V3 is a DOC 
+    -- they switch places also if V3 is a double-object construction (DOC) 
     iVPSlash (Slash2V3 v3 n_dobj) = \subj,oobj -> iNP n_dobj (\dobj -> iV3 v3 subj dobj oobj) ;
     iVPSlash (Slash3V3 v3 n_oobj) = \subj,dobj -> iNP n_oobj (\oobj -> iV3 v3 subj dobj oobj) ;
 
@@ -193,8 +190,13 @@ def iAdvVP (PrepNP by8agent_Prep np) vpf = \i -> iNP np (\y,e -> And (vpf i e) (
 -- But we interpret a prepositional phrase (type Adv) as a proposition about an individual
 fun iAdvCN : Adv -> Ind -> Prop ;
 def
-    -- iAdvCN (PrepNP prep np) = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep x y) e) ;
-    iAdvCN (PrepNP prep np) = \x -> iNP np (\y,_ -> iPrep prep x y) DummyEvent ;
+    -- iAdvCN (PrepNP prep np)      = \x -> ExistE (\e -> iNP np (\y,e' -> iPrep prep x y) e) ;
+
+    -- using DummyEvent instead of ExistE that would introduce an event that is not
+    -- actually an event in the sentence (since iNP requires an event)
+    iAdvCN (PrepNP prep np)       = \x -> iNP np (\y,_ -> iPrep prep x y) DummyEvent ;
+    iAdvCN (PrepArtif1NP prep np) = \x -> iNP np (\y,_ -> iPrepArtif1NP prep x y) DummyEvent ;
+    iAdvCN (PrepArtif2NP prep np) = \x -> iNP np (\y,_ -> iPrepArtif2NP prep x y) DummyEvent ;
 
 
 -- An adjective is a proposition about an individual.
@@ -218,40 +220,31 @@ def
 fun iPN : PN -> (Ind -> Event -> Prop) -> Event -> Prop ;
 def iPN pn vpf = vpf (PNInd pn) ;
 
--- A verb is combined with 1-3 individuals, an event, and sometimes a complement
+-- 1/2/3-place verb is combined with 1/2/3 individuals and an event
+-- passive doesn't have the subject
 fun
-    iV      : V -> Ind                              -> Event -> Prop ;
-    iV2     : V2 -> Ind -> Ind                      -> Event -> Prop ;
-    iV3     : V3 -> Ind -> Ind -> Ind               -> Event -> Prop ;
-    iV2Pass : V2 -> Ind                             -> Event -> Prop ;
-    iV3Pass : V3 -> Ind -> Ind                      -> Event -> Prop ;
-    iVV     : VV -> (Ind -> Event -> Prop) -> Ind   -> Event -> Prop ;
-    iVS     : VS -> (Event -> Prop) -> Ind          -> Event -> Prop ;
+    iV      : V  -> Ind               -> Event -> Prop ;
+    iV2     : V2 -> Ind -> Ind        -> Event -> Prop ;
+    iV3     : V3 -> Ind -> Ind -> Ind -> Event -> Prop ;
+    iV2Pass : V2 -> Ind               -> Event -> Prop ;
+    iV3Pass : V3 -> Ind -> Ind        -> Event -> Prop ;
 def
-    iV (VUnergV v) i e      = And (VUnergEvent v e) (Agent i e) ;
-    iV (VUnaccV v) i e      = And (VUnaccEvent v e) (Theme i e) ;
-    iV2 v subj obj e        = And (V2Event v e) (And (Agent subj e) (Theme obj e)) ;
-    iV3 (V3docV3 v3) subj oobj dobj e   = And (V3docEvent v3 e) (And (And
-                                            (Agent subj e)
-                                            (Recipient oobj e))
-                                            (Theme dobj e)) ;
-    iV3 (V3toV3 v3)  subj dobj oobj e   = And (V3toEvent v3 e) (And (And
-                                            (Agent subj e)
-                                            (Theme dobj e))
-                                            (Recipient oobj e)) ;
-    iV2Pass v obj e                     = And (V2Event v e) (Theme obj e) ;
-    iV3Pass (V3docV3 v3) oobj dobj e    = And (V3docEvent v3 e) (And (Recipient oobj e) (Theme dobj e)) ;
-    iV3Pass (V3toV3 v3)  dobj oobj e    = And (V3toEvent  v3 e) (And (Theme dobj e) (Recipient oobj e)) ;
-    iVV vv vpf subj e                   = And (And (VVEvent vv e) (Agent subj e))
-                                            (ExistE (\e2 -> And
-                                                (Xcomp e e2)
-                                                (vpf subj e2))) ;
-    iVS vs eprop subj e                 = And
-                                            (And (VSEvent vs e) (Agent subj e))
-                                            (ExistE (\e2 -> And
-                                                (Ccomp e e2)
-                                                (eprop e2)
-                                            )) ;
+    iV (VUnergV v)   subj           = \e -> And (VUnergEvent v e) (Agent subj e) ;
+    iV (VUnaccV v)   subj           = \e -> And (VUnaccEvent v e) (Theme subj e) ;
+    iV2 v            subj obj       = \e -> And (V2Event v e) (And (Agent subj e) (Theme obj e)) ;
+    iV3 (V3docV3 v3) subj oobj dobj = \e -> And (V3docEvent v3 e) (And (And (Agent subj e) (Recipient oobj e)) (Theme dobj e)) ;
+    iV3 (V3toV3 v3)  subj dobj oobj = \e -> And (V3toEvent v3 e)  (And (And (Agent subj e) (Theme dobj e)) (Recipient oobj e)) ;
+    iV2Pass v        obj            = \e -> And (V2Event v e) (Theme obj e) ;
+    iV3Pass (V3docV3 v3) oobj dobj  = \e -> And (V3docEvent v3 e) (And (Recipient oobj e) (Theme dobj e)) ;
+    iV3Pass (V3toV3 v3)  dobj oobj  = \e -> And (V3toEvent  v3 e) (And (Theme dobj e) (Recipient oobj e)) ;
+
+-- verb with a verb or a sentence as a complement
+fun
+    iVV : VV -> (Ind -> Event -> Prop) -> Ind -> Event -> Prop ;
+    iVS : VS -> (Event -> Prop)        -> Ind -> Event -> Prop ;
+def
+    iVV vv vpf   subj = \e -> And (And (VVEvent vv e) (Agent subj e)) (ExistE (\e2 -> And (Xcomp e e2) (vpf subj e2))) ;
+    iVS vs eprop subj = \e -> And (And (VSEvent vs e) (Agent subj e)) (ExistE (\e2 -> And (Ccomp e e2) (eprop e2))) ;
 
 
 -- interpretation stops at the lexical and morphological interpretation functions
@@ -274,10 +267,14 @@ fun
 
     -- prepositions are relations between individuals
     iPrep : Prep -> Ind -> Ind -> Prop ;  -- e.g. "nmod . beside ( x , y )"
+    iPrepArtif1NP : PrepArtif1 -> Ind -> Ind -> Prop ;  
+    iPrepArtif2NP : PrepArtif2 -> Ind -> Ind -> Prop ;  
 
     -- morphological features
     Time        : Tense -> Event -> Prop ;
     Anteriority : Ant   -> Event -> Prop ;
     Number      : Num   -> Ind   -> Prop ;
 
+    -- DummyVP is needed only for interpreting the standalone VPs in the SLOG dataset
+    DummyVP : Ind -> Event -> Prop ;
 }

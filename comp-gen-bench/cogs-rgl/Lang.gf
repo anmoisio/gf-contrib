@@ -100,6 +100,8 @@ abstract Lang =
     -- Cogs,
     CogsLexicon
 
+    ,ArtificialCNs
+
     ** {
 flags startcat=S ;
 
